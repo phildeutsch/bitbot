@@ -1,5 +1,4 @@
 from bbClasses import *
-from bbAnalysis import *
 from bbFunctions import *
 import time
 import sys
@@ -7,12 +6,6 @@ import re
 import os.path
 
 start_time = time.time()
-
-logFileName   = 'bbLog.csv'
-logFileNameBT = 'bbLogBT.csv'
-maxWalk      = 0.1
-midDistance  = 0.5
-tradeBuffer  = 0.0
 
 with open(logFileNameBT, 'w') as logBT:
     logBT.write('Time,Bid,Ask,EUR,BTC,Trade\n')

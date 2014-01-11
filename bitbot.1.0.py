@@ -16,7 +16,7 @@ import os.path
 import pandas as pd
 import numpy as np
 
-t         = trader(logFileName, maxWalk, midDistance, tradeBuffer)
+t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)
 p         = portfolio(0,0)
 m         = marketData('Null', 0, 0)
 krakenAPI = krakenex.API(key, secret)

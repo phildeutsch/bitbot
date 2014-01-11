@@ -1,4 +1,4 @@
-bitbot - algortihmic trader written by Philipp Deutsch
+bitbot - algortihmic trader for kraken
 
 Dependencies:
 

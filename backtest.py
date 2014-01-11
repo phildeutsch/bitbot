@@ -7,13 +7,14 @@ import re
 import os.path
 import linecache
 import numpy as np
+import pandas as pd
 
 #start_time = time.time()
 
 results = []
-for walkUp in [0.03, 0.05, 0.1]:
-    for walkDown in [0.03, 0.05, 0.1]:
-        for minTrade in [1.0, 1.5]:
+for walkUp in [0.1, 0.15, 0.2]:
+    for walkDown in [0.03, 0.05]:
+        for minTrade in [1.0, 1.25, 1.5]:
             logFileNameBT = 'Logs/' + str(walkUp) + str(walkDown) + str(minTrade) + '.bt'
             with open(logFileNameBT, 'w') as logBT:
                 logBT.write('Time,Bid,Ask,EUR,BTC,Trade\n')
@@ -51,15 +52,22 @@ for walkUp in [0.03, 0.05, 0.1]:
 
                 m, p = testData(logFileName, m, p, i)
                 t = trader(logFileNameBT, walkUp, walkDown, midDistance, tradeBuffer)
+          
+            data = pd.read_csv(logFileNameBT)
+            data['Value'] = data['EUR'] + data['BTC'] * data['Bid']
+            m = np.mean(data['Value'].pct_change())
+            s = np.std(data['Value'].pct_change())
+            sharpe = m/s * 100
             
             data = re.split(',', linecache.getline(logFileNameBT, file_len(logFileName)+1))
             os.remove(logFileNameBT)
             endValue = float(data[3]) + float(data[4]) * float(data[1])
             endRet   = (endValue/funds - 1) * 100
             print 'Return: ' + str(endRet) + '%'
-            results.append([walkUp, walkDown, minTrade, endRet])
+            results.append([walkUp, walkDown, minTrade, endRet, sharpe])
+            
 
 results = np.array(results)
-print results[results[:,3].argsort()][::-1]
+print results[results[:,4].argsort()][::-1]
 
 #print time.time() - start_time, "seconds"    

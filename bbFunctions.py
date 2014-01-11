@@ -1,5 +1,3 @@
-from bbClasses import *
-from bbSettings import *
 import linecache
 import time
 import sys
@@ -56,14 +54,19 @@ def getData(krakenAPI, p, m):
 
     return p, m
 
-def getHistoricMax(logFileName):
+def getBounds(logFileName, walkUp, walkDown):
     with open(logFileName,'r') as logFile:
         history = logFile.readlines()
     maxPrice = float(re.split(',', history[1])[2])
+    minPrice = float(re.split(',', history[1])[1])
     for line in range(2,len(history)):
         if float(re.split(',', history[line])[2]) > maxPrice:
             maxPrice = float(re.split(',', history[line])[2])
-    return maxPrice
+            minPrice = maxPrice * (1 - walkDown)
+        if float(re.split(',', history[line])[1]) < minPrice:
+            minPrice = float(re.split(',', history[line])[1])
+            maxPrice = minPrice * (1 + walkUp)
+    return minPrice, maxPrice
 
 def testData(logFile, m, p, i):
     data = re.split(',', linecache.getline(logFile, i+1))

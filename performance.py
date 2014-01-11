@@ -1,5 +1,5 @@
-from btcTraderPerformance import *
+from bbSettings import *
+from bbPerformance import *
 
-fileNameLog = 'btcTraderLog.txt'
-makePerformanceTable(fileNameLog)
+makePerformanceTable(logFileNameBT)
 

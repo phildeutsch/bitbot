@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 
 def showPerformance(df, date):
-    w = pd.read_csv('btcTraderTransfers.csv', parse_dates=[0], index_col=0)
+    w = pd.read_csv(transferFile, parse_dates=[0], index_col=0)
     if date != 'all':
         df = df[date]
         try:

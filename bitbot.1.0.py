@@ -16,7 +16,7 @@ import os.path
 import pandas as pd
 import numpy as np
 
-t         = trader(logFileName)
+t         = trader(logFileName, maxWalk, midDistance, tradeBuffer)
 p         = portfolio(0,0)
 m         = marketData('Null', 0, 0)
 krakenAPI = krakenex.API(key, secret)
@@ -25,11 +25,10 @@ run = 1
 while run:
     [p, m] = getData(krakenAPI, p, m)
     
-    print m.mean    
-    print t.calcBaseWeight(m)
-    print t.calcMomentum(m)
-    print t.calcCoinsToTrade(m, p)
-    print t.checkTradeSize()
+    t.calcBaseWeight(m)
+#    t.calcMomentum(m)
+    t.calcCoinsToTrade(m, p)
+    t.checkTradeSize(minTrade)
     
 #   cancelOrders(krakenAPI)    
         

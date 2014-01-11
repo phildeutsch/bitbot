@@ -1,4 +1,3 @@
-from bbSettings import *
 from bbFunctions import *
 
 class portfolio:
@@ -19,20 +18,21 @@ class marketData:
 
 class trader:
     """ Stores all self parameters """
-    def __init__(self, logFileName):
+    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer):
         try:
-            self.maxPrice = getHistoricMax(logFileName)
+            self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
             self.tradeBuffer = tradeBuffer
             self.midDistance = midDistance
-            self.maxWalk = maxWalk
-            self.minPrice = self.maxPrice * (1 - self.maxWalk)
+            self.walkUp = walkUp
+            self.walkDown = walkDown
             self.midPrice = self.minPrice + \
                 self.midDistance * (self.maxPrice - self.minPrice)
         except IndexError:
             self.maxPrice = 0
             self.tradeBuffer = tradeBuffer
             self.midDistance = midDistance
-            self.maxWalk = maxWalk
+            self.walkUp = walkUp
+            self.walkDown = walkDown
             self.minPrice = 0
             self.midPrice = 0
             self.coinsToTrade = 0
@@ -84,8 +84,8 @@ class trader:
         self.coinsToTrade = N/D
         return self.coinsToTrade
 
-    def checkTradeSize(self):
-        if abs(self.coinsToTrade) < 0.5:
+    def checkTradeSize(self, minTrade):
+        if abs(self.coinsToTrade) < minTrade:
             self.coinsToTrade = 0
         return self.coinsToTrade
         

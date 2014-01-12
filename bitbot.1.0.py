@@ -13,8 +13,6 @@ import time
 import sys
 import re
 import os.path
-import pandas as pd
-import numpy as np
 
 t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)
 p         = portfolio(0,0)

@@ -43,5 +43,5 @@ while run:
     sys.stdout.flush()
 
     printLogLine(p, m, t, logFileName)
-    run = 0
-#    time.sleep(delay)
+#   run = 0
+    time.sleep(delay)

@@ -13,28 +13,27 @@ def printLogLine(p, m, t, logFileName):
         logFile.write(str(p.BTC) + ',')
         logFile.write(str(t.coinsToTrade) + '\n')
 
-def placeOrder(krakenAPI, trader):
-    if abs(trader.coinsToTrade) > minTrade:
-        if coinsToTrade < 0:
-            trade = krakenAPI.query_private('AddOrder', {
-                'pair' : 'XXBTZEUR',
-                'type' : 'sell', 
-                'ordertype' : 'limit',
-                'price' : tradePrice, 
-                'volume' : -coinsToTrade
-            })
-            trader.error = 0
-        else:
-            trade = api.query_private('AddOrder', {
-                'pair' : 'XXBTZEUR',
-                'type' : 'buy',
-                'ordertype' : 'limit',
-                'price' : tradePrice,
-                'volume' : coinsToTrade
-             })
-            trader.error = 0
-        if trade['error'] != []:
-            trader.error = 1
+def placeOrder(krakenAPI, m, t):
+    if t.coinsToTrade < 0:
+        trade = krakenAPI.query_private('AddOrder', {
+            'pair' : 'XXBTZEUR',
+            'type' : 'sell', 
+            'ordertype' : 'limit',
+            'price' : m.ask, 
+            'volume' : -t.coinsToTrade
+        })
+        trader.error = 0
+    else:
+        trade = krakenAPI.query_private('AddOrder', {
+            'pair' : 'XXBTZEUR',
+            'type' : 'buy',
+            'ordertype' : 'limit',
+            'price' : m.bid,
+            'volume' : t.coinsToTrade
+         })
+        t.error = 0
+    if trade['error'] != []:
+        t.error = 1
 
 def cancelOrders(krakenAPI):
     openOrders = krakenAPI.query_private('OpenOrders')['result']

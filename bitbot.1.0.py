@@ -21,16 +21,16 @@ krakenAPI = krakenex.API(key, secret)
 
 run = 1
 while run:
-    [p, m] = getData(krakenAPI, p, m)
+    p, m = getData(krakenAPI, p, m)
     
     t.calcBaseWeight(m)
-#    t.calcMomentum(m)
+#   t.calcMomentum(m)
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(minTrade)
     
-#   cancelOrders(krakenAPI)    
+    cancelOrders(krakenAPI)    
         
-#   placeOrder(krakenAPI, t)
+    placeOrder(krakenAPI, m, t)
 
     strLog = m.time
     strLog = strLog + ' | B: '+str(round(m.bid,1))+' A: '+str(round(m.ask,1))
@@ -38,12 +38,10 @@ while run:
     strLog = strLog + ' | Bounds: ' + str(t.minPrice) + ' ' + str(t.maxPrice)
     strLog = strLog + ' | Trade: ' + str(round(t.coinsToTrade,3)) + '\n'
 
-#   Update trader parameters
-
     # Write user information + Log
     sys.stdout.write(strLog)
     sys.stdout.flush()
 
-#   printLogLine(p, m, t, logFileName)
-#    time.sleep(600)
+    printLogLine(p, m, t, logFileName)
     run = 0
+#    time.sleep(delay)

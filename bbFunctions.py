@@ -22,7 +22,7 @@ def placeOrder(krakenAPI, m, t):
             'price' : m.ask, 
             'volume' : -t.coinsToTrade
         })
-        trader.error = 0
+        t.error = 0
     else:
         trade = krakenAPI.query_private('AddOrder', {
             'pair' : 'XXBTZEUR',

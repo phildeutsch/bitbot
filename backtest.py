@@ -13,8 +13,8 @@ import pandas as pd
 
 results = []
 for walkUp in [0.15]:
-    for walkDown in [0.03]:
-        for minTrade in [1.0]:
+    for walkDown in [0]:
+        for minTrade in [0.75]:
             logFileNameBT = 'Logs/' + str(walkUp) + str(walkDown) + str(minTrade) + '.bt'
             with open(logFileNameBT, 'w') as logBT:
                 logBT.write('Time,Bid,Ask,EUR,BTC,Trade\n')

@@ -1,0 +1,20 @@
+error handling
+
+when using kraken api
+
+updating t.coinstotrade: check if coinstotrade in [-m.btc, p.EUR * m.bid]
+
+using middistance
+
+using tradebuffer
+
+using momentum
+  which time horizon to use for moving average?
+
+usd arbitrage:
+  add usd to portfolio and market data
+  duplicate everything for usd?! how do i need to change the trader classe?
+  strategy? 
+
+fixing printed output of status.txt
+

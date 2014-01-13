@@ -49,9 +49,9 @@ for walkUp in [0.15]:
           
             data = pd.read_csv(logFileNameBT)
             data['Value'] = data['EUR'] + data['BTC'] * data['Bid']
-            m = np.mean(data['Value'].pct_change())
+            r = np.mean(data['Value'].pct_change())
             s = np.std(data['Value'].pct_change())
-            sharpe = m/s * 100
+            sharpe = r/s * 100
             
             data = re.split(',', linecache.getline(logFileNameBT, file_len(logFileNameBT)))
 #            os.remove(logFileNameBT)

@@ -82,12 +82,28 @@ def printLogLine(p, m, t, logFileName):
         logFile.write(str(p.BTC) + ',')
         logFile.write(str(t.coinsToTrade) + '\n')
 
+def printStatus(p, m, t, statusFileName):
+    with open(statusFileName, 'w') as statusFile:
+        statusFile.write('{0:<10}'.format('Time:'))
+        statusFile.write(m.time + '\n')
+        statusFile.write('{0:<10}'.format('Price:'))
+        statusFile.write('{0:0.1f}'.format((m.bid+m.ask)/2) + '\n')
+        statusFile.write('{0:<10}'.format('EUR:'))
+        statusFile.write('{0:0.1f}'.format(p.EUR) + '\n')
+        statusFile.write('{0:<10}'.format('BTC:'))
+        statusFile.write('{0:0.3f}'.format(p.BTC) + '\n')
+        statusFile.write('{0:<10}'.format('Value:'))
+        statusFile.write('{0:0.2f}'.format(p.EUR + p.BTC * m.bid))
+
 def printTermLine(p, m, t):
-    strLog = m.time
-    strLog = strLog + ' | B: '+ '{0:>5.1f}'.format(m.bid) + ' A: '+ '{0:>5.1f}'.format(m.ask)
-    strLog = strLog + ' | EUR: ' + '{0:>6.1f}'.format(p.EUR) + ' BTC: ' + '{0:>5.3f}'.format(p.BTC)
-    strLog = strLog + ' | Bounds: ' + '{0:>5.1f}'.format(t.minPrice) + ' ' + '{0:>5.1f}'.format(t.maxPrice)
-    strLog = strLog + ' | Trade: ' + '{0:>4.1f}'.format(t.coinsToTrade) 
+    strLog = m.time + ' |'
+    strLog += ' B: '+ '{0:>5.1f}'.format(m.bid) 
+    strLog += ' A: '+ '{0:>5.1f}'.format(m.ask) + ' |'
+    strLog += ' EUR: ' + '{0:>6.1f}'.format(p.EUR)
+    strLog += ' BTC: ' + '{0:>5.3f}'.format(p.BTC) + ' |'
+    strLog += ' Bounds: ' + '{0:>5.1f}'.format(t.minPrice) 
+    strLog += '{0:>6.1f}'.format(t.maxPrice) + ' |'
+    strLog += ' Trade: ' + '{0:>4.1f}'.format(t.coinsToTrade) 
     print(strLog)
     sys.stdout.flush()
     return 0

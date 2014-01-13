@@ -12,7 +12,7 @@ import pandas as pd
 #start_time = time.time()
 
 results = []
-for walkUp in [0.15]:
+for midDistance in [0.4, 0.5, 0.6]:
     for walkDown in [0]:
         for minTrade in [0.75]:
             logFileNameBT = 'Logs/' + str(walkUp) + str(walkDown) + str(minTrade) + '.bt'
@@ -24,8 +24,8 @@ for walkUp in [0.15]:
             m = marketData('2013-12-25 22:11:00', 493.3, 495.7)
             printLogLine(p, m, t, logFileNameBT)
 
-            #for i in range(1,file_len(logFileName)):
-            for i in range(1,100):
+            for i in range(1,file_len(logFileName)):
+            #for i in range(1,100):
                 
                 t.calcBaseWeight(m)
             #    print(t.calcMomentum(m))
@@ -34,8 +34,8 @@ for walkUp in [0.15]:
 
                 t.checkTradeSize(minTrade)
 
-                if abs(t.coinsToTrade) >= minTrade:
-                    printTermLine(p, m, t)
+#                if abs(t.coinsToTrade) >= minTrade:
+#                    printTermLine(p, m, t)
                 printLogLine(p, m, t, logFileNameBT)
 
                 p.BTC = p.BTC + t.coinsToTrade
@@ -58,7 +58,7 @@ for walkUp in [0.15]:
             endValue = float(data[3]) + float(data[4]) * float(data[1])
             endRet   = (endValue/funds - 1) * 100
             print('Return: ' + str(endRet) + '%')
-            results.append([walkUp, walkDown, minTrade, endRet, sharpe])
+            results.append([midDistance, walkDown, minTrade, endRet, sharpe])
             
 
 results = np.array(results)

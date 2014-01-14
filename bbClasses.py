@@ -1,5 +1,7 @@
 from bbFunctions import *
 
+from collections import deque
+
 class portfolio:
     """ Stores portfolio with holdings in EUR and BTC """
     def __init__(self, amountEUR, amountBTC):
@@ -9,12 +11,13 @@ class portfolio:
 
 class marketData:
     """ Stores market data """
-    def __init__(self, time, bid, ask):
+    def __init__(self, time, bid, ask, priceWindow):
         self.time = time
         self.bid = bid
         self.ask = ask
-        self.mean = (bid + ask)/2
-
+        self.price = (bid + ask)/2
+        self.mean = self.price
+        self.histPrices = deque([self.price], priceWindow)
 
 class trader:
     """ Stores all self parameters """
@@ -61,13 +64,12 @@ class trader:
             self.target = y
         return self.target
 
-    def calcmomentum(self, m):
-        price = (m.bid + m.ask)/2
+    def calcMomentum(self, momFactor, m):
         try:
-            mom  = - (price/m.mean-1)
+            mom  = - (m.price/m.mean-1)
         except zerodivisionerror:
             mom  = 1
-        self.target = self.target * mom
+        self.target = self.target * (1 + momFactor * mom)
         return self.target
 
     def calcCoinsToTrade(self, m, p):

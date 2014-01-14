@@ -36,8 +36,8 @@ for tradeBuffer in [0]:
                                 priceWindow)
                             printLogLine(p, m, t, logFileNameBT)
 
-                            for i in range(1,file_len(logFileName)):
-                            #for i in range(1,1000):
+                            #for i in range(1,file_len(logFileName)):
+                            for i in range(1,200):
                                 
                                 t.calcBaseWeight(m)
                                 t.calcMomentum(momFactor, m)
@@ -89,4 +89,5 @@ results = np.array(results)
 print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
       'minTrade, Return, Sharpe')
 print(results[results[:,8].argsort()][::-1])
+drawPlot(plotFileHead, plotFileTail, m, t)
 

@@ -12,6 +12,22 @@ def cancelOrders(krakenAPI, t):
     except:
         t.error = 0    
 
+def drawPlot(plotFileHead, plotFileTail, m, t):
+    with open('Analysis/plot.html','w') as picFile:
+        with open(plotFileHead,'rt') as file1:
+            content = file1.readlines()
+            picFile.write(''.join(content))
+
+        for i in range(len(m.histPrices)):
+            picFile.write('[' + str(i) + ',')
+            picFile.write(str(m.histPrices[i]) + ',')
+            picFile.write(str(t.buys[i]) + ',')
+            picFile.write(str(t.sells[i]) + '],\n')
+
+        with open(plotFileTail,'rt') as file2:
+            content = file2.readlines()
+            picFile.write(''.join(content))
+
 def file_len(fname):
     with open(fname) as f:
         for i, l in enumerate(f):

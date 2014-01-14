@@ -22,6 +22,7 @@ class marketData:
 class trader:
     """ Stores all self parameters """
     def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer):
+        self.buys = self.sells = deque([], 100)
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
             self.tradeBuffer = tradeBuffer
@@ -89,5 +90,9 @@ class trader:
     def checkTradeSize(self, minTrade):
         if abs(self.coinsToTrade) < minTrade:
             self.coinsToTrade = 0
+            self.buys.append('null')
+            self.sells.append('null')
+        self.buys.append(self.coinsToTrade)
+        self.sells.append(self.coinsToTrade)
         return self.coinsToTrade
         

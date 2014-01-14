@@ -5,6 +5,7 @@
 #                                                                             #
 ###############################################################################
 
+from bbKeys import *
 from bbClasses import *
 from bbSettings import *
 from bbFunctions import *
@@ -22,7 +23,7 @@ while True:
     p, m = getData(krakenAPI, p, m, t)
     
     t.calcBaseWeight(m)
-    t.calcMomentum(m)
+    t.calcMomentum(momFactor, m)
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(minTrade)
     

@@ -95,14 +95,14 @@ def printStatus(p, m, t, statusFileName):
     with open(statusFileName, 'w') as statusFile:
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write(m.time + '\n')
-        statusFile.write('{0:<10}'.format('Price:'))
-        statusFile.write('{0:0.1f}'.format((m.bid+m.ask)/2) + '\n')
-        statusFile.write('{0:<10}'.format('EUR:'))
-        statusFile.write('{0:0.1f}'.format(p.EUR) + '\n')
-        statusFile.write('{0:<10}'.format('BTC:'))
-        statusFile.write('{0:0.3f}'.format(p.BTC) + '\n')
         statusFile.write('{0:<10}'.format('Value:'))
-        statusFile.write('{0:0.2f}'.format(p.EUR + p.BTC * m.bid))
+        statusFile.write('{0:>7.7f}'.format(p.EUR + p.BTC * m.bid) + '\n')
+        statusFile.write('{0:<10}'.format('Price:'))
+        statusFile.write('{0:>6.1f}'.format((m.bid+m.ask)/2) + '\n')
+        statusFile.write('{0:<10}'.format('EUR:'))
+        statusFile.write('{0:>6.1f}'.format(p.EUR) + '\n')
+        statusFile.write('{0:<10}'.format('BTC:'))
+        statusFile.write('{0:>6.1f}'.format(p.BTC) + '\n')
 
 def printTermLine(p, m, t):
     strLog = m.time + ' |'

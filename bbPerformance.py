@@ -1,8 +1,13 @@
 import pandas as pd
+from math import isnan
 import sys
 
-def showPerformance(df, date):
-    w = pd.read_csv(transferFile, parse_dates=[0], index_col=0)
+def showPerformance(df, date, transfers=None):
+    if transfers != None:
+        w = pd.read_csv(transferFile, parse_dates=[0], index_col=0)
+    else:
+        w = []
+        
     if date != 'all':
         df = df[date]
         try:
@@ -31,18 +36,19 @@ def showPerformance(df, date):
     buyAmounts  = df[buys].Trade * df[buys].Ask
     buyTotal    = df[buys].sum()['Trade']
     avgBuyPrice = buyAmounts.sum() / buyTotal
-    
-    sys.stdout.write(date)
-    if len(date) < 10:
-        sys.stdout.write('\t')
-    sys.stdout.write('\t' + str(round(buyTotal,3)))
-    sys.stdout.write('\t' + str(round(avgBuyPrice,1)))
-    sys.stdout.write('\t\t' + str(round(-sellTotal,3)))
-    sys.stdout.write('\t' + str(round(avgSellPrice,1)))
-    sys.stdout.write('\t\t' + str(round(100*retStrategy,1)) + '%')
-    sys.stdout.write('\t' + str(round(100*retHold,1)) + '%\n')
-    
+    if isnan(avgBuyPrice):
+        avgBuyPrice = 0
+    if isnan(avgSellPrice):
+        avgSellPrice = 0
 
+    sys.stdout.write('{0:<10}'.format(date))
+    sys.stdout.write('{0:>8.1f}'.format(float(buyTotal)))
+    sys.stdout.write('{0:>8.1f}'.format(float(avgBuyPrice)))
+    sys.stdout.write('{0:>8.1f}'.format(float(-sellTotal)))
+    sys.stdout.write('{0:>8.1f}'.format(float(avgSellPrice)))
+    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retStrategy))) + '%')
+    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retHold)) + '%\n'))
+    
     return [buyTotal, avgBuyPrice, sellTotal, avgSellPrice]
 
 def makePerformanceTable(logFile):
@@ -52,7 +58,14 @@ def makePerformanceTable(logFile):
     for d in range(len(dates)):
         if str(dates[d])[0:10] not in uniqueDates:
             uniqueDates.append(str(dates[d])[0:10])
-    print 'Date \t\tBought \tBuy Price \tSold \tSell Price \tReturn \tBuy&Hold' 
+    sys.stdout.write('{0:<10}'.format('Date'))
+    sys.stdout.write('{0:>8}'.format('Bought'))
+    sys.stdout.write('{0:>8}'.format('Ask'))
+    sys.stdout.write('{0:>8}'.format('Sold'))
+    sys.stdout.write('{0:>8}'.format('Bid'))
+    sys.stdout.write('{0:>9}'.format('Strategy'))
+    sys.stdout.write('{0:>9}'.format('Buy&Hold'))
+    print()
     showPerformance(history, 'all')
     for d in uniqueDates:
         showPerformance(history, d)

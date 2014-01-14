@@ -1,9 +1,9 @@
-##############################################################################
-#                                                                            #
-#   bitbot trader                                Philipp Deutsch             #
-#                                                                            #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#   bitbot trader                                Philipp Deutsch              #
+#                                                                             #
+#                                                                             #
+###############################################################################
 
 from bbClasses import *
 from bbSettings import *
@@ -15,15 +15,14 @@ import re
 
 t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)
 p         = portfolio(0,0)
-m         = marketData('Null', 0, 0)
+m         = marketData('Null', 0, 0, priceWindow)
 krakenAPI = krakenex.API(key, secret)
 
-run = 1
-while run:
+while True:
     p, m = getData(krakenAPI, p, m, t)
     
     t.calcBaseWeight(m)
-#   t.calcMomentum(m)
+    t.calcMomentum(m)
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(minTrade)
     
@@ -35,5 +34,4 @@ while run:
     printTermLine(p, m, t)
     printLogLine(p, m, t, logFileName)
 
-#   run = 0
     time.sleep(delay)

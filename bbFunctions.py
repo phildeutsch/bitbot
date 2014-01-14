@@ -42,6 +42,9 @@ def getData(krakenAPI, p, m, t):
         p.EUR  = float(balance['ZEUR'])
         p.BTC  = float(balance['XXBT'])
         p.weight = p.EUR / (p.EUR + p.BTC * m.bid)
+        m.price = (m.bid+m.ask)/2
+        m.histPrices.append(m.price)
+        m.mean = sum(m.histPrices)/len(m.histPrices)
     except:
         t.error = 0
 
@@ -52,6 +55,9 @@ def getDataBacktest(logFile, m, p, i):
     m.time = data[0]
     m.bid = float(data[1])
     m.ask = float(data[2])
+    m.price = (m.bid+m.ask)/2
+    m.histPrices.append(m.price)
+    m.mean = sum(m.histPrices)/len(m.histPrices)
 
     p.weight = p.EUR / (p.EUR + p.BTC * m.bid)
 

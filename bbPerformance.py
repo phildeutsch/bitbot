@@ -4,7 +4,7 @@ import sys
 
 def showPerformance(df, date, transfers=None):
     if transfers != None:
-        w = pd.read_csv(transferFile, parse_dates=[0], index_col=0)
+        w = pd.read_csv(transfers, parse_dates=[0], index_col=0)
     else:
         w = []
         
@@ -51,7 +51,7 @@ def showPerformance(df, date, transfers=None):
     
     return [buyTotal, avgBuyPrice, sellTotal, avgSellPrice]
 
-def makePerformanceTable(logFile):
+def makePerformanceTable(logFile, transfers=None):
     history = pd.read_csv(logFile, parse_dates=[0], index_col=0)
     dates=history.index.values
     uniqueDates = []
@@ -66,16 +66,12 @@ def makePerformanceTable(logFile):
     sys.stdout.write('{0:>9}'.format('Strategy'))
     sys.stdout.write('{0:>9}'.format('Buy&Hold'))
     print()
-    showPerformance(history, 'all')
+    showPerformance(history, 'all', transfers)
     for d in uniqueDates:
-        showPerformance(history, d)
+        showPerformance(history, d, transfers)
 
 def getTotalPerformance(logFile):
     df = pd.read_csv(logFile, parse_dates=[0], index_col=0)
     startValue = float(df[:1]['EUR'] + df[:1]['BTC'] * df[:1]['Bid'])
     endValue   = float(df.tail(1)['EUR'] + df.tail(1)['BTC'] * df.tail(1)['Bid'])
     return endValue / startValue - 1
-
-    
-  
-

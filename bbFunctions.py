@@ -3,11 +3,14 @@ import time
 import sys
 import re
 
-def cancelOrders(krakenAPI):
-    openOrders = krakenAPI.query_private('OpenOrders')['result']
-    if openOrders['open'] != {}:
-        for transaction in openOrders['open'].keys():
-            krakenAPI.query_private('CancelOrder', {'txid':transaction})
+def cancelOrders(krakenAPI, t):
+    try:
+        openOrders = krakenAPI.query_private('OpenOrders')['result']
+        if openOrders['open'] != {}:
+            for transaction in openOrders['open'].keys():
+                krakenAPI.query_private('CancelOrder', {'txid':transaction})
+    except:
+        t.error = 0    
 
 def file_len(fname):
     with open(fname) as f:
@@ -29,15 +32,18 @@ def getBounds(logFileName, walkUp, walkDown):
             maxPrice = minPrice * (1 + walkUp)
     return minPrice, maxPrice
 
-def getData(krakenAPI, p, m):
-    m.time   = krakenAPI.query_public('Time')['result']['rfc1123'][5:20]
-    tickData = krakenAPI.query_public('Ticker', {'pair' : 'XXBTZEUR'})
-    balance  = krakenAPI.query_private('Balance')['result']
-    m.bid = float(tickData['result']['XXBTZEUR']['b'][0])
-    m.ask = float(tickData['result']['XXBTZEUR']['a'][0])
-    p.EUR  = float(balance['ZEUR'])
-    p.BTC  = float(balance['XXBT'])
-    p.weight = p.EUR / (p.EUR + p.BTC * m.bid)
+def getData(krakenAPI, p, m, t):
+    try:
+        m.time   = krakenAPI.query_public('Time')['result']['rfc1123'][5:20]
+        tickData = krakenAPI.query_public('Ticker', {'pair' : 'XXBTZEUR'})
+        balance  = krakenAPI.query_private('Balance')['result']
+        m.bid = float(tickData['result']['XXBTZEUR']['b'][0])
+        m.ask = float(tickData['result']['XXBTZEUR']['a'][0])
+        p.EUR  = float(balance['ZEUR'])
+        p.BTC  = float(balance['XXBT'])
+        p.weight = p.EUR / (p.EUR + p.BTC * m.bid)
+    except:
+        t.error = 0
 
     return p, m
 
@@ -52,25 +58,28 @@ def getDataBacktest(logFile, m, p, i):
     return m, p
 
 def placeOrder(krakenAPI, m, t):
-    if t.coinsToTrade < 0:
-        trade = krakenAPI.query_private('AddOrder', {
-            'pair' : 'XXBTZEUR',
-            'type' : 'sell', 
-            'ordertype' : 'limit',
-            'price' : m.ask, 
-            'volume' : -t.coinsToTrade
-        })
-        t.error = 0
-    else:
-        trade = krakenAPI.query_private('AddOrder', {
-            'pair' : 'XXBTZEUR',
-            'type' : 'buy',
-            'ordertype' : 'limit',
-            'price' : m.bid,
-            'volume' : t.coinsToTrade
-         })
-        t.error = 0
-    if trade['error'] != []:
+    try:
+        if t.coinsToTrade < 0:
+            trade = krakenAPI.query_private('AddOrder', {
+                'pair' : 'XXBTZEUR',
+                'type' : 'sell', 
+                'ordertype' : 'limit',
+                'price' : m.ask, 
+                'volume' : -t.coinsToTrade
+            })
+            t.error = 0
+        else:
+            trade = krakenAPI.query_private('AddOrder', {
+                'pair' : 'XXBTZEUR',
+                'type' : 'buy',
+                'ordertype' : 'limit',
+                'price' : m.bid,
+                'volume' : t.coinsToTrade
+             })
+            t.error = 0
+        if trade['error'] != []:
+            t.error = 1
+    except:
         t.error = 1
 
 def printLogLine(p, m, t, logFileName):

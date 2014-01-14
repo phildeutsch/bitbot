@@ -20,14 +20,14 @@ krakenAPI = krakenex.API(key, secret)
 
 run = 1
 while run:
-    p, m = getData(krakenAPI, p, m)
+    p, m = getData(krakenAPI, p, m, t)
     
     t.calcBaseWeight(m)
 #   t.calcMomentum(m)
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(minTrade)
     
-    cancelOrders(krakenAPI)    
+    cancelOrders(krakenAPI, t)    
         
     placeOrder(krakenAPI, m, t)
 

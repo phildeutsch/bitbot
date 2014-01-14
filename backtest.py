@@ -23,18 +23,21 @@ for tradeBuffer in [0]:
                             logFileNameBT += str(midDistance)
                             logFileNameBT += str(walkUp)
                             logFileNameBT += str(walkDown)
-                            logFileNameBT += str(minTrade) + '.bt'
+                            logFileNameBT += str(minTrade) + '.csv'
                             
                             with open(logFileNameBT, 'w') as logBT:
                                 logBT.write('Time,Bid,Ask,EUR,BTC,Trade\n')
 
-                            t = trader(logFileNameBT, walkUp, walkDown, midDistance, tradeBuffer)
+                            t = trader(logFileNameBT, walkUp, walkDown,
+                                    midDistance, tradeBuffer)
                             p = portfolio(funds, 0)
-                            m = marketData('2013-12-25 22:11:00', 493.3, 495.7, priceWindow)
+                            m = marketData(
+                                '2013-12-25 22:11:00', 493.3, 495.7,
+                                priceWindow)
                             printLogLine(p, m, t, logFileNameBT)
 
-                            #for i in range(1,file_len(logFileName)):
-                            for i in range(1,1000):
+                            for i in range(1,file_len(logFileName)):
+                            #for i in range(1,1000):
                                 
                                 t.calcBaseWeight(m)
                                 t.calcMomentum(momFactor, m)
@@ -53,18 +56,22 @@ for tradeBuffer in [0]:
                                     p.EUR = p.EUR - t.coinsToTrade * m.bid
 
                                 m, p = getDataBacktest(logFileName, m, p, i)
-                                t = trader(logFileNameBT, walkUp, walkDown, midDistance, tradeBuffer)
+                                t = trader(logFileNameBT, walkUp, walkDown,
+                                        midDistance, tradeBuffer)
                           
                             data = pd.read_csv(logFileNameBT)
-                            data['Value'] = data['EUR'] + data['BTC'] * data['Bid']
+                            data['Value'] = (data['EUR'] +
+                                             data['BTC'] * data['Bid'])
                             r = np.mean(data['Value'].pct_change())
                             s = np.std(data['Value'].pct_change())
                             sharpe = r/s * 100
                             
                             data = re.split(',',
-                                        linecache.getline(logFileNameBT, file_len(logFileNameBT)))
+                                    linecache.getline(logFileNameBT,
+                                    file_len(logFileNameBT)))
 
-                            endValue = float(data[3]) + float(data[4]) * float(data[1])
+                            endValue = (float(data[3]) +
+                                        float(data[4]) * float(data[1]))
                             endRet   = (endValue/funds - 1) * 100
                             #print('Return: ' + str(endRet) + '%')
                             results.append([tradeBuffer,
@@ -79,6 +86,7 @@ for tradeBuffer in [0]:
                             #os.remove(logFileNameBT)      
 
 results = np.array(results)
-print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown, minTrade, Return, Sharpe')
+print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
+      'minTrade, Return, Sharpe')
 print(results[results[:,8].argsort()][::-1])
 

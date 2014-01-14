@@ -23,8 +23,6 @@ def showPerformance(df, date, transfers=None):
 
     btcHold   = float(startValue / df[:1]['Ask'])
     endHold   = float(btcHold * df.tail(1)['Bid'])
-    if len(w) != 0:
-        endHold   = endHold + float(w.sum()['Amount'] * w.sum()['Bid'])
     retHold   = endHold / startValue - 1 
 
     buys    = df['Trade'].map(lambda x: x > 0.01)

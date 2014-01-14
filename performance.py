@@ -9,4 +9,4 @@ logFileNameBT += str(walkUp)
 logFileNameBT += str(walkDown)
 logFileNameBT += str(minTrade) + '.csv'
                             
-makePerformanceTable(logFileName)
+makePerformanceTable(logFileName, transferFile)

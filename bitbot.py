@@ -34,6 +34,6 @@ while True:
     printTermLine(p, m, t)
     printLogLine(p, m, t, logFileName)
 
-    t = trader(logFileNameBT, walkUp, walkDown, midDistance, tradeBuffer)
+    t = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)
 
     time.sleep(delay)

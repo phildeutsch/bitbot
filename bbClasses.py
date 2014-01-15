@@ -20,27 +20,24 @@ class marketData:
         self.histPrices = deque([self.price], priceWindow)
 
 class trader:
-    """ Stores all self parameters """
-    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer):
-        self.buys = self.sells = deque([], 100)
+    """ Stores all trade parameters """
+    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer,
+                 priceWindow):
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
-            self.tradeBuffer = tradeBuffer
-            self.midDistance = midDistance
-            self.walkUp = walkUp
-            self.walkDown = walkDown
-            self.midPrice = self.minPrice + \
-                self.midDistance * (self.maxPrice - self.minPrice)
         except IndexError:
             self.maxPrice = 0
-            self.tradeBuffer = tradeBuffer
-            self.midDistance = midDistance
-            self.walkUp = walkUp
-            self.walkDown = walkDown
             self.minPrice = 0
-            self.midPrice = 0
-            self.coinsToTrade = 0
-            self.target = 0
+        self.tradeBuffer = tradeBuffer
+        self.midDistance = midDistance
+        self.walkUp = walkUp
+        self.walkDown = walkDown
+        self.midPrice = self.minPrice + \
+            self.midDistance * (self.maxPrice - self.minPrice)
+        self.buys  = deque([], priceWindow)
+        self.sells = deque([], priceWindow)
+        self.coinsToTrade = 0
+        self.target = 0
 
     def calcBaseWeight(self, marketData):
         tb = self.tradeBuffer
@@ -92,7 +89,12 @@ class trader:
             self.coinsToTrade = 0
             self.buys.append('null')
             self.sells.append('null')
-        self.buys.append(self.coinsToTrade)
-        self.sells.append(self.coinsToTrade)
+        elif self.coinsToTrade > minTrade:
+            self.buys.append(self.coinsToTrade)
+            self.sells.append('null')
+            print(self.buys)
+        elif self.coinsToTrade < -minTrade:
+            self.buys.append('null')
+            self.sells.append(-self.coinsToTrade)
         return self.coinsToTrade
         

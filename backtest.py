@@ -29,12 +29,12 @@ for tradeBuffer in [0]:
                                 logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minTrade,maxTrade\n')
 
                             t = trader(logFileNameBT, walkUp, walkDown,
-                                    midDistance, tradeBuffer)
+                                    midDistance, tradeBuffer, priceWindow)
                             p = portfolio(funds, 0)
                             m = marketData('Null', 0, 0, priceWindow)
 
-                            for i in range(1,file_len(logFileName)):
-                            #for i in range(1,200):
+                            #for i in range(1,file_len(logFileName)):
+                            for i in range(1,200):
                                 m, p = getDataBacktest(logFileName, m, p, i)
                                 
                                 t.calcBaseWeight(m)
@@ -54,7 +54,7 @@ for tradeBuffer in [0]:
                                     p.EUR = p.EUR - t.coinsToTrade * m.bid
 
                                 t = trader(logFileNameBT, walkUp, walkDown,
-                                        midDistance, tradeBuffer)
+                                        midDistance, tradeBuffer, priceWindow)
                           
                             data = pd.read_csv(logFileNameBT)
                             data['Value'] = (data['EUR'] +
@@ -63,12 +63,12 @@ for tradeBuffer in [0]:
                             s = np.std(data['Value'].pct_change())
                             sharpe = r/s * 100
                             
-                            data = re.split(',',
+                            lastline = re.split(',',
                                     linecache.getline(logFileNameBT,
                                     file_len(logFileNameBT)))
 
-                            endValue = (float(data[3]) +
-                                        float(data[4]) * float(data[1]))
+                            endValue = (float(lastline[3]) +
+                                        float(lastline[4]) * float(lastline[1]))
                             endRet   = (endValue/funds - 1) * 100
                             #print('Return: ' + str(endRet) + '%')
                             results.append([tradeBuffer,
@@ -86,5 +86,5 @@ results = np.array(results)
 print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
       'minTrade, Return, Sharpe')
 print(results[results[:,8].argsort()][::-1])
-#drawPlot(plotFileHead, plotFileTail, m, t)
+drawPlot(plotFileHead, plotFileTail, m, t)
 

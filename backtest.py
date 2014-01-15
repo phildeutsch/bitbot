@@ -26,28 +26,26 @@ for tradeBuffer in [0]:
                             logFileNameBT += str(minTrade) + '.csv'
                             
                             with open(logFileNameBT, 'w') as logBT:
-                                logBT.write('Time,Bid,Ask,EUR,BTC,Trade\n')
+                                logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minTrade,maxTrade\n')
 
                             t = trader(logFileNameBT, walkUp, walkDown,
                                     midDistance, tradeBuffer)
                             p = portfolio(funds, 0)
-                            m = marketData(
-                                '2013-12-25 22:11:00', 493.3, 495.7,
-                                priceWindow)
-                            printLogLine(p, m, t, logFileNameBT)
+                            m = marketData('Null', 0, 0, priceWindow)
 
                             for i in range(1,file_len(logFileName)):
                             #for i in range(1,200):
+                                m, p = getDataBacktest(logFileName, m, p, i)
                                 
                                 t.calcBaseWeight(m)
                                 t.calcMomentum(momFactor, m)
                                 t.calcCoinsToTrade(m, p)
                                 t.checkTradeSize(minTrade)
 
-                                #if abs(t.coinsToTrade) >= minTrade:
-                                #    printTermLine(p, m, t)
+                                if abs(t.coinsToTrade) >= minTrade:
+                                    printTermLine(p, m, t)
 
-                                printLogLine(p, m, t, logFileNameBT)
+                                printLogLine(p, m, t, logFileNameBT, 1)
 
                                 p.BTC = p.BTC + t.coinsToTrade
                                 if t.coinsToTrade > 0:
@@ -55,7 +53,6 @@ for tradeBuffer in [0]:
                                 elif t.coinsToTrade < 0:
                                     p.EUR = p.EUR - t.coinsToTrade * m.bid
 
-                                m, p = getDataBacktest(logFileName, m, p, i)
                                 t = trader(logFileNameBT, walkUp, walkDown,
                                         midDistance, tradeBuffer)
                           

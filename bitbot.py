@@ -15,7 +15,7 @@ import sys
 import re
 
 t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)
-p         = portfolio(0,0)
+p         = portfolio(funds,0)
 m         = marketData('Null', 0, 0, priceWindow)
 krakenAPI = krakenex.API(key, secret)
 
@@ -28,11 +28,12 @@ while True:
     t.checkTradeSize(minTrade)
     
     cancelOrders(krakenAPI, t)    
-        
     placeOrder(krakenAPI, m, t)
 
     printStatus(p, m, t, statusFileName)
     printTermLine(p, m, t)
     printLogLine(p, m, t, logFileName)
+
+    t = trader(logFileNameBT, walkUp, walkDown, midDistance, tradeBuffer)
 
     time.sleep(delay)

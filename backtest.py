@@ -8,7 +8,7 @@ from collections import deque
 
 import numpy as np
 import pandas as pd
-
+logFileName='Logs/dl_history.csv'
 results = []
 for tradeBuffer in [0]:
     for priceWindow in [100]:
@@ -33,14 +33,14 @@ for tradeBuffer in [0]:
                             p = portfolio(funds, 0)
                             m = marketData('Null', 0, 0, priceWindow)
 
-                            #for i in range(1,file_len(logFileName)):
-                            for i in range(1,200):
+                            for i in range(1,file_len(logFileName)):
+                            #for i in range(1,200):
                                 m, p = getDataBacktest(logFileName, m, p, i)
                                 
                                 t.calcBaseWeight(m)
                                 t.calcMomentum(momFactor, m)
                                 t.calcCoinsToTrade(m, p)
-                                t.checkTradeSize(minTrade)
+                                t.checkTradeSize(m, p, minTrade)
 
                                 if abs(t.coinsToTrade) >= minTrade:
                                     printTermLine(p, m, t)
@@ -86,5 +86,5 @@ results = np.array(results)
 print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
       'minTrade, Return, Sharpe')
 print(results[results[:,8].argsort()][::-1])
-drawPlot(plotFileHead, plotFileTail, m, t)
+#drawPlot(plotFileHead, plotFileTail, m, t)
 

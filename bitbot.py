@@ -25,7 +25,7 @@ while True:
     t.calcBaseWeight(m)
     t.calcMomentum(momFactor, m)
     t.calcCoinsToTrade(m, p)
-    t.checkTradeSize(minTrade)
+    t.checkTradeSize(m, p, minTrade)
     
     cancelOrders(krakenAPI, t)    
     placeOrder(krakenAPI, m, t)

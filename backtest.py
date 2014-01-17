@@ -9,6 +9,7 @@ from collections import deque
 import numpy as np
 import pandas as pd
 #logFileName='Logs/dl_history.csv'
+funds = 100
 results = []
 for tradeBuffer in [0]:
     for priceWindow in [100]:
@@ -16,14 +17,14 @@ for tradeBuffer in [0]:
             for midDistance in [0.5]:
                 for walkUp in [0.15]:
                     for walkDown in [0]:
-                        for minTrade in [minTrade]:
+                        for tradeFactor in [tradeFactor]:
                             logFileNameBT  = 'Logs/' + str(tradeBuffer)
                             logFileNameBT += str(priceWindow)
                             logFileNameBT += str(momFactor)
                             logFileNameBT += str(midDistance)
                             logFileNameBT += str(walkUp)
                             logFileNameBT += str(walkDown)
-                            logFileNameBT += str(minTrade) + '.csv'
+                            logFileNameBT += str(tradeFactor) + '.csv'
                             
                             with open(logFileNameBT, 'w') as logBT:
                                 logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minTrade,maxTrade\n')
@@ -40,9 +41,9 @@ for tradeBuffer in [0]:
                                 t.calcBaseWeight(m)
                                 t.calcMomentum(momFactor, m)
                                 t.calcCoinsToTrade(m, p)
-                                t.checkTradeSize(m, p, minTrade)
+                                t.checkTradeSize(m, p, tradeFactor)
 
-                                if abs(t.coinsToTrade) >= minTrade:
+                                if abs(t.coinsToTrade) > 0:
                                     printTermLine(p, m, t)
 
                                 printLogLine(p, m, t, logFileNameBT, bounds = 1)
@@ -77,14 +78,14 @@ for tradeBuffer in [0]:
                                             midDistance,
                                             walkUp,
                                             walkDown,
-                                            minTrade,
+                                            tradeFactor,
                                             round(endRet,2),
                                             round(sharpe,2)])
                             #os.remove(logFileNameBT)      
 
 results = np.array(results)
 print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
-      'minTrade, Return, Sharpe')
+      'tradeFactor, Return, Sharpe')
 print(results[results[:,8].argsort()][::-1])
 #drawPlot(plotFileHead, plotFileTail, m, t)
 

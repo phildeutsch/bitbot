@@ -8,6 +8,7 @@ class portfolio:
         self.EUR = amountEUR
         self.BTC = amountBTC
         self.weight = 1
+        self.value = 0
 
 class marketData:
     """ Stores market data """
@@ -88,7 +89,8 @@ class trader:
         self.coinsToTrade = N/D
         return self.coinsToTrade
 
-    def checkTradeSize(self, m, p, minTrade):
+    def checkTradeSize(self, m, p, tradeFactor):
+        minTrade = tradeFactor * p.value
         if self.coinsToTrade < -p.BTC:
                 self.coinsToTrade = -p.BTC
         if self.coinsToTrade > p.EUR / m.ask:
@@ -97,6 +99,7 @@ class trader:
             self.coinsToTrade = 0
             self.buys.append('null')
             self.sells.append('null')
+            return 0
         elif self.coinsToTrade > minTrade:
             self.buys.append(self.coinsToTrade)
             self.sells.append('null')

@@ -1,8 +1,7 @@
 delay          = 600.0
-funds          = 2000
 walkUp         = 0.15
 walkDown       = 0
-minTrade       = 0.7 * funds / 1500
+tradeFactor    = 0.0005
 midDistance    = 0.5
 momFactor      = 0.75
 priceWindow    = 100

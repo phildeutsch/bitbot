@@ -57,7 +57,8 @@ def getData(krakenAPI, p, m, t):
         m.ask = float(tickData['result']['XXBTZEUR']['a'][0])
         p.EUR  = float(balance['ZEUR'])
         p.BTC  = float(balance['XXBT'])
-        p.weight = p.EUR / (p.EUR + p.BTC * m.bid)
+        p.value = p.EUR + p.BTC * m.bid
+        p.weight = p.EUR / p.value
         m.price = (m.bid+m.ask)/2
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)

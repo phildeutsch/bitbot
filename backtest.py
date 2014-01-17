@@ -8,7 +8,7 @@ from collections import deque
 
 import numpy as np
 import pandas as pd
-logFileName='Logs/dl_history.csv'
+#logFileName='Logs/dl_history.csv'
 results = []
 for tradeBuffer in [0]:
     for priceWindow in [100]:
@@ -16,7 +16,7 @@ for tradeBuffer in [0]:
             for midDistance in [0.5]:
                 for walkUp in [0.15]:
                     for walkDown in [0]:
-                        for minTrade in [0.75]:
+                        for minTrade in [minTrade]:
                             logFileNameBT  = 'Logs/' + str(tradeBuffer)
                             logFileNameBT += str(priceWindow)
                             logFileNameBT += str(momFactor)
@@ -45,7 +45,7 @@ for tradeBuffer in [0]:
                                 if abs(t.coinsToTrade) >= minTrade:
                                     printTermLine(p, m, t)
 
-                                printLogLine(p, m, t, logFileNameBT, 1)
+                                printLogLine(p, m, t, logFileNameBT, bounds = 1)
 
                                 p.BTC = p.BTC + t.coinsToTrade
                                 if t.coinsToTrade > 0:

@@ -132,11 +132,11 @@ def printStatus(p, m, t, statusFileName):
 
 def printTermLine(p, m, t):
     strLog = '{0:<10}'.format(m.time) + ' |'
-    strLog += ' B: '+ '{0:>7.1f}'.format(m.bid) 
-    strLog += ' A: '+ '{0:>7.1f}'.format(m.ask) + ' |'
-    strLog += ' EUR: ' + '{0:>6.1f}'.format(p.EUR)
-    strLog += ' BTC: ' + '{0:>7.3f}'.format(p.BTC) + ' |'
-    strLog += ' Bounds: ' + '{0:>6.1f}'.format(t.minPrice) 
+    strLog += ' B:'+ '{0:>7.1f}'.format(m.bid) 
+    strLog += ' A:'+ '{0:>7.1f}'.format(m.ask) + ' |'
+    strLog += ' EUR:' + '{0:>6.1f}'.format(p.EUR)
+    strLog += ' BTC:' + '{0:>7.3f}'.format(p.BTC) + ' |'
+    strLog += ' Bounds:' + '{0:>6.1f}'.format(t.minPrice) 
     strLog += '{0:>7.1f}'.format(t.maxPrice) + ' |'
     strLog += ' Trade: ' + '{0:>6.1f}'.format(t.coinsToTrade) 
     print(strLog)

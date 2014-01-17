@@ -38,6 +38,7 @@ class trader:
         self.sells = deque([], priceWindow)
         self.coinsToTrade = 0
         self.target = 0
+        self.tradePrice = 1
 
     def calcBaseWeight(self, marketData):
         tb = self.tradeBuffer
@@ -46,6 +47,9 @@ class trader:
         maxPrice = self.maxPrice
         midPrice = self.midPrice
         p = (marketData.bid + marketData.ask)/2
+        if minPrice == midPrice or midPrice == maxPrice:
+            self.target = 1
+            return self.target
         if marketData.bid < self.minPrice:
             self.target = tb
         elif marketData.ask > self.maxPrice:
@@ -84,7 +88,11 @@ class trader:
         self.coinsToTrade = N/D
         return self.coinsToTrade
 
-    def checkTradeSize(self, minTrade):
+    def checkTradeSize(self, m, p, minTrade):
+        if self.coinsToTrade < -p.BTC:
+                self.coinsToTrade = -p.BTC
+        if self.coinsToTrade > p.EUR / m.ask:
+                self.coinsToTrade = p.EUR / m.ask
         if abs(self.coinsToTrade) < minTrade:
             self.coinsToTrade = 0
             self.buys.append('null')
@@ -92,7 +100,6 @@ class trader:
         elif self.coinsToTrade > minTrade:
             self.buys.append(self.coinsToTrade)
             self.sells.append('null')
-            print(self.buys)
         elif self.coinsToTrade < -minTrade:
             self.buys.append('null')
             self.sells.append(-self.coinsToTrade)

@@ -1,5 +1,5 @@
 from bbFunctions import *
-
+from bbSettings import *
 from collections import deque
 
 class portfolio:
@@ -22,6 +22,9 @@ class marketData:
 
 class trader:
     """ Stores all trade parameters """
+    buys  = deque([], priceWindow)
+    sells = deque([], priceWindow)
+    
     def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer,
                  priceWindow):
         try:
@@ -35,8 +38,6 @@ class trader:
         self.walkDown = walkDown
         self.midPrice = self.minPrice + \
             self.midDistance * (self.maxPrice - self.minPrice)
-        self.buys  = deque([], priceWindow)
-        self.sells = deque([], priceWindow)
         self.coinsToTrade = 0
         self.target = 0
         self.tradePrice = 1
@@ -101,10 +102,10 @@ class trader:
             self.sells.append('null')
             return 0
         elif self.coinsToTrade > minTrade:
-            self.buys.append(self.coinsToTrade)
+            self.buys.append(m.bid)
             self.sells.append('null')
         elif self.coinsToTrade < -minTrade:
             self.buys.append('null')
-            self.sells.append(-self.coinsToTrade)
-        return self.coinsToTrade
+            self.sells.append(m.ask)
+        return self
         

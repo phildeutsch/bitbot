@@ -18,7 +18,8 @@ def showPerformance(df, date, transfers=None):
     startValue = float(df[:1]['EUR'] + df[:1]['BTC'] * df[:1]['Bid'])
     endValue   = float(df.tail(1)['EUR'] + df.tail(1)['BTC'] * df.tail(1)['Bid'])
     if len(w) != 0:
-        endValue   = endValue + float(w.sum()['Amount'] * w.sum()['Bid'])
+        w['EUR']=w['Amount']*w['Bid']
+        endValue   = endValue - float(w.sum()['EUR'])
     retStrategy= endValue / startValue - 1
 
     btcHold   = float(startValue / df[:1]['Ask'])

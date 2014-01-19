@@ -75,7 +75,7 @@ def getDataBacktest(logFile, m, p, i):
     m.price = (m.bid+m.ask)/2
     m.histPrices.append(m.price)
     m.mean = sum(m.histPrices)/len(m.histPrices)
-
+    p.value = p.EUR + p.BTC * m.bid
     p.weight = p.EUR / (p.EUR + p.BTC * m.bid)
 
     return m, p

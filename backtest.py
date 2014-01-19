@@ -9,7 +9,7 @@ from collections import deque
 import numpy as np
 import pandas as pd
 #logFileName='Logs/dl_history.csv'
-funds = 100
+funds = 1000
 results = []
 for tradeBuffer in [0]:
     for priceWindow in [100]:

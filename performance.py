@@ -7,6 +7,7 @@ logFileNameBT += str(momFactor)
 logFileNameBT += str(midDistance)
 logFileNameBT += str(walkUp)
 logFileNameBT += str(walkDown)
-logFileNameBT += str(minTrade) + '.csv'
+logFileNameBT += str(tradeFactor) + '.csv'
                             
-makePerformanceTable(logFileName, transferFile)
+#makePerformanceTable(logFileName, transferFile)
+makePerformanceTable(logFileNameBT)

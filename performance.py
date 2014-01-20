@@ -9,5 +9,5 @@ logFileNameBT += str(walkUp)
 logFileNameBT += str(walkDown)
 logFileNameBT += str(tradeFactor) + '.csv'
                             
-#makePerformanceTable(logFileName, transferFile)
-makePerformanceTable(logFileNameBT)
+makePerformanceTable(logFileName, transferFile)
+#makePerformanceTable(logFileNameBT)

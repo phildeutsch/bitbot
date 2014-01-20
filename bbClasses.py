@@ -108,4 +108,3 @@ class trader:
             self.buys.append('null')
             self.sells.append(m.ask)
         return self
-        

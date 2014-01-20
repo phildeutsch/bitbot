@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from math import isnan
 import sys
 
@@ -50,8 +51,16 @@ def showPerformance(df, date, transfers=None):
     
     return [buyTotal, avgBuyPrice, sellTotal, avgSellPrice]
 
-def makePerformanceTable(logFile, transfers=None):
+def makePerformanceTable(logFile, start=None, end=None, transfers=None):
     history = pd.read_csv(logFile, parse_dates=[0], index_col=0)
+    if start is None:
+        npstart = None
+    else:
+        npstart = np.datetime64(start)
+    if end is None:
+        npend = None
+    else: npend = np.datetime64(end)
+    history = history[npstart:npend]
     dates=history.index.values
     uniqueDates = []
     for d in range(len(dates)):

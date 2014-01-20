@@ -9,5 +9,5 @@ logFileNameBT += str(walkUp)
 logFileNameBT += str(walkDown)
 logFileNameBT += str(tradeFactor) + '.csv'
                             
-makePerformanceTable(logFileName, None, '2013-12-31')
+makePerformanceTable(logFileName, '2014-01-10', None, transferFile)
 #makePerformanceTable(logFileNameBT)

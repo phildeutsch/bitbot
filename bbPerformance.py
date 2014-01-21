@@ -3,25 +3,24 @@ import numpy as np
 from math import isnan
 import sys
 
-def showPerformance(df, tdf=[], date='Total'):
+def showPerformance(df, bt, tdf=[], date='Total'):
     if date != 'Total':
         df = df[date]
+        bt = bt[date]
         try:
             tdf = tdf[date]
         except:
             tdf = []
 
     startValue = float(df[:1]['EUR'] + df[:1]['BTC'] * df[:1]['Bid'])
+    startValBT = float(bt[:1]['EUR'] + bt[:1]['BTC'] * bt[:1]['Bid'])
     endValue   = float(df.tail(1)['EUR'] + df.tail(1)['BTC'] * df.tail(1)['Bid'])
+    endValBT   = float(bt.tail(1)['EUR'] + bt.tail(1)['BTC'] * bt.tail(1)['Bid'])
     if len(tdf) != 0:
         tdf['EUR']=tdf['Amount']*tdf['Bid']
         endValue   = endValue - float(tdf.sum()['EUR'])
     retStrategy= endValue / startValue - 1
-
-    btcHold   = float(startValue / df[:1]['Ask'])
-    endHold   = float(btcHold * df.tail(1)['Bid'])
-    retHold   = endHold / startValue - 1 
-
+    retBT = endValBT / startValBT - 1
 #    buys    = df['Trade'].map(lambda x: x > 0.01)
 #    sells   = df['Trade'].map(lambda x: x < -0.01)
 
@@ -39,16 +38,20 @@ def showPerformance(df, tdf=[], date='Total'):
     openPrice  = float((df[:1]['Bid'] + df[:1]['Ask'])/2)
     closePrice = float((df.tail(1)['Bid'] + df.tail(1)['Ask'])/2)    
 
+    retHold    = closePrice / openPrice - 1
+
     sys.stdout.write('{0:<10}'.format(date))
     sys.stdout.write('{0:>8.1f}'.format(float(openPrice)))
     sys.stdout.write('{0:>8.1f}'.format(float(closePrice)))
+    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retHold))) + '%')
     sys.stdout.write(str('{0:>8.1f}'.format(float(100*retStrategy))) + '%')
-    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retHold)) + '%\n'))
+    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retBT)) + '%\n'))
 
-    return retStrategy, retHold
+    return retHold, retStrategy, retBT
 
-def makePerformanceTable(logFile, start=None, end=None, transfers=None):
-    history = pd.read_csv(logFile, parse_dates=[0], index_col=0)
+def makePerformanceTable(logFile, logFileBT, start=None, end=None, transfers=None):
+    history   = pd.read_csv(logFile, parse_dates=[0], index_col=0)
+    historyBT = pd.read_csv(logFileBT, parse_dates=[0], index_col=0)
     if transfers is None:
         t = []
     else:
@@ -59,10 +62,12 @@ def makePerformanceTable(logFile, start=None, end=None, transfers=None):
         npstart = np.datetime64(start)
     if end is None:
         npend = None
-    else: npend = np.datetime64(end)
-    history = history[npstart:npend]
-    t = t[npstart:npend]
-    dates=history.index.values
+    else: 
+        npend = np.datetime64(end)
+    history     = history[npstart:npend]
+    historyBT   = historyBT[npstart:npend]
+    t           = t[npstart:npend]
+    dates       = history.index.values
     uniqueDates = []
     for d in range(len(dates)):
         if str(dates[d])[0:10] not in uniqueDates:
@@ -70,21 +75,24 @@ def makePerformanceTable(logFile, start=None, end=None, transfers=None):
     sys.stdout.write('{0:<10}'.format('Date'))
     sys.stdout.write('{0:>8}'.format('Open'))
     sys.stdout.write('{0:>8}'.format('Close'))
-    sys.stdout.write('{0:>9}'.format('Strategy'))
-    sys.stdout.write('{0:>10}'.format('Buy&Hold\n'))
+    sys.stdout.write('{0:>9}'.format('Buy&Hold'))
+    sys.stdout.write('{0:>10}'.format('Strategy'))
+    sys.stdout.write('{0:>10}'.format('Backtest\n'))
     results = []
     for d in uniqueDates:
-        results.append(showPerformance(history, t, d))
-    showPerformance(history, t, 'Total')
+        results.append(showPerformance(history, historyBT, t, d))
+    showPerformance(history, historyBT, t, 'Total')
     results = np.array(results)
 #    np.set_printoptions(precision=4, suppress=True)
 #    print(results)
     sys.stdout.write('{0:<26}'.format('Mean daily return:'))
     sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[0])) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[1])) + '%\n')    
+    sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[1])) + '%')    
+    sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[2])) + '%\n')    
     sys.stdout.write('{0:<26}'.format('Mean daily std deviaton:'))
     sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[0])) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[1])) + '%\n')    
+    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[1])) + '%')    
+    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[2])) + '%\n')    
     print('')
 
 def getTotalPerformance(logFile):

@@ -6,8 +6,9 @@ logFileNameBT += str(priceWindow)
 logFileNameBT += str(momFactor)
 logFileNameBT += str(midDistance)
 logFileNameBT += str(walkUp)
-logFileNameBT += str(walkDown)
-logFileNameBT += str(tradeFactor) + '.csv'
+logFileNameBT += str(walkDown) + '.csv'
                             
-makePerformanceTable(logFileName, '2014-01-10', None, transferFile)
-#makePerformanceTable(logFileNameBT)
+startDate = '2014-01-08'
+endDate   = '2014-01-20'
+
+makePerformanceTable(logFileName, logFileNameBT, startDate, endDate, transferFile)

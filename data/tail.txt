@@ -1,0 +1,23 @@
+]);
+
+        // Set chart options
+        var options = {'width':400,
+                       'height':300,
+       series: {0:{color: 'black', lineWidth: 1, pointSize: 0},
+1:{color: 'green'},
+                2:{color: 'blue'}}
+       };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new
+google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+  </body>
+</html>

@@ -5,13 +5,14 @@
 #                                                                             #
 ###############################################################################
 
+import sys
+sys.path.append('./source')
 from bbKeys import *
 from bbClasses import *
 from bbSettings import *
 from bbFunctions import *
 import krakenex
 import time
-import sys
 import re
 
 t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)

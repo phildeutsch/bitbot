@@ -1,3 +1,5 @@
+import sys
+sys.path.append('./source')
 from bbSettings import *
 from bbClasses import *
 from bbFunctions import *
@@ -18,7 +20,7 @@ for tradeBuffer in [0]:
             for midDistance in [0.5]:
                 for walkUp in [0.15]:
                     for walkDown in [0]:
-                        logFileNameBT  = 'Logs/' + str(tradeBuffer)
+                        logFileNameBT  = 'data/' + str(tradeBuffer)
                         logFileNameBT += str(priceWindow)
                         logFileNameBT += str(momFactor)
                         logFileNameBT += str(midDistance)

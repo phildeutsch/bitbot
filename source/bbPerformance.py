@@ -49,9 +49,9 @@ def showPerformance(df, bt, tdf=[], date='Total'):
 
     return retHold, retStrategy, retBT
 
-def makePerformanceTable(logFile, logFileBT, start=None, end=None, transfers=None):
-    history   = pd.read_csv(logFile, parse_dates=[0], index_col=0)
-    historyBT = pd.read_csv(logFileBT, parse_dates=[0], index_col=0)
+def makePerformanceTable(logFileName, logFileNameBT, start=None, end=None, transfers=None):
+    history   = pd.read_csv(logFileName, parse_dates=[0], index_col=0)
+    historyBT = pd.read_csv(logFileNameBT, parse_dates=[0], index_col=0)
     if transfers is None:
         t = []
     else:
@@ -63,7 +63,7 @@ def makePerformanceTable(logFile, logFileBT, start=None, end=None, transfers=Non
     if end is None:
         npend = None
     else: 
-        npend = np.datetime64(end)
+        npend = np.datetime64(end + 'T23:59')
     history     = history[npstart:npend]
     historyBT   = historyBT[npstart:npend]
     t           = t[npstart:npend]

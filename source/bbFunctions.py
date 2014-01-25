@@ -67,16 +67,17 @@ def getData(krakenAPI, p, m, t):
 
     return p, m
 
-def getDataBacktest(logFile, m, p, i):
+def getDataBacktest(logFile,  m, p, t, i):
     data = re.split(',', linecache.getline(logFile, i+1))
     m.time = data[0]
     m.bid = float(data[1])
     m.ask = float(data[2])
+    
+    p.value = p.EUR + p.BTC * m.bid
+    p.weight = p.EUR / p.value
     m.price = (m.bid+m.ask)/2
     m.histPrices.append(m.price)
     m.mean = sum(m.histPrices)/len(m.histPrices)
-    p.value = p.EUR + p.BTC * m.bid
-    p.weight = p.EUR / (p.EUR + p.BTC * m.bid)
 
     return m, p
 

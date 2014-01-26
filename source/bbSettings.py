@@ -8,6 +8,7 @@ priceWindow    = 100
 tradeBuffer    = 0
  
 logFileName    = 'data/history.csv'
+txFileName     = 'data/transactions.csv'
 transferFile   = 'data/transfers.csv'
 statusFileName = 'data/status.txt'
 plotFileHead   = 'data/head.txt'

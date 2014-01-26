@@ -11,7 +11,7 @@ from collections import deque
 import numpy as np
 import pandas as pd
 np.set_printoptions(precision=4, suppress=True)
-funds = 1000
+funds = 2000
 results = []
 for tradeBuffer in [0]:
     for priceWindow in [100]:
@@ -87,5 +87,5 @@ results = np.array(results)
 print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
       'Return, Sharpe')
 print(results[results[:,7].argsort()][::-1])
-#drawPlot(plotFileHead, plotFileTail, m, t)
+drawPlot(plotFileHead, plotFileTail, m, t)
 

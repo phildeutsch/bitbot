@@ -13,7 +13,7 @@ def cancelOrders(krakenAPI, t):
         t.error = 0    
 
 def drawPlot(plotFileHead, plotFileTail, m, t):
-    with open('Analysis/plot.html','w') as picFile:
+    with open('data/plot.html','w') as picFile:
         with open(plotFileHead,'rt') as file1:
             content = file1.readlines()
             picFile.write(''.join(content))

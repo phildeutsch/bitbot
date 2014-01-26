@@ -34,8 +34,8 @@ for tradeBuffer in [0]:
                         p = portfolio(funds, 0)
                         m = marketData('Null', 0, 0, priceWindow)
 
-#                        for i in range(1,file_len(logFileName)):
-                        for i in range(1,2):
+                        for i in range(1,file_len(logFileName)):
+#                        for i in range(1,100):
                            
                             m, p = getDataBacktest(logFileName,  m, p, t, i)
                             

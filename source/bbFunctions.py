@@ -48,7 +48,7 @@ def getBounds(logFileName, walkUp, walkDown):
             maxPrice = minPrice * (1 + walkUp)
     return minPrice, maxPrice
 
-def getData(krakenAPI, p, m, t):
+def getData(krakenAPI, m, p, t):
     try:
         m.time   = krakenAPI.query_public('Time')['result']['rfc1123'][5:20]
         tickData = krakenAPI.query_public('Ticker', {'pair' : 'XXBTZEUR'})
@@ -65,7 +65,7 @@ def getData(krakenAPI, p, m, t):
     except:
         t.error = 0
 
-    return p, m
+    return m, p
 
 def getDataBacktest(logFile,  m, p, t, i):
     data = re.split(',', linecache.getline(logFile, i+1))

@@ -15,26 +15,30 @@ import krakenex
 import time
 import re
 
-t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)
-p         = portfolio(funds,0)
+t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer,
+                    priceWindow)
+p         = portfolio(1,0)
 m         = marketData('Null', 0, 0, priceWindow)
 krakenAPI = krakenex.API(key, secret)
 
 while True:
-    p, m = getData(krakenAPI, p, m, t)
+    t    = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer,
+                   priceWindow)
+    m, p = getData(krakenAPI, m, p, t)
     
     t.calcBaseWeight(m)
     t.calcMomentum(momFactor, m)
     t.calcCoinsToTrade(m, p)
-    t.checkTradeSize(m, p, minTrade)
+    t.checkTradeSize(m, p, tradeFactor)
     
-    cancelOrders(krakenAPI, t)    
-    placeOrder(krakenAPI, m, t)
+#   cancelOrders(krakenAPI, t)    
+#   placeOrder(krakenAPI, m, t)
 
     printStatus(p, m, t, statusFileName)
     printTermLine(p, m, t)
     printLogLine(p, m, t, logFileName)
-
-    t = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer)
+    if t.coinsToTrade > 0:
+        printLogLine(p, m, t, txFileName)
+    drawPlot(plotFileHead, plotFileTail, m, t)
 
     time.sleep(delay)

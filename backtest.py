@@ -37,6 +37,8 @@ for tradeBuffer in [0]:
                         for i in range(1,file_len(logFileName)):
 #                        for i in range(1,100):
                            
+                            t = trader(logFileNameBT, walkUp, walkDown,
+                                    midDistance, tradeBuffer, priceWindow)
                             m, p = getDataBacktest(logFileName,  m, p, t, i)
                             
                             t.calcBaseWeight(m)
@@ -55,9 +57,6 @@ for tradeBuffer in [0]:
                             elif t.coinsToTrade < 0:
                                 p.EUR = p.EUR - t.coinsToTrade * m.bid
 
-                            t = trader(logFileNameBT, walkUp, walkDown,
-                                    midDistance, tradeBuffer, priceWindow)
-                      
                         data = pd.read_csv(logFileNameBT)
                         data['Value'] = (data['EUR'] +
                                          data['BTC'] * data['Bid'])

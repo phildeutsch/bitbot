@@ -15,15 +15,13 @@ import krakenex
 import time
 import re
 
-t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, 
-                    priceWindow)
+t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow)
 p         = portfolio(1,0)
 m         = marketData('Null', 0, 0, priceWindow)
 krakenAPI = krakenex.API(key, secret)
 
 while True:
-    t    = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer,
-                   priceWindow)
+    t    = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow)
     m, p = getData(krakenAPI, m, p, t)
     
     t.calcBaseWeight(m)

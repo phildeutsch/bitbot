@@ -25,8 +25,7 @@ class trader:
     buys  = deque([], priceWindow)
     sells = deque([], priceWindow)
     
-    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer,
-                 priceWindow):
+    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow):
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
         except IndexError:

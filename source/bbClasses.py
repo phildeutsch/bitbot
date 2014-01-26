@@ -18,7 +18,7 @@ class marketData:
         self.ask = ask
         self.price = (bid + ask)/2
         self.mean = self.price
-        self.histPrices = deque([self.price], priceWindow)
+        self.histPrices = deque([], priceWindow)
 
 class trader:
     """ Stores all trade parameters """

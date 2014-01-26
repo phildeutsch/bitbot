@@ -15,7 +15,7 @@ import krakenex
 import time
 import re
 
-t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer,
+t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, 
                     priceWindow)
 p         = portfolio(1,0)
 m         = marketData('Null', 0, 0, priceWindow)
@@ -31,8 +31,8 @@ while True:
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(m, p, tradeFactor)
     
-#   cancelOrders(krakenAPI, t)    
-#   placeOrder(krakenAPI, m, t)
+    cancelOrders(krakenAPI, t)    
+    placeOrder(krakenAPI, m, t)
 
     printStatus(p, m, t, statusFileName)
     printTermLine(p, m, t)

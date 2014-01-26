@@ -35,7 +35,7 @@ while True:
     printStatus(p, m, t, statusFileName)
     printTermLine(p, m, t)
     printLogLine(p, m, t, logFileName)
-    if t.coinsToTrade > 0:
+    if abs(t.coinsToTrade) > 0:
         printLogLine(p, m, t, txFileName)
     drawPlot(plotFileHead, plotFileTail, m, t)
 

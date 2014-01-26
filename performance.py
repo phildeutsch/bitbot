@@ -11,6 +11,9 @@ logFileNameBT += str(walkUp)
 logFileNameBT += str(walkDown) + '.csv'
                             
 startDate = '2014-01-08'
-endDate   = '2014-01-25'
+#endDate   = '2014-01-25'
+endDate   = None
 
-makePerformanceTable(logFileName, logFileNameBT, startDate, endDate, transferFile)
+getTransactions(logFileName, transFileName)
+makePerformanceTable(logFileName, logFileNameBT, startDate, endDate,
+                        transFileName)

@@ -95,8 +95,11 @@ def makePerformanceTable(logFileName, logFileNameBT, start=None, end=None, trans
     sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[2])) + '%\n')    
     print('')
 
-def getTotalPerformance(logFile):
-    df = pd.read_csv(logFile, parse_dates=[0], index_col=0)
-    startValue = float(df[:1]['EUR'] + df[:1]['BTC'] * df[:1]['Bid'])
-    endValue   = float(df.tail(1)['EUR'] + df.tail(1)['BTC'] * df.tail(1)['Bid'])
-    return endValue / startValue - 1
+def getTransactions(logFileName, transFileName):
+    history  = pd.read_csv(logFileName, parse_dates=[0], index_col=0)
+    df  = history.diff()    
+    tx  = (df['Trade'] == 0) & (df['BTC'] != 0) & (df['EUR'] == 0)
+    amounts = df[tx]['BTC']
+    out = history.loc[amounts.index.values,:].loc[:,['Bid','Ask']]
+    out['Amount'] = amounts
+    out.to_csv(transFileName)     

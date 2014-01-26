@@ -9,7 +9,7 @@ tradeBuffer    = 0
  
 logFileName    = 'data/history.csv'
 txFileName     = 'data/transactions.csv'
-transferFile   = 'data/transfers.csv'
+transFileName  = 'data/transfers.csv'
 statusFileName = 'data/status.txt'
 plotFileHead   = 'data/head.txt'
 plotFileTail   = 'data/tail.txt'

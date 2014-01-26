@@ -11,8 +11,8 @@ logFileNameBT += str(walkUp)
 logFileNameBT += str(walkDown) + '.csv'
                             
 startDate = '2014-01-08'
-#endDate   = '2014-01-25'
-endDate   = None
+endDate   = '2014-01-25'
+#endDate   = None
 
 getTransactions(logFileName, transFileName)
 makePerformanceTable(logFileName, logFileNameBT, startDate, endDate,

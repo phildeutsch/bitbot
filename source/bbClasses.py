@@ -101,9 +101,9 @@ class trader:
             self.sells.append('null')
             return 0
         elif self.coinsToTrade > minTrade:
-            self.buys.append(m.bid)
+            self.buys.append(m.ask)
             self.sells.append('null')
         elif self.coinsToTrade < -minTrade:
             self.buys.append('null')
-            self.sells.append(m.ask)
+            self.sells.append(m.bid)
         return self

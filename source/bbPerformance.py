@@ -3,24 +3,26 @@ import numpy as np
 from math import isnan
 import sys
 
-def showPerformance(df, bt, tdf=[], date='Total'):
+def showPerformance(df, bt=None, tdf=[], date='Total'):
     if date != 'Total':
         df = df[date]
-        bt = bt[date]
+        if bt is not None:
+            bt = bt[date]
         try:
             tdf = tdf[date]
         except:
             tdf = []
 
     startValue = float(df[:1]['EUR'] + df[:1]['BTC'] * df[:1]['Bid'])
-    startValBT = float(bt[:1]['EUR'] + bt[:1]['BTC'] * bt[:1]['Bid'])
     endValue   = float(df.tail(1)['EUR'] + df.tail(1)['BTC'] * df.tail(1)['Bid'])
-    endValBT   = float(bt.tail(1)['EUR'] + bt.tail(1)['BTC'] * bt.tail(1)['Bid'])
     if len(tdf) != 0:
         tdf['EUR']=tdf['Amount']*tdf['Bid']
         endValue   = endValue - float(tdf.sum()['EUR'])
     retStrategy= endValue / startValue - 1
-    retBT = endValBT / startValBT - 1
+    if bt is not None:
+        endValBT   = float(bt.tail(1)['EUR'] + bt.tail(1)['BTC'] * bt.tail(1)['Bid'])
+        startValBT = float(bt[:1]['EUR'] + bt[:1]['BTC'] * bt[:1]['Bid'])
+        retBT = endValBT / startValBT - 1
 #    buys    = df['Trade'].map(lambda x: x > 0.01)
 #    sells   = df['Trade'].map(lambda x: x < -0.01)
 
@@ -45,13 +47,19 @@ def showPerformance(df, bt, tdf=[], date='Total'):
     sys.stdout.write('{0:>8.1f}'.format(float(closePrice)))
     sys.stdout.write(str('{0:>8.1f}'.format(float(100*retHold))) + '%')
     sys.stdout.write(str('{0:>8.1f}'.format(float(100*retStrategy))) + '%')
-    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retBT)) + '%\n'))
+    if bt is not None:
+        sys.stdout.write(str('{0:>8.1f}'.format(float(100*retBT)) + '%\n'))
+        return retHold, retStrategy, retBT
+    else:
+        sys.stdout.write('\n')
+        return retHold, retStrategy
 
-    return retHold, retStrategy, retBT
-
-def makePerformanceTable(logFileName, logFileNameBT, start=None, end=None, transfers=None):
+def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, transfers=None):
     history   = pd.read_csv(logFileName, parse_dates=[0], index_col=0)
-    historyBT = pd.read_csv(logFileNameBT, parse_dates=[0], index_col=0)
+    if logFileNameBT is not None:
+        historyBT = pd.read_csv(logFileNameBT, parse_dates=[0], index_col=0)
+    else:
+        historyBT = None
     if transfers is None:
         t = []
     else:
@@ -65,7 +73,8 @@ def makePerformanceTable(logFileName, logFileNameBT, start=None, end=None, trans
     else: 
         npend = np.datetime64(end + 'T23:59')
     history     = history[npstart:npend]
-    historyBT   = historyBT[npstart:npend]
+    if logFileNameBT is not None:
+        historyBT   = historyBT[npstart:npend]
     t           = t[npstart:npend]
     dates       = history.index.values
     uniqueDates = []
@@ -77,7 +86,10 @@ def makePerformanceTable(logFileName, logFileNameBT, start=None, end=None, trans
     sys.stdout.write('{0:>8}'.format('Close'))
     sys.stdout.write('{0:>9}'.format('Buy&Hold'))
     sys.stdout.write('{0:>10}'.format('Strategy'))
-    sys.stdout.write('{0:>10}'.format('Backtest\n'))
+    if logFileNameBT is not None:
+        sys.stdout.write('{0:>10}'.format('Backtest\n'))
+    else:
+        sys.stdout.write('\n')
     results = []
     for d in uniqueDates:
         results.append(showPerformance(history, historyBT, t, d))
@@ -88,11 +100,17 @@ def makePerformanceTable(logFileName, logFileNameBT, start=None, end=None, trans
     sys.stdout.write('{0:<26}'.format('Mean daily return:'))
     sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[0])) + '%')    
     sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[1])) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[2])) + '%\n')    
+    if logFileNameBT is not None:
+        sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[2])) + '%\n')    
+    else:
+        sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Mean daily std deviaton:'))
     sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[0])) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[1])) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[2])) + '%\n')    
+    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[1])) + '%')     
+    if logFileNameBT is not None:
+        sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[2])) + '%\n')    
+    else:
+        sys.stdout.write('\n')
     print('')
 
 def getTransactions(logFileName, transFileName):

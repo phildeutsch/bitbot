@@ -5,40 +5,42 @@ import sys
 
 def showPerformance(df, bt=None, tdf=[], date='Total'):
     if date != 'Total':
-        df = df[date]
+        dft = df[date]
+        dfy = df[str(np.datetime64(date)-1)]
         if bt is not None:
-            bt = bt[date]
+            btt = bt[date]
+            bty = bt[str(np.datetime64(date)-1)]
         try:
             tdf = tdf[date]
         except:
             tdf = []
 
-    startValue = float(df[:1]['EUR'] + df[:1]['BTC'] * df[:1]['Bid'])
-    endValue   = float(df.tail(1)['EUR'] + df.tail(1)['BTC'] * df.tail(1)['Bid'])
+        startValue = float(dfy.tail(1)['EUR'] + \
+                           dfy.tail(1)['BTC'] * dfy.tail(1)['Bid'])
+        endValue   = float(dft.tail(1)['EUR'] + \
+                           dft.tail(1)['BTC'] * dft.tail(1)['Bid'])
+        openPrice  = float((dfy.tail(1)['Bid'] + dfy.tail(1)['Ask'])/2)
+        closePrice = float((dft.tail(1)['Bid'] + dft.tail(1)['Ask'])/2) 
+    else:
+        startValue = float(df.head(1)['EUR'] + \
+                           df.head(1)['BTC'] * df.head(1)['Bid'])
+        endValue   = float(df.tail(1)['EUR'] + \
+                           df.tail(1)['BTC'] * df.tail(1)['Bid'])
+        openPrice  = float((df.head(1)['Bid'] + df.head(1)['Ask'])/2)
+        closePrice = float((df.tail(1)['Bid'] + df.tail(1)['Ask'])/2) 
+                                
     if len(tdf) != 0:
         tdf['EUR']=tdf['Amount']*tdf['Bid']
         endValue   = endValue - float(tdf.sum()['EUR'])
     retStrategy= endValue / startValue - 1
     if bt is not None:
-        endValBT   = float(bt.tail(1)['EUR'] + bt.tail(1)['BTC'] * bt.tail(1)['Bid'])
-        startValBT = float(bt[:1]['EUR'] + bt[:1]['BTC'] * bt[:1]['Bid'])
+        endValBT   = float(btt.tail(1)['EUR'] + \
+                           btt.tail(1)['BTC'] * btt.tail(1)['Bid'])
+        startValBT = float(bty.tail(1)['EUR'] + \
+                           bty.tail(1)['BTC'] * bty.tail(1)['Bid'])
         retBT = endValBT / startValBT - 1
-#    buys    = df['Trade'].map(lambda x: x > 0.01)
-#    sells   = df['Trade'].map(lambda x: x < -0.01)
 
-#    sellAmounts = df[sells].Trade * df[sells].Bid
-#    sellTotal   = df[sells].sum()['Trade']
-#    avgSellPrice= sellAmounts.sum() / sellTotal
-#    buyAmounts  = df[buys].Trade * df[buys].Ask
-#    buyTotal    = df[buys].sum()['Trade']
-#    avgBuyPrice = buyAmounts.sum() / buyTotal
-#    if isnan(avgBuyPrice):
-#        avgBuyPrice = 0
-#    if isnan(avgSellPrice):
-#        avgSellPrice = 0
-
-    openPrice  = float((df[:1]['Bid'] + df[:1]['Ask'])/2)
-    closePrice = float((df.tail(1)['Bid'] + df.tail(1)['Ask'])/2)    
+   
 
     retHold    = closePrice / openPrice - 1
 
@@ -67,7 +69,7 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     if start is None:
         npstart = None
     else:
-        npstart = np.datetime64(start)
+        npstart = np.datetime64(start + 'T23:50') - np.timedelta64(1, 'D')
     if end is None:
         npend = None
     else: 
@@ -81,6 +83,7 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     for d in range(len(dates)):
         if str(dates[d])[0:10] not in uniqueDates:
             uniqueDates.append(str(dates[d])[0:10])
+      
     sys.stdout.write('{0:<10}'.format('Date'))
     sys.stdout.write('{0:>8}'.format('Open'))
     sys.stdout.write('{0:>8}'.format('Close'))
@@ -90,9 +93,11 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
         sys.stdout.write('{0:>10}'.format('Backtest\n'))
     else:
         sys.stdout.write('\n')
+        
     results = []
-    for d in uniqueDates:
+    for d in uniqueDates[1:]:
         results.append(showPerformance(history, historyBT, t, d))
+        
     showPerformance(history, historyBT, t, 'Total')
     results = np.array(results)
 #    np.set_printoptions(precision=4, suppress=True)

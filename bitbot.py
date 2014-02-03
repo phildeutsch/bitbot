@@ -1,18 +1,13 @@
-###############################################################################
-#                                                                             #
-#   bitbot trader                                Philipp Deutsch              #
-#                                                                             #
-#                                                                             #
-###############################################################################
-
 import sys
 sys.path.append('./source')
 sys.path.append('./api')
+
 from bbKeys import *
 from bbClasses import *
 from bbSettings import *
 from bbFunctions import *
-import krakenex
+import APIkraken
+
 import time
 import re
 
@@ -20,7 +15,7 @@ t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer,
                    priceWindow)
 p         = portfolio(1,0)
 m         = marketData('Null', 0, 0, priceWindow)
-krakenAPI = krakenex.API(key, secret)
+krakenAPI = APIkraken.API(key, secret)
 
 while True:
     t    = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffe,

@@ -5,8 +5,9 @@ import sys
 
 def showPerformance(df, bt=None, tdf=[], date='Total'):
     if date != 'Total':
-        dft = df[date]
-        dfy = df[str(np.datetime64(date)-1)]
+        dft = df[np.datetime64(date + 'T00:01') : np.datetime64(date + 'T23:59')]
+        dfy = df[np.datetime64(date + 'T00:01') - np.timedelta64(1, 'D') : \
+                 np.datetime64(date + 'T23:59') - np.timedelta64(1, 'D')]
         if bt is not None:
             btt = bt[date]
             bty = bt[str(np.datetime64(date)-1)]
@@ -22,6 +23,8 @@ def showPerformance(df, bt=None, tdf=[], date='Total'):
         openPrice  = float((dfy.tail(1)['Bid'] + dfy.tail(1)['Ask'])/2)
         closePrice = float((dft.tail(1)['Bid'] + dft.tail(1)['Ask'])/2) 
     else:
+        npstart = np.datetime64(str(df.head(1).index.values)[2:12] + 'T23:50')
+        df = df[npstart:]
         startValue = float(df.head(1)['EUR'] + \
                            df.head(1)['BTC'] * df.head(1)['Bid'])
         endValue   = float(df.tail(1)['EUR'] + \

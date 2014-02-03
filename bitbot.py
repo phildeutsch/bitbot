@@ -7,6 +7,7 @@
 
 import sys
 sys.path.append('./source')
+sys.path.append('./api')
 from bbKeys import *
 from bbClasses import *
 from bbSettings import *
@@ -15,13 +16,15 @@ import krakenex
 import time
 import re
 
-t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow)
+t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, 
+                   priceWindow)
 p         = portfolio(1,0)
 m         = marketData('Null', 0, 0, priceWindow)
 krakenAPI = krakenex.API(key, secret)
 
 while True:
-    t    = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow)
+    t    = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffe,
+                  priceWindow)
     m, p = getData(krakenAPI, m, p, t)
     
     t.calcBaseWeight(m)
@@ -32,11 +35,11 @@ while True:
     cancelOrders(krakenAPI, t)    
     placeOrder(krakenAPI, m, t)
 
-    printStatus(p, m, t, statusFileName)
-    printTermLine(p, m, t)
-    printLogLine(p, m, t, logFileName)
+    printStatus(m, p, t, statusFileName)
+    printTermLine(m, p, t)
+    printLogLine(m, p, t, logFileName)
     if abs(t.coinsToTrade) > 0:
-        printLogLine(p, m, t, txFileName)
+        printLogLine(m, p, t, txFileName)
     drawPlot(plotFileHead, plotFileTail, m, t)
 
     time.sleep(delay)

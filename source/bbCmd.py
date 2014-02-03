@@ -37,10 +37,12 @@ class bbCmd(cmd.Cmd):
     def help_performance(self):
             print('Syntax: performance')
             print('-- Calculates the performance between two dates for ' +
-                  'a client') 
+                  'a client')
+            
 
     def do_exit(self, arg):
         sys.exit(1)
+        
     def help_exit(self):
             print('Syntax: exit')
             print('-- Terminates the application')

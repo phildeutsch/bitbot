@@ -13,8 +13,12 @@ class bbCmd(cmd.Cmd):
 
     
     def do_performance(self, arg):
-        startDate = '2014-01-08'
-        endDate   = None
+        startDate = input('Initial Date (YYYY-MM-DD): ')
+        if len(startDate) is not 10:
+            startDate = '2014-01-08'
+        endDate   = input('End Date (YYYY-MM-DD): ')
+        if len(endDate) is not 10:
+            endDate = None
         btflag    = 0
         getTransactions(logFileName, transFileName)
         if btflag is '1':

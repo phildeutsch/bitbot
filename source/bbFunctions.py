@@ -106,7 +106,7 @@ def placeOrder(krakenAPI, m, t):
     except:
         t.error = 1
 
-def printLogLine(p, m, t, logFileName, bounds=0):
+def printLogLine(m, p, t, logFileName, bounds=0):
     with open(logFileName,'a') as logFile:
         logFile.write(m.time + ',')
         logFile.write('{0:0.2f}'.format(m.bid) + ',')
@@ -119,7 +119,7 @@ def printLogLine(p, m, t, logFileName, bounds=0):
             logFile.write(',' + '{0:0.2f}'.format(t.maxPrice))
         logFile.write('\n')
 
-def printStatus(p, m, t, statusFileName):
+def printStatus(m, p, t, statusFileName):
     with open(statusFileName, 'w') as statusFile:
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write('{0:<10}'.format(m.time) + '\n')
@@ -132,7 +132,7 @@ def printStatus(p, m, t, statusFileName):
         statusFile.write('{0:<10}'.format('BTC:'))
         statusFile.write('{0:>6.1f}'.format(p.BTC) + '\n')
 
-def printTermLine(p, m, t):
+def printTermLine(m, p, t):
     strLog = '{0:<10}'.format(m.time) + ' |'
     strLog += ' B:'+ '{0:>7.1f}'.format(m.bid) 
     strLog += ' A:'+ '{0:>7.1f}'.format(m.ask) + ' |'

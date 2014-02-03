@@ -47,9 +47,9 @@ for tradeBuffer in [0]:
                             t.checkTradeSize(m, p, tradeFactor)
             
                             if abs(t.coinsToTrade) > 0:
-                                printTermLine(p, m, t)
+                                printTermLine(m, p, t)
 
-                            printLogLine(p, m, t, logFileNameBT, bounds = 1)
+                            printLogLine(m, p, t, logFileNameBT, bounds = 1)
 
                             p.BTC = p.BTC + t.coinsToTrade
                             if t.coinsToTrade > 0:

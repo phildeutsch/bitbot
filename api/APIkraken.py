@@ -9,7 +9,7 @@ import base64
 import time
  
  
-class APIkraken(object):
+class API(object):
     """Kraken.com cryptocurrency Exchange API.
      
     Public methods:

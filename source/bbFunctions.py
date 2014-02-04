@@ -48,7 +48,7 @@ def getBounds(logFileName, walkUp, walkDown):
             maxPrice = minPrice * (1 + walkUp)
     return minPrice, maxPrice
 
-def getData(krakenAPI, m, p, t):
+def getData(krakenAPI, m, p, t = None):
     try:
         m.time   = krakenAPI.query_public('Time')['result']['rfc1123'][5:20]
         tickData = krakenAPI.query_public('Ticker', {'pair' : 'XXBTZEUR'})
@@ -63,7 +63,8 @@ def getData(krakenAPI, m, p, t):
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)
     except:
-        t.error = 0
+        if t is not None:
+            t.error = 0
 
     return m, p
 
@@ -119,7 +120,7 @@ def printLogLine(m, p, t, logFileName, bounds=0):
             logFile.write(',' + '{0:0.2f}'.format(t.maxPrice))
         logFile.write('\n')
 
-def printStatus(m, p, t, statusFileName):
+def printStatus(m, p, statusFileName):
     with open(statusFileName, 'w') as statusFile:
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write('{0:<10}'.format(m.time) + '\n')

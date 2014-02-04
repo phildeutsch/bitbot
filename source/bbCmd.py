@@ -3,8 +3,12 @@ import cmd
 sys.path.append('./source')
 sys.path.append('./api')
 
+import APIkraken
+from bbClasses import *
 from bbSettings import *
+from bbFunctions import *
 from bbPerformance import *
+from bbKeysMonitor import *
 
 class bbCmd(cmd.Cmd):
     def __init__(self):
@@ -38,8 +42,29 @@ class bbCmd(cmd.Cmd):
             print('Syntax: performance')
             print('-- Calculates the performance between two dates for ' +
                   'a client')
-            
 
+
+    def do_balance(self, arg):    
+        krakenAPI = APIkraken.API(keyKraken, secKraken)
+        pKraken   = portfolio(1,0)
+        mKraken   = marketData('Null', 0, 0, 0)
+        mKraken, pKraken = getData(krakenAPI, mKraken, pKraken)
+
+        print('Exchange   EUR         BTC     Value')
+        print('------------------------------------')
+        sys.stdout.write('{0:<10}'.format('Kraken'))       
+        sys.stdout.write('{0:>8.2f}'.format(float(pKraken.EUR)))       
+        sys.stdout.write('{0:>10.3f}'.format(float(pKraken.BTC)))
+        sys.stdout.write('{0:>10.2f}'.format(pKraken.BTC * mKraken.bid + \
+                                             pKraken.EUR))
+        print('')       
+
+
+    def help_balance(self):
+            print('Syntax: balance')
+            print('-- Shows the current balance and total Value of the ' +
+                  'portfolio')
+            
     def do_exit(self, arg):
         sys.exit(1)
         

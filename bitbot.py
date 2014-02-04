@@ -30,7 +30,7 @@ while True:
     cancelOrders(krakenAPI, t)    
     placeOrder(krakenAPI, m, t)
 
-    printStatus(m, p, t, statusFileName)
+    printStatus(m, p, statusFileName)
     printTermLine(m, p, t)
     printLogLine(m, p, t, logFileName)
     if abs(t.coinsToTrade) > 0:

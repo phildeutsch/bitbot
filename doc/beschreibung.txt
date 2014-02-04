@@ -7,3 +7,11 @@ TL;DR:  Wenn du eine einfache high-risk Möglichkeit suchst, in bitcoin zu inves
 In den letzten Wochen habe ich ein Programm geschrieben, das automatisiert bitcoins kauft bzw. verkauft. Ich habe es in den letzten Wochen mit eigenem Geld getestet und möchte jetzt nach und nach beginnen, die Strategie mit mehr Kapital zu fahren. Ich habe hier alle relevanten Infos zusammengeschrieben, bitte gib mir Bescheid wenn ich etwas vergessen habe.
 
 
+*** Allgemeine Strategie ***
+Meine Strategie baut darauf auf, dass Bitcoin Preise generell stark Schwanken. Das Programm ist so kalibriert, dass die Schwankungen getracked werden und BTC gekauft werden, wenn die Preis (relativ) niedrig ist und verkauft werden, wenn der Preis (relativ) hoch ist. Im optimalen Fall kann dadurch bei jeder "Welle" Profit gemacht werden.
+
+Ob der Preis als "hoch" oder "niedrig" eingestuft wird, hängt von mehreren Faktoren ab:
+
+
+
+Diese Strategie hat offensichtliche

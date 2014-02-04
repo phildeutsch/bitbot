@@ -50,8 +50,8 @@ class bbCmd(cmd.Cmd):
         mKraken   = marketData('Null', 0, 0, 0)
         mKraken, pKraken = getData(krakenAPI, mKraken, pKraken)
 
-        print('Exchange   EUR         BTC     Value')
-        print('------------------------------------')
+        print('Exchange   EUR         BTC     Value  ')
+        print('--------------------------------------')
         sys.stdout.write('{0:<10}'.format('Kraken'))       
         sys.stdout.write('{0:>8.2f}'.format(float(pKraken.EUR)))       
         sys.stdout.write('{0:>10.3f}'.format(float(pKraken.BTC)))

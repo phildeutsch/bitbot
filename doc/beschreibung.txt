@@ -19,6 +19,9 @@ Diese Strategie hat offensichtliche Nachteile:
 
 
 Andere Risiken:
-1. Börsenkonkurs: Im Moment werden alle Trades über eine Bitcoin Börse (www.kraken.com) abgewickelt, an der auch das gesamte Portfolio liegt. Es ist grundsätzlich weder ein Konkurs der Börse, noch ein Betrug durch die Börsenbetreiber auszuschließen, und wäre auch nicht ohne Präzedenzfall in der kurzen Bitcoingeschichte. Um dieses Risiko zu minimieren, werden die folgenden Maßnahmen in den nächsten Versionen meines Programms implementiert:
+1. Börsenkonkurs: Im Moment werden alle Trades über eine Bitcoin Börse (www.kraken.com) abgewickelt, an der auch das gesamte Portfolio liegt. Es ist grundsätzlich weder ein Konkurs der Börse, noch ein Betrug durch die Börsenbetreiber auszuschließen, und wäre auch nicht ohne Präzedenzfall in der kurzen Bitcoingeschichte. Um dieses Risiko zu minimieren, ist geplant, die folgenden Maßnahmen in den nächsten Versionen meines Programms zu implementieren:
+    Konten und Abwicklung bei mehreren Börsen. Durch so eine Diversifizierung wird der potentielle Verlust von 100% auf z.B. 33% bei drei Börsen gedrückt.
+    Lagerung eines Teils der Depots (sowohl in Fiat als auch in Bitcoin) auf Bankkonten bzw. offline. Wenn nur mehr jener Teil an der Börse gelagert wird, der kurzfristig zum Handel benötigt wird, ist der effekt eines Potentiellen Verlusts der Börseneinlage dementsprechend gering.
     
+2. Bugs: Das Programm ist vollständig von mir entwickelt und geschrieben. Dementsprechend gibt es im Moment weder ein unabhängiges Risikomanagement, noch jegliche Art von 4-Augen-Prinzip. Im Betrieb (mit realem Handel) habe ich keine gröberen Fehler festgestellt, aber das schließt natürlich nicht aus, dass es welche gibt. Ich bin jedenfalls zuversichtlich genug, um mein eigenes Geld auf die Richtigkeit zu setzen.
   

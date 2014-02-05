@@ -8,9 +8,6 @@ def showPerformance(df, bt=None, tdf=[], date='Total'):
         dft = df[np.datetime64(date + 'T00:01') : np.datetime64(date + 'T23:59')]
         dfy = df[np.datetime64(date + 'T00:01') - np.timedelta64(1, 'D') : \
                  np.datetime64(date + 'T23:59') - np.timedelta64(1, 'D')]
-        if bt is not None:
-            btt = bt[date]
-            bty = bt[str(np.datetime64(date)-1)]
         try:
             tdf = tdf[date]
         except:
@@ -21,28 +18,43 @@ def showPerformance(df, bt=None, tdf=[], date='Total'):
         endValue   = float(dft.tail(1)['EUR'] + \
                            dft.tail(1)['BTC'] * dft.tail(1)['Bid'])
         openPrice  = float((dfy.tail(1)['Bid'] + dfy.tail(1)['Ask'])/2)
-        closePrice = float((dft.tail(1)['Bid'] + dft.tail(1)['Ask'])/2) 
+        closePrice = float((dft.tail(1)['Bid'] + dft.tail(1)['Ask'])/2)
+        if bt is not None:
+            btt = bt[np.datetime64(date + 'T00:01') : np.datetime64(date + 'T23:59')]
+            bty = bt[np.datetime64(date + 'T00:01') - np.timedelta64(1, 'D') : \
+                     np.datetime64(date + 'T23:59') - np.timedelta64(1, 'D')]
+            startValBT = float(bty.tail(1)['EUR'] + \
+                               bty.tail(1)['BTC'] * bty.tail(1)['Bid'])
+            endValBT   = float(btt.tail(1)['EUR'] + \
+                               btt.tail(1)['BTC'] * btt.tail(1)['Bid'])
+            retBT = endValBT / startValBT - 1
     else:
         npstart = np.datetime64(str(df.head(1).index.values)[2:12] + 'T23:50')
         df = df[npstart:]
+        if bt is not None:
+            bt = bt[npstart:]
+        try:
+            tdf = tdf[npstart:]
+        except:
+            tdf = []
+
         startValue = float(df.head(1)['EUR'] + \
                            df.head(1)['BTC'] * df.head(1)['Bid'])
         endValue   = float(df.tail(1)['EUR'] + \
                            df.tail(1)['BTC'] * df.tail(1)['Bid'])
         openPrice  = float((df.head(1)['Bid'] + df.head(1)['Ask'])/2)
-        closePrice = float((df.tail(1)['Bid'] + df.tail(1)['Ask'])/2) 
+        closePrice = float((df.tail(1)['Bid'] + df.tail(1)['Ask'])/2)
+        if bt is not None:
+            endValBT   = float(bt.head(1)['EUR'] + \
+                               bt.head(1)['BTC'] * bt.head(1)['Bid'])
+            startValBT = float(bt.tail(1)['EUR'] + \
+                               bt.tail(1)['BTC'] * bt.tail(1)['Bid'])
+            retBT = endValBT / startValBT - 1
                                 
     if len(tdf) != 0:
         tdf['EUR']=tdf['Amount']*tdf['Bid']
         endValue   = endValue - float(tdf.sum()['EUR'])
     retStrategy= endValue / startValue - 1
-    if bt is not None:
-        endValBT   = float(btt.tail(1)['EUR'] + \
-                           btt.tail(1)['BTC'] * btt.tail(1)['Bid'])
-        startValBT = float(bty.tail(1)['EUR'] + \
-                           bty.tail(1)['BTC'] * bty.tail(1)['Bid'])
-        retBT = endValBT / startValBT - 1
-
     retHold    = closePrice / openPrice - 1
 
     sys.stdout.write('{0:<10}'.format(date))
@@ -109,7 +121,7 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     sst = float(results.std(axis=0)[1])
     if logFileNameBT is not None:
         rbt = float(results.mean(axis=0)[2])
-        rst = float(results.mean(axis=0)[2])
+        sbt = float(results.std(axis=0)[2])
 
     sys.stdout.write('{0:<26}'.format('Mean daily return:'))
     sys.stdout.write('{0:>8.1}'.format(rbh) + '%')    

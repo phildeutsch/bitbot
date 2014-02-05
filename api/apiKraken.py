@@ -1,6 +1,5 @@
 import json
 import urllib
-import urllib2
  
 import hashlib
 import hmac
@@ -39,15 +38,16 @@ class API(object):
         req    -- additional request parameters (default {})
          
         """
-        postdata = urllib.urlencode(req)
+        postdata = urllib.parse.urlencode(req)
+        postdata = postdata.encode('latin1')
          
         headers = {
-            'User-Agent': 'Kraken Python API Agent'
+            'User-Agent': 'phildeutsch.com'
         }
          
         url = self.uri + '/' + self.apiversion + '/public/' + method
-        ret = urllib2.urlopen(urllib2.Request(url, postdata, headers))
-        return json.loads(ret.read())
+        ret = urllib.request.urlopen(urllib.request.Request(url, postdata, headers))
+        return json.loads(ret.read().decode('latin1'))
      
     def query_private(self, method, req={}):
         """API queries that require a valid key/secret pair.
@@ -58,20 +58,23 @@ class API(object):
          
         """
         req['nonce'] = int(1000*time.time())
-        postdata = urllib.urlencode(req)
+        postdata = urllib.parse.urlencode(req)
          
         urlpath = '/' + self.apiversion + '/private/' + method
-        message = urlpath + hashlib.sha256(str(req['nonce']) +
-                                            postdata).digest()
+        message = hashlib.sha256(
+           (str(req['nonce']) + postdata).encode('latin1')).digest()
+        message = urlpath + message.decode('latin1')
+        message = message.encode('latin')
         signature = hmac.new(base64.b64decode(self.secret),
                              message, hashlib.sha512)
-         
+        
         headers = {
-            'User-Agent': 'Kraken Python API Agent',
+            'User-Agent': 'phildeutsch.com',
             'API-Key': self.key,
             'API-Sign': base64.b64encode(signature.digest())
         }
+        postdata = postdata.encode('latin1')
          
         url = self.uri + urlpath
-        ret = urllib2.urlopen(urllib2.Request(url, postdata, headers))
-        return json.loads(ret.read())
+        ret = urllib.request.urlopen(urllib.request.Request(url, postdata, headers))
+        return json.loads(ret.read().decode('latin1'))

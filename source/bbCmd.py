@@ -27,7 +27,7 @@ class bbCmd(cmd.Cmd):
         getTransactions(logFileName, transFileName)
         if btflag is 'y':
             sys.stdout.write('Running backtest...')
-            import backtest
+            # backtest
             sys.stdout.write('done.\n')
             logFileNameBT  = 'data/' + str(tradeBuffer)
             logFileNameBT += str(priceWindow)

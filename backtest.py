@@ -86,5 +86,4 @@ results = np.array(results)
 print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
       'Return, Sharpe')
 print(results[results[:,7].argsort()][::-1])
-drawPlot(plotFileHead, plotFileTail, m, t)
 

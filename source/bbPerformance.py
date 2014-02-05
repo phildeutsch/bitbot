@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from math import isnan
+from math import isnan, sqrt
 import sys
 
 def showPerformance(df, bt=None, tdf=[], date='Total'):
@@ -42,8 +42,6 @@ def showPerformance(df, bt=None, tdf=[], date='Total'):
         startValBT = float(bty.tail(1)['EUR'] + \
                            bty.tail(1)['BTC'] * bty.tail(1)['Bid'])
         retBT = endValBT / startValBT - 1
-
-   
 
     retHold    = closePrice / openPrice - 1
 
@@ -105,21 +103,37 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     results = np.array(results)
 #    np.set_printoptions(precision=4, suppress=True)
 #    print(results)
+    rbh = float(results.mean(axis=0)[0])
+    rst = float(results.mean(axis=0)[1])
+    sbh = float(results.std(axis=0)[0])
+    sst = float(results.std(axis=0)[1])
+    if logFileNameBT is not None:
+        rbt = float(results.mean(axis=0)[2])
+        rst = float(results.mean(axis=0)[2])
+
     sys.stdout.write('{0:<26}'.format('Mean daily return:'))
-    sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[0])) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[1])) + '%')    
+    sys.stdout.write('{0:>8.1}'.format(rbh) + '%')    
+    sys.stdout.write('{0:>8.1}'.format(rst) + '%')    
     if logFileNameBT is not None:
         sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[2])) + '%\n')    
     else:
         sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Mean daily std deviaton:'))
-    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[0])) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[1])) + '%')     
+    sys.stdout.write('{0:>8.1}'.format(sbh) + '%')    
+    sys.stdout.write('{0:>8.1}'.format(sst) + '%')     
     if logFileNameBT is not None:
         sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[2])) + '%\n')    
     else:
         sys.stdout.write('\n')
+    sys.stdout.write('{0:<26}'.format('Annualized Sharpe ratio:'))
+    sys.stdout.write('{0:>8.2f}'.format(rbh/sbh * sqrt(365)))    
+    sys.stdout.write('{0:>9.2f}'.format(rst/sst * sqrt(365)))
+    if logFileNameBT is not None:
+        sys.stdout.write('{0:>9.2f}'.format(rbt/sbt * sqrt(365)))
     print('')
+    if logFileNameBT is not None:
+        return rbh, sbh, rst, sst, rbt, sbt
+    return rbh, sbh, rst, sst
 
 def getTransactions(logFileName, transFileName):
     history  = pd.read_csv(logFileName, parse_dates=[0], index_col=0)

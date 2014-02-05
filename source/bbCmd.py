@@ -3,7 +3,7 @@ import cmd
 sys.path.append('./source')
 sys.path.append('./api')
 
-import APIkraken
+import apiKraken
 from bbClasses import *
 from bbSettings import *
 from bbFunctions import *
@@ -23,10 +23,12 @@ class bbCmd(cmd.Cmd):
         endDate   = input('End Date (YYYY-MM-DD): ')
         if len(endDate) is not 10:
             endDate = None
-        btflag    = 0
+        btflag = input('Run backtest? (y/n): ')
         getTransactions(logFileName, transFileName)
-        if btflag is '1':
+        if btflag is 'y':
+            sys.stdout.write('Running backtest...')
             import backtest
+            sys.stdout.write('done.\n')
             logFileNameBT  = 'data/' + str(tradeBuffer)
             logFileNameBT += str(priceWindow)
             logFileNameBT += str(momFactor)
@@ -36,8 +38,9 @@ class bbCmd(cmd.Cmd):
             makePerformanceTable(logFileName, logFileNameBT, startDate,
                                  endDate, transFileName)
         else:
-            makePerformanceTable(logFileName, None, startDate, endDate,
-                                 transFileName)        
+            rbh, sbh, rst, sst = makePerformanceTable(logFileName, None,
+                                     startDate, endDate, transFileName)
+            
     def help_performance(self):
             print('Syntax: performance')
             print('-- Calculates the performance between two dates for ' +
@@ -45,7 +48,7 @@ class bbCmd(cmd.Cmd):
 
 
     def do_balance(self, arg):    
-        krakenAPI = APIkraken.API(keyKraken, secKraken)
+        krakenAPI = apiKraken.API(keyKraken, secKraken)
         pKraken   = portfolio(1,0)
         mKraken   = marketData('Null', 0, 0, 0)
         mKraken, pKraken = getData(krakenAPI, mKraken, pKraken)

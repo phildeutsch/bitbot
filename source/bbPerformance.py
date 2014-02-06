@@ -80,12 +80,12 @@ def showPerformance(df, bt=None, tdf=[], date='Total'):
     retHold    = closePrice / openPrice - 1
 
     sys.stdout.write('{0:<10}'.format(date))
-    sys.stdout.write('{0:>8.1f}'.format(float(openPrice)))
-    sys.stdout.write('{0:>8.1f}'.format(float(closePrice)))
-    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retHold))) + '%')
-    sys.stdout.write(str('{0:>8.1f}'.format(float(100*retStrategy))) + '%')
+    sys.stdout.write('{0:>8.2f}'.format(float(openPrice)))
+    sys.stdout.write('{0:>8.2f}'.format(float(closePrice)))
+    sys.stdout.write(str('{0:>8.2f}'.format(float(100*retHold))) + '%')
+    sys.stdout.write(str('{0:>8.2f}'.format(float(100*retStrategy))) + '%')
     if bt is not None:
-        sys.stdout.write(str('{0:>8.1f}'.format(float(100*retBT)) + '%\n'))
+        sys.stdout.write(str('{0:>8.2f}'.format(float(100*retBT)) + '%\n'))
         return retHold, retStrategy, retBT
     else:
         sys.stdout.write('\n')
@@ -151,17 +151,17 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
         dbt = float(100*results[:,2][results[:,2]<0].std())
 
     sys.stdout.write('{0:<26}'.format('Mean daily return:'))
-    sys.stdout.write('{0:>8.1}'.format(rbh) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(rst) + '%')    
+    sys.stdout.write('{0:>8.2f}'.format(rbh) + '%')    
+    sys.stdout.write('{0:>8.2f}'.format(rst) + '%')    
     if logFileNameBT is not None:
-        sys.stdout.write('{0:>8.1}'.format(float(results.mean(axis=0)[2])) + '%\n')    
+        sys.stdout.write('{0:>8.2f}'.format(float(results.mean(axis=0)[2])) + '%\n')    
     else:
         sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Mean daily std deviaton:'))
-    sys.stdout.write('{0:>8.1f}'.format(sbh) + '%')    
-    sys.stdout.write('{0:>8.1f}'.format(sst) + '%')     
+    sys.stdout.write('{0:>8.2f}'.format(sbh) + '%')    
+    sys.stdout.write('{0:>8.2f}'.format(sst) + '%')     
     if logFileNameBT is not None:
-        sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[2])) + '%\n')    
+        sys.stdout.write('{0:>8.2f}'.format(float(results.std(axis=0)[2])) + '%\n')    
     else:
         sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Annualized Sharpe ratio:'))

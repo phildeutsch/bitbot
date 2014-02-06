@@ -37,4 +37,6 @@ while True:
         printLogLine(m, p, t, txFileName)
     drawPlot(plotFileHead, plotFileTail, m, t)
 
+    timeNow = datetime.datetime.now()
+    delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
     time.sleep(delay)

@@ -45,9 +45,9 @@ def showPerformance(df, bt=None, tdf=[], date='Total'):
         openPrice  = float((df.head(1)['Bid'] + df.head(1)['Ask'])/2)
         closePrice = float((df.tail(1)['Bid'] + df.tail(1)['Ask'])/2)
         if bt is not None:
-            endValBT   = float(bt.head(1)['EUR'] + \
+            startValBT = float(bt.head(1)['EUR'] + \
                                bt.head(1)['BTC'] * bt.head(1)['Bid'])
-            startValBT = float(bt.tail(1)['EUR'] + \
+            endValBT   = float(bt.tail(1)['EUR'] + \
                                bt.tail(1)['BTC'] * bt.tail(1)['Bid'])
             retBT = endValBT / startValBT - 1
                                 

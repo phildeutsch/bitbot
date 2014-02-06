@@ -139,16 +139,16 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
 #    np.set_printoptions(precision=4, suppress=True)
 #    print(results)
     print('')
-    rbh = float(results.mean(axis=0)[0])
-    rst = float(results.mean(axis=0)[1])
-    sbh = float(results.std(axis=0)[0])
-    sst = float(results.std(axis=0)[1])
-    dbh = float(results[:,0][results[:,0]<0].std())
-    dst = float(results[:,1][results[:,1]<0].std())
+    rbh = float(100*results.mean(axis=0)[0])
+    rst = float(100*results.mean(axis=0)[1])
+    sbh = float(100*results.std(axis=0)[0])
+    sst = float(100*results.std(axis=0)[1])
+    dbh = float(100*results[:,0][results[:,0]<0].std())
+    dst = float(100*results[:,1][results[:,1]<0].std())
     if logFileNameBT is not None:
-        rbt = float(results.mean(axis=0)[2])
-        sbt = float(results.std(axis=0)[2])
-        dbt = float(results[:,2][results[:,2]<0].std())
+        rbt = float(100*results.mean(axis=0)[2])
+        sbt = float(100*results.std(axis=0)[2])
+        dbt = float(100*results[:,2][results[:,2]<0].std())
 
     sys.stdout.write('{0:<26}'.format('Mean daily return:'))
     sys.stdout.write('{0:>8.1}'.format(rbh) + '%')    
@@ -158,8 +158,8 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     else:
         sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Mean daily std deviaton:'))
-    sys.stdout.write('{0:>8.1}'.format(sbh) + '%')    
-    sys.stdout.write('{0:>8.1}'.format(sst) + '%')     
+    sys.stdout.write('{0:>8.1f}'.format(sbh) + '%')    
+    sys.stdout.write('{0:>8.1f}'.format(sst) + '%')     
     if logFileNameBT is not None:
         sys.stdout.write('{0:>8.1}'.format(float(results.std(axis=0)[2])) + '%\n')    
     else:

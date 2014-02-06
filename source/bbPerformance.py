@@ -119,9 +119,12 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     rst = float(results.mean(axis=0)[1])
     sbh = float(results.std(axis=0)[0])
     sst = float(results.std(axis=0)[1])
+    dbh = float(results[:,0][results[:,0]<0].std())
+    dst = float(results[:,1][results[:,1]<0].std())
     if logFileNameBT is not None:
         rbt = float(results.mean(axis=0)[2])
         sbt = float(results.std(axis=0)[2])
+        dbt = float(results[:,2][results[:,2]<0].std())
 
     sys.stdout.write('{0:<26}'.format('Mean daily return:'))
     sys.stdout.write('{0:>8.1}'.format(rbh) + '%')    
@@ -141,7 +144,16 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     sys.stdout.write('{0:>8.2f}'.format(rbh/sbh * sqrt(365)))    
     sys.stdout.write('{0:>9.2f}'.format(rst/sst * sqrt(365)))
     if logFileNameBT is not None:
-        sys.stdout.write('{0:>9.2f}'.format(rbt/sbt * sqrt(365)))
+        sys.stdout.write('{0:>9.2f}'.format(rbt/sbt * sqrt(365)) + '\n')
+    else:
+        sys.stdout.write('\n')
+    sys.stdout.write('{0:<26}'.format('Annualized Sortino ratio:'))
+    sys.stdout.write('{0:>8.2f}'.format(rbh/dbh * sqrt(365)))    
+    sys.stdout.write('{0:>9.2f}'.format(rst/dst * sqrt(365)))
+    if logFileNameBT is not None:
+        sys.stdout.write('{0:>9.2f}'.format(rbt/dbt * sqrt(365)) + '\n')
+    else:
+        sys.stdout.write('\n')   
     print('')
     if logFileNameBT is not None:
         return rbh, sbh, rst, sst, rbt, sbt

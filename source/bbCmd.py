@@ -17,7 +17,10 @@ class bbCmd(cmd.Cmd):
 
     def do_backtest(self, arg):
         stepSize  = input('Set step size [10]: ')
-        stepSize = int(stepSize)
+        try:
+            stepSize = int(stepSize)
+        except:
+            stepSize = 10
         paramFlag = input('Use current parameters? ([y]/n): ')
         if paramFlag is not 'n':
             import backtest

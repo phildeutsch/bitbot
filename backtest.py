@@ -10,8 +10,7 @@ from collections import deque
 
 import numpy as np
 import pandas as pd
-np.set_printoptions(precision=4, suppress=True)
-funds = 2000
+funds = 100
 results = []
 for tradeBuffer in [0]:
     for priceWindow in [100]:
@@ -46,8 +45,8 @@ for tradeBuffer in [0]:
                             t.calcCoinsToTrade(m, p)
                             t.checkTradeSize(m, p, tradeFactor)
             
-#                           if abs(t.coinsToTrade) > 0:
-#                               printTermLine(m, p, t)
+                            if abs(t.coinsToTrade) > 0:
+                                printTermLine(m, p, t)
 
                             printLogLine(m, p, t, logFileNameBT, bounds = 1)
 
@@ -82,8 +81,9 @@ for tradeBuffer in [0]:
                                         round(sharpe,2)])
                         #os.remove(logFileNameBT)      
 
-results = np.array(results)
-print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
-      'Return, Sharpe')
-print(results[results[:,7].argsort()][::-1])
+#results = np.array(results)
+#print('tradeBuffer, priceWindow, momFactor, midDistance, walkUp, walkDown,' + 
+#      'Return, Sharpe')
+#np.set_printoptions(precision=4, suppress=True)
+#print(results[results[:,7].argsort()][::-1])
 

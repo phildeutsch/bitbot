@@ -1,4 +1,3 @@
-delay          = 600.0
 walkUp         = 0.15
 walkDown       = 0
 tradeFactor    = 0.00045

@@ -3,6 +3,28 @@ import numpy as np
 from math import isnan, sqrt
 import sys
 
+def drawdown(r):
+    prices = np.ones(len(r))
+    prices[0] = 100
+    for i in range(1,len(r)):
+        prices[i] = prices[i-1] * (1 + r[i-1])
+    
+    prevmaxi = 0
+    prevmini = 0
+    maxi = 0
+
+    for i in range(len(prices))[1:]:
+        if prices[i] >= prices[maxi]:
+            maxi = i
+        else:
+        # You can only determine the largest drawdown on a downward price!
+            if (prices[maxi] - prices[i]) > (prices[prevmaxi] - prices[prevmini]):
+                prevmaxi = maxi
+                prevmini = i
+    low = prices[prevmini]
+    high = prices[prevmaxi]
+    return 100 * (low/high - 1)
+
 def showPerformance(df, bt=None, tdf=[], date='Total'):
     if date != 'Total':
         dft = df[np.datetime64(date + 'T00:01') : np.datetime64(date + 'T23:59')]
@@ -110,11 +132,13 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     results = []
     for d in uniqueDates[1:]:
         results.append(showPerformance(history, historyBT, t, d))
-        
+    
     showPerformance(history, historyBT, t, 'Total')
     results = np.array(results)
+
 #    np.set_printoptions(precision=4, suppress=True)
 #    print(results)
+    print('')
     rbh = float(results.mean(axis=0)[0])
     rst = float(results.mean(axis=0)[1])
     sbh = float(results.std(axis=0)[0])
@@ -153,7 +177,14 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     if logFileNameBT is not None:
         sys.stdout.write('{0:>9.2f}'.format(rbt/dbt * sqrt(365)) + '\n')
     else:
-        sys.stdout.write('\n')   
+        sys.stdout.write('\n')
+    sys.stdout.write('{0:<26}'.format('Maximum drawdown:'))
+    sys.stdout.write('{0:>8.2f}'.format(drawdown(results[:,0])) + '%')    
+    sys.stdout.write('{0:>8.2f}'.format(drawdown(results[:,1])) + '%')
+    if logFileNameBT is not None:
+        sys.stdout.write('{0:>8.2f}'.format(drawdown(results[:,2])) + '%\n')
+    else:
+        sys.stdout.write('\n')  
     print('')
     if logFileNameBT is not None:
         return rbh, sbh, rst, sst, rbt, sbt

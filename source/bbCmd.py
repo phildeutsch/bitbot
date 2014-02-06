@@ -15,6 +15,17 @@ class bbCmd(cmd.Cmd):
         cmd.Cmd.__init__(self)
         self.prompt = 'B> '
 
+    def do_backtest(self, arg):
+        stepSize  = input('Set step size [10]: ')
+        stepSize = int(stepSize)
+        paramFlag = input('Use current parameters? ([y]/n): ')
+        if paramFlag is not 'n':
+            import backtest
+            
+    def help_backtest(self):
+        print('Syntax: backtest')
+        print('-- Run backtest using the current logfile as input')
+    
     
     def do_performance(self, arg):
         startDate = input('Initial Date (YYYY-MM-DD): ')
@@ -26,9 +37,6 @@ class bbCmd(cmd.Cmd):
         btflag = input('Run backtest? (y/n): ')
         getTransactions(logFileName, transFileName)
         if btflag is 'y':
-            sys.stdout.write('Running backtest...')
-            # backtest
-            sys.stdout.write('done.\n')
             logFileNameBT  = 'data/' + str(tradeBuffer)
             logFileNameBT += str(priceWindow)
             logFileNameBT += str(momFactor)

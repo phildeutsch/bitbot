@@ -46,6 +46,11 @@ class bbCmd(cmd.Cmd):
             logFileNameBT += str(midDistance)
             logFileNameBT += str(walkUp)
             logFileNameBT += str(walkDown) + '.csv'
+            
+            d,r=getReturns(logFileNameBT, None, startDate, endDate)
+            printReturns(d, r)
+            print('')
+            printSummary(r)
         else:
             d,r=getReturns(logFileName, transFileName, startDate, endDate)
             printReturns(d, r)

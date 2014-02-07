@@ -46,11 +46,11 @@ class bbCmd(cmd.Cmd):
             logFileNameBT += str(midDistance)
             logFileNameBT += str(walkUp)
             logFileNameBT += str(walkDown) + '.csv'
-            makePerformanceTable(logFileName, logFileNameBT, startDate,
-                                 endDate, transFileName)
         else:
-            rbh, sbh, rst, sst = makePerformanceTable(logFileName, None,
-                                     startDate, endDate, transFileName)
+            d,r=getReturns(logFileName, transFileName, startDate, endDate)
+            printReturns(d, r)
+            print('')
+            printSummary(r)
             
     def help_performance(self):
             print('Syntax: performance')

@@ -4,9 +4,9 @@ from math import isnan, sqrt
 import sys
 
 def drawdown(r):
-    prices = np.ones(len(r))
+    prices = np.ones(len(r)+1)
     prices[0] = 100
-    for i in range(1,len(r)):
+    for i in range(1,len(prices)):
         prices[i] = prices[i-1] * (1 + r[i-1])
     
     prevmaxi = 0

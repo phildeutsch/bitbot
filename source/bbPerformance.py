@@ -23,7 +23,17 @@ def drawdown(r):
                 prevmini = i
     low = prices[prevmini]
     high = prices[prevmaxi]
-    return 100 * (low/high - 1)
+    return low/high - 1
+    
+def sortino(r):
+    avgReturn = r.mean()
+    avgNegVol = r[r<0].std()
+    return avgReturn / avgNegVol * sqrt(365)
+    
+def sharpe(r):
+    avgReturn = r.mean()
+    avgVol    = r.std()
+    return avgReturn / avgVol * sqrt(365)
 
 def showPerformance(df, bt=None, tdf=[], date='Total'):
     if date != 'Total':
@@ -76,6 +86,7 @@ def showPerformance(df, bt=None, tdf=[], date='Total'):
     if len(tdf) != 0:
         tdf['EUR']=tdf['Amount']*tdf['Bid']
         endValue   = endValue - float(tdf.sum()['EUR'])
+
     retStrategy= endValue / startValue - 1
     retHold    = closePrice / openPrice - 1
 
@@ -165,24 +176,24 @@ def makePerformanceTable(logFileName, logFileNameBT=None, start=None, end=None, 
     else:
         sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Annualized Sharpe ratio:'))
-    sys.stdout.write('{0:>8.2f}'.format(rbh/sbh * sqrt(365)))    
-    sys.stdout.write('{0:>9.2f}'.format(rst/sst * sqrt(365)))
+    sys.stdout.write('{0:>8.2f}'.format(sharpe(results[:,0])))    
+    sys.stdout.write('{0:>9.2f}'.format(sharpe(results[:,1])))
     if logFileNameBT is not None:
-        sys.stdout.write('{0:>9.2f}'.format(rbt/sbt * sqrt(365)) + '\n')
+        sys.stdout.write('{0:>9.2f}'.format(sharpe(results[:,2])) + '\n')
     else:
         sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Annualized Sortino ratio:'))
-    sys.stdout.write('{0:>8.2f}'.format(rbh/dbh * sqrt(365)))    
-    sys.stdout.write('{0:>9.2f}'.format(rst/dst * sqrt(365)))
+    sys.stdout.write('{0:>9.2f}'.format(sortino(results[:,0])))    
+    sys.stdout.write('{0:>8.2f}'.format(sortino(results[:,1])))
     if logFileNameBT is not None:
-        sys.stdout.write('{0:>9.2f}'.format(rbt/dbt * sqrt(365)) + '\n')
+        sys.stdout.write('{0:>9.2f}'.format(sortino(results[:,2])) + '\n')
     else:
         sys.stdout.write('\n')
     sys.stdout.write('{0:<26}'.format('Maximum drawdown:'))
-    sys.stdout.write('{0:>8.2f}'.format(drawdown(results[:,0])) + '%')    
-    sys.stdout.write('{0:>8.2f}'.format(drawdown(results[:,1])) + '%')
+    sys.stdout.write('{0:>8.2f}'.format(100*drawdown(results[:,0])) + '%')    
+    sys.stdout.write('{0:>8.2f}'.format(100*drawdown(results[:,1])) + '%')
     if logFileNameBT is not None:
-        sys.stdout.write('{0:>8.2f}'.format(drawdown(results[:,2])) + '%\n')
+        sys.stdout.write('{0:>8.2f}'.format(100*drawdown(results[:,2])) + '%\n')
     else:
         sys.stdout.write('\n')  
     print('')

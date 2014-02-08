@@ -29,9 +29,11 @@ for tradeBuffer in [0]:
                         for i in range(1,file_len(logFileName)):
 #                        for i in range(1,100):
                            
-                            t = trader(logFileNameBT, walkUp, walkDown,
-                                    midDistance, tradeBuffer, priceWindow)
+#                            t = trader(logFileNameBT, walkUp, walkDown,
+#                                    midDistance, tradeBuffer, priceWindow)
                             m, p = getDataBacktest(logFileName,  m, p, t, i)
+
+                            t.updateBounds(m)
                             
                             t.calcBaseWeight(m)
                             t.calcMomentum(momFactor, m)

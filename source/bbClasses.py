@@ -26,11 +26,9 @@ class trader:
     sells = deque([], priceWindow)
     
     def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow):
-        try:
-            self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
-        except IndexError:
-            self.maxPrice = 0
-            self.minPrice = 0
+        self.maxPrice = 0
+        self.minPrice = 0
+        self.midPrice = 0
         self.tradeBuffer = tradeBuffer
         self.midDistance = midDistance
         self.walkUp = walkUp
@@ -40,6 +38,17 @@ class trader:
         self.coinsToTrade = 0
         self.target = 0
         self.tradePrice = 1
+
+    def updateBounds(self, m):
+        if m.ask > self.maxPrice:
+            self.maxPrice = m.ask
+            self.minPrice = self.maxPrice * (1 - self.walkDown)
+        if m.bid < self.minPrice:
+            self.minPrice = m.bid
+            self.maxPrice = self.minPrice * (1 + self.walkUp)
+        self.midPrice = self.minPrice + \
+                        self.midDistance * (self.maxPrice - self.minPrice)
+        return self.minPrice, self.maxPrice
 
     def calcBaseWeight(self, marketData):
         tb = self.tradeBuffer

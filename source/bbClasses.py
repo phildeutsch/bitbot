@@ -80,7 +80,7 @@ class trader:
     def calcMomentum(self, momFactor, m):
         try:
             mom  = - (m.price/m.mean-1)
-        except zerodivisionerror:
+        except ZeroDivisionError:
             mom  = 1
         self.target = self.target * (1 + momFactor * mom)
         return self.target
@@ -96,7 +96,11 @@ class trader:
             self.tradePrice = m.bid
         N = self.target * (p.EUR + p.BTC * m.bid) - p.EUR
         D = self.target * (self.tradePrice - m.bid) - self.tradePrice
-        self.coinsToTrade = N/D
+        print(N, D)
+        try:
+            self.coinsToTrade = N/D
+        except ZeroDivisionError:
+            self.coinsToTrade = 0
         return self.coinsToTrade
 
     def checkTradeSize(self, m, p, tradeFactor):

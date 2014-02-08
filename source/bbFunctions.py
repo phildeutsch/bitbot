@@ -12,7 +12,7 @@ def cancelOrders(krakenAPI, t):
     except:
         t.error = 0    
 
-def drawPlot(plotFileHead, plotFileTail, m, t):
+def drawPlot(m, t, plotFileHead, plotFileTail, plotFile):
     with open(plotFile,'w') as picFile:
         with open(plotFileHead,'rt') as file1:
             content = file1.readlines()
@@ -34,21 +34,7 @@ def file_len(fname):
             pass
     return i + 1
 
-def getBounds(logFileName, walkUp, walkDown):
-    with open(logFileName,'r') as logFile:
-        history = logFile.readlines()
-    maxPrice = float(re.split(',', history[1])[2])
-    minPrice = float(re.split(',', history[1])[1])
-    for line in range(2,len(history)):
-        if float(re.split(',', history[line])[2]) > maxPrice:
-            maxPrice = float(re.split(',', history[line])[2])
-            minPrice = maxPrice * (1 - walkDown)
-        if float(re.split(',', history[line])[1]) < minPrice:
-            minPrice = float(re.split(',', history[line])[1])
-            maxPrice = minPrice * (1 + walkUp)
-    return minPrice, maxPrice
-
-def getData(krakenAPI, m, p, t = None):
+def getData(krakenAPI, m, p, t):
     try:
         m.time   = krakenAPI.query_public('Time')['result']['rfc1123'][5:20]
         tickData = krakenAPI.query_public('Ticker', {'pair' : 'XXBTZEUR'})
@@ -62,11 +48,14 @@ def getData(krakenAPI, m, p, t = None):
         m.price = (m.bid+m.ask)/2
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)
+
+        if m.bid < t.minPrice * (1 - 0.03):
+            t.freeze = 3
     except:
         if t is not None:
             t.error = 0
 
-    return m, p
+    return m, p, t
 
 def getDataBacktest(logFile,  m, p, t, i):
     data = re.split(',', linecache.getline(logFile, i+1))
@@ -128,13 +117,13 @@ def printStatus(m, p, statusFileName):
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write('{0:<10}'.format(m.time) + '\n')
         statusFile.write('{0:<10}'.format('Value:'))
-        statusFile.write('{0:>7.7f}'.format(p.EUR + p.BTC * m.bid) + '\n')
+        statusFile.write('{0:>6.1f}'.format(p.EUR + p.BTC * m.bid) + '\n')
         statusFile.write('{0:<10}'.format('Price:'))
         statusFile.write('{0:>6.1f}'.format((m.bid+m.ask)/2) + '\n')
         statusFile.write('{0:<10}'.format('EUR:'))
         statusFile.write('{0:>6.1f}'.format(p.EUR) + '\n')
         statusFile.write('{0:<10}'.format('BTC:'))
-        statusFile.write('{0:>6.1f}'.format(p.BTC) + '\n')
+        statusFile.write('{0:>7.2f}'.format(p.BTC) + '\n')
 
 def printTermLine(m, p, t):
     strLog = '{0:<10}'.format(m.time) + ' |'

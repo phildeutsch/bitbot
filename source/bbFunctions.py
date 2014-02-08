@@ -50,7 +50,7 @@ def getData(krakenAPI, m, p, t):
         m.mean = sum(m.histPrices)/len(m.histPrices)
 
         if m.bid < t.minPrice * (1 - 0.03):
-            t.freeze = 3
+            t.freeze = True
     except:
         if t is not None:
             t.error = 0
@@ -68,9 +68,6 @@ def getDataBacktest(logFile,  m, p, t, i):
     m.price = (m.bid+m.ask)/2
     m.histPrices.append(m.price)
     m.mean = sum(m.histPrices)/len(m.histPrices)
-
-    if m.bid < t.minPrice * (1 - 0.03):
-        t.freeze = 3 
 
     return m, p, t
 

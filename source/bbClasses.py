@@ -38,7 +38,7 @@ class trader:
         self.coinsToTrade = 0
         self.target = 0
         self.tradePrice = 1
-        self.freeze = 0
+        self.freeze = False
 
     def updateBounds(self, m):
         if m.ask > self.maxPrice:
@@ -81,7 +81,7 @@ class trader:
         try:
             mom  = - (m.price/m.mean-1)
         except ZeroDivisionError:
-            mom  = 1
+            mom  = 0
         self.target = self.target * (1 + momFactor * mom)
         return self.target
 
@@ -96,7 +96,6 @@ class trader:
             self.tradePrice = m.bid
         N = self.target * (p.EUR + p.BTC * m.bid) - p.EUR
         D = self.target * (self.tradePrice - m.bid) - self.tradePrice
-        print(N, D)
         try:
             self.coinsToTrade = N/D
         except ZeroDivisionError:
@@ -104,9 +103,9 @@ class trader:
         return self.coinsToTrade
 
     def checkTradeSize(self, m, p, tradeFactor):
-        if self.freeze > 0:
-            self.freeze -= 1
+        if self.freeze is True:
             self.coinsToTrade = -p.BTC
+            print('Trade suspended.')
             return self.coinsToTrade
 
         minTrade = tradeFactor * p.value

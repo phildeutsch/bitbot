@@ -6,10 +6,12 @@ momFactor      = 0.75
 priceWindow    = 100
 tradeBuffer    = 0
  
-logFileName    = 'data/history.csv'
-txFileName     = 'data/transactions.csv'
-transFileName  = 'data/transfers.csv'
-statusFileName = 'data/status.txt'
-plotFile       = 'data/plot.html'
+logFileName    = 'logs/history.csv'
+statusFileName = 'logs/status.txt'
+plotFile       = 'logs/plot.html'
+txFileName     = 'logs/transactions.csv'
+
+transFileName  = 'data/funding.csv'
+
 plotFileHead   = 'source/plotHead.txt'
 plotFileTail   = 'source/plotTail.txt'

@@ -27,14 +27,10 @@ for tradeBuffer in [0]:
                         m = marketData('Null', 0, 0, priceWindow)
 
                         for i in range(1,file_len(logFileName)):
-#                        for i in range(1,100):
                            
-#                            t = trader(logFileNameBT, walkUp, walkDown,
-#                                    midDistance, tradeBuffer, priceWindow)
-                            m, p = getDataBacktest(logFileName,  m, p, t, i)
+                            m, p, t = getDataBacktest(logFileName,  m, p, t, i)
 
                             t.updateBounds(m)
-                            
                             t.calcBaseWeight(m)
                             t.calcMomentum(momFactor, m)
                             t.calcCoinsToTrade(m, p)

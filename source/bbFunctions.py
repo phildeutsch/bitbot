@@ -80,7 +80,10 @@ def getDataBacktest(logFile,  m, p, t, i):
     m.histPrices.append(m.price)
     m.mean = sum(m.histPrices)/len(m.histPrices)
 
-    return m, p
+    if m.bid < t.minPrice * (1 - 0.03):
+        t.freeze = 3 
+
+    return m, p, t
 
 def placeOrder(krakenAPI, m, t):
     try:

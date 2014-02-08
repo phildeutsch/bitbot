@@ -110,7 +110,9 @@ class trader:
                 self.coinsToTrade = -p.BTC
         if self.coinsToTrade > p.EUR / m.ask:
                 self.coinsToTrade = p.EUR / m.ask
-        if abs(self.coinsToTrade) < minTrade:
+        if abs(self.coinsToTrade) < minTrade \
+           or self.target is 0 \
+           or self.target is 1:
             self.coinsToTrade = 0
             self.buys.append('null')
             self.sells.append('null')

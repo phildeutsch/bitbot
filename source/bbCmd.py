@@ -16,11 +16,6 @@ class bbCmd(cmd.Cmd):
         self.prompt = 'B> '
 
     def do_backtest(self, arg):
-        stepSize  = input('Set step size [10]: ')
-        try:
-            stepSize = int(stepSize)
-        except:
-            stepSize = 10
         paramFlag = input('Use current parameters? ([y]/n): ')
         if paramFlag is not 'n':
             import backtest
@@ -37,7 +32,7 @@ class bbCmd(cmd.Cmd):
         endDate   = input('End Date (YYYY-MM-DD): ')
         if len(endDate) is not 10:
             endDate = None
-        btflag = input('Run backtest? (y/n): ')
+        btflag = input('Run backtest? (y/[n]): ')
         getTransactions(logFileName, transFileName)
         if btflag is 'y':
             d,r=getReturns(logFileNameBT, None, startDate, endDate)

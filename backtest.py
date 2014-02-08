@@ -18,15 +18,8 @@ for tradeBuffer in [0]:
             for midDistance in [0.5]:
                 for walkUp in [0.15]:
                     for walkDown in [0]:
-                        logFileNameBT  = 'data/' + str(tradeBuffer)
-                        logFileNameBT += str(priceWindow)
-                        logFileNameBT += str(momFactor)
-                        logFileNameBT += str(midDistance)
-                        logFileNameBT += str(walkUp)
-                        logFileNameBT += str(walkDown) + '.csv'
-                        
                         with open(logFileNameBT, 'w') as logBT:
-                            logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minTrade,maxTrade\n')
+                            logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
 
                         t = trader(logFileNameBT, walkUp, walkDown,
                                 midDistance, tradeBuffer, priceWindow)

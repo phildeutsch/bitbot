@@ -12,6 +12,7 @@ plotFile       = 'logs/plot.html'
 txFileName     = 'logs/transactions.csv'
 
 transFileName  = 'data/funding.csv'
+logFileNameBT  = 'data/logBT.csv'
 
 plotFileHead   = 'source/plotHead.txt'
 plotFileTail   = 'source/plotTail.txt'

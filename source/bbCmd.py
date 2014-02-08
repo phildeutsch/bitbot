@@ -40,13 +40,6 @@ class bbCmd(cmd.Cmd):
         btflag = input('Run backtest? (y/n): ')
         getTransactions(logFileName, transFileName)
         if btflag is 'y':
-            logFileNameBT  = 'data/' + str(tradeBuffer)
-            logFileNameBT += str(priceWindow)
-            logFileNameBT += str(momFactor)
-            logFileNameBT += str(midDistance)
-            logFileNameBT += str(walkUp)
-            logFileNameBT += str(walkDown) + '.csv'
-            
             d,r=getReturns(logFileNameBT, None, startDate, endDate)
             printReturns(d, r)
             print('')

@@ -44,6 +44,16 @@ class trader:
         self.tradePrice = 1
         self.freeze = 0
 
+    def checkFreeze(self, m, stopLossLimit, freezeFileName):
+        with open(freezeFileName, 'rt') as freezeFile:
+            freezeFlag = freezeFile.read().strip()
+        if m.bid < self.minPrice * (1 - stopLossLimit):
+            self.freeze = 1
+        elif freezeFlag is 0:
+            self.freeze = 0
+        elif freezeFlag is 1:
+            self.freeze = 1
+
     def updateBounds(self, m):
         if m.ask > self.maxPrice:
             self.maxPrice = m.ask
@@ -117,17 +127,8 @@ class trader:
         if self.coinsToTrade > p.EUR / m.ask:
                 self.coinsToTrade = p.EUR / m.ask
         minTrade = tradeFactor * p.value
-        if abs(self.coinsToTrade) < minTrade \
-           or self.target is 0 \
-           or self.target is 1:
-            self.coinsToTrade = 0
-            self.buys.append('null')
-            self.sells.append('null')
-            return 0
-        elif self.coinsToTrade > minTrade:
-            self.buys.append(m.ask)
-            self.sells.append('null')
-        elif self.coinsToTrade < -minTrade:
-            self.buys.append('null')
-            self.sells.append(m.bid)
+        if abs(self.coinsToTrade) < minTrade:
+            if self.target is not 0 and self.target is not 1:
+                self.coinsToTrade = 0
+                return 0
         return self

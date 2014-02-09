@@ -31,17 +31,18 @@ for tradeBuffer in [0]:
 
                             m, p = getDataBacktest(logFileName,  m, p, t, i)
 
+                            t.checkFreeze(m, stopLossLimit, freezeFileName)
                             t.updateBounds(m)
                             t.calcBaseWeight(m)
                             t.calcMomentum(momFactor, m)
                             t.calcCoinsToTrade(m, p)
                             t.checkTradeSize(m, p, tradeFactor)
             
+                            printStatus(m, p, t, statusFileName, freezeFileName)
                             if abs(t.coinsToTrade) > 0:
                                 printTermLine(m, p, t)
-
-                            printStatus(m, p, t, statusFileName, freezeFileName)
                             printLogLine(m, p, t, logFileNameBT, bounds = 1)
+                            drawPlot(m, t, plotFile)
 
                             p.BTC = p.BTC + t.coinsToTrade
                             if t.coinsToTrade > 0:

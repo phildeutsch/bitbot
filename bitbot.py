@@ -37,7 +37,7 @@ while True:
     printLogLine(m, p, t, logFileName)
     if abs(t.coinsToTrade) > 0:
         printLogLine(m, p, t, txFileName)
-    drawPlot(m, t, plotFileHead, plotFileTail, plotFile)
+    drawPlot(m, t, plotFile)
 
     timeNow = datetime.datetime.now()
     delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second

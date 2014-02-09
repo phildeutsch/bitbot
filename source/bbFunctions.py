@@ -12,7 +12,20 @@ def cancelOrders(krakenAPI, t):
     except:
         t.error = 0    
 
-def drawPlot(m, t, plotFileHead, plotFileTail, plotFile):
+def drawPlot(m, t, plotFile):
+    plotFileHead   = 'source/plotHead.txt'
+    plotFileTail   = 'source/plotTail.txt'
+
+    if t.coinsToTrade is 0:
+        t.buys.append('null')
+        t.sells.append('null')
+    elif t.coinsToTrade > 0:
+        t.buys.append(m.ask)
+        t.sells.append('null')
+    elif t.coinsToTrade < 0:
+        t.buys.append('null')
+        t.sells.append(m.bid)
+
     with open(plotFile,'w') as picFile:
         with open(plotFileHead,'rt') as file1:
             content = file1.readlines()
@@ -63,8 +76,6 @@ def getData(krakenAPI, m, p, t = None):
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)
 
-        if m.bid < t.minPrice * (1 - 0.03):
-            t.freeze = 1
     except:
         if t is not None:
             t.error = 0
@@ -83,9 +94,6 @@ def getDataBacktest(logFile,  m, p, t, i):
     m.histPrices.append(m.price)
     m.mean = sum(m.histPrices)/len(m.histPrices)
     
-    if m.bid < t.minPrice * (1 - 0.03):
-        t.freeze = 1
-
     return m, p
 
 def placeOrder(krakenAPI, m, t):
@@ -130,6 +138,11 @@ def printStatus(m, p, t, statusFileName, freezeFileName):
     with open(statusFileName, 'w') as statusFile:
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write('{0:<10}'.format(m.time) + '\n')
+        statusFile.write('{0:<10}'.format('Status:'))
+        if t.freeze is 0:
+            statusFile.write('{0:<10}'.format('Trading') + '\n')
+        elif t.freeze is 1:
+            statusFile.write('{0:<10}'.format('Trading frozen') + '\n')
         statusFile.write('{0:<10}'.format('Value:'))
         statusFile.write('{0:>6.1f}'.format(p.EUR + p.BTC * m.bid) + '\n')
         statusFile.write('{0:<10}'.format('Price:'))
@@ -138,8 +151,6 @@ def printStatus(m, p, t, statusFileName, freezeFileName):
         statusFile.write('{0:>6.1f}'.format(p.EUR) + '\n')
         statusFile.write('{0:<10}'.format('BTC:'))
         statusFile.write('{0:>7.2f}'.format(p.BTC) + '\n')
-    with open(freezeFileName, 'w') as freezeFile:
-        freezeFile.write(str(t.freeze))
 
 def printTermLine(m, p, t):
     strLog = '{0:<10}'.format(m.time) + ' |'

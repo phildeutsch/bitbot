@@ -29,14 +29,14 @@ while True:
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(m, p, tradeFactor)
     
-#    cancelOrders(krakenAPI, t)    
-#    placeOrder(krakenAPI, m, t)
+    cancelOrders(krakenAPI, t)    
+    placeOrder(krakenAPI, m, t)
 
     printStatus(m, p, statusFileName)
     printTermLine(m, p, t)
-#    printLogLine(m, p, t, logFileName)
-#    if abs(t.coinsToTrade) > 0:
-#        printLogLine(m, p, t, txFileName)
+    printLogLine(m, p, t, logFileName)
+    if abs(t.coinsToTrade) > 0:
+        printLogLine(m, p, t, txFileName)
     drawPlot(m, t, plotFileHead, plotFileTail, plotFile)
 
     timeNow = datetime.datetime.now()

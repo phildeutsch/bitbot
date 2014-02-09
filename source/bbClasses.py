@@ -26,11 +26,15 @@ class trader:
     sells = deque([], priceWindow)
     
     def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow):
-        self.maxPrice = 0
-        self.minPrice = 0
-        self.midPrice = 0
-        self.tradeBuffer = tradeBuffer
+        try:
+            self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
+        except:
+            self.minPrice = 0
+            self.maxPrice = 0
         self.midDistance = midDistance
+        self.midPrice = self.minPrice + \
+                        self.midDistance * (self.maxPrice - self.minPrice)
+        self.tradeBuffer = tradeBuffer
         self.walkUp = walkUp
         self.walkDown = walkDown
         self.midPrice = self.minPrice + \

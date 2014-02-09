@@ -34,6 +34,20 @@ def file_len(fname):
             pass
     return i + 1
 
+def getBounds(logFileName, walkUp, walkDown):
+    with open(logFileName,'r') as logFile:
+        history = logFile.readlines()
+    maxPrice = float(re.split(',', history[1])[2])
+    minPrice = float(re.split(',', history[1])[1])
+    for line in range(2,len(history)):
+        if float(re.split(',', history[line])[2]) > maxPrice:
+            maxPrice = float(re.split(',', history[line])[2])
+            minPrice = maxPrice * (1 - walkDown)
+        if float(re.split(',', history[line])[1]) < minPrice:
+            minPrice = float(re.split(',', history[line])[1])
+            maxPrice = minPrice * (1 + walkUp)
+    return minPrice, maxPrice
+
 def getData(krakenAPI, m, p, t):
     try:
         m.time   = krakenAPI.query_public('Time')['result']['rfc1123'][5:20]

@@ -27,7 +27,7 @@ for tradeBuffer in [0]:
                         m = marketData('Null', 0, 0, priceWindow)
 
                         for i in range(1,file_len(logFileName)):
-                            t.freeze = False                           
+                            t.freeze = 0                           
 
                             m, p = getDataBacktest(logFileName,  m, p, t, i)
 
@@ -40,6 +40,7 @@ for tradeBuffer in [0]:
                             if abs(t.coinsToTrade) > 0:
                                 printTermLine(m, p, t)
 
+                            printStatus(m, p, t, statusFileName, freezeFileName)
                             printLogLine(m, p, t, logFileNameBT, bounds = 1)
 
                             p.BTC = p.BTC + t.coinsToTrade

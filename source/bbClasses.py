@@ -42,7 +42,7 @@ class trader:
         self.coinsToTrade = 0
         self.target = 0
         self.tradePrice = 1
-        self.freeze = False
+        self.freeze = 0
 
     def updateBounds(self, m):
         if m.ask > self.maxPrice:
@@ -107,7 +107,7 @@ class trader:
         return self.coinsToTrade
 
     def checkTradeSize(self, m, p, tradeFactor):
-        if self.freeze is True:
+        if self.freeze is 1:
             self.coinsToTrade = -p.BTC
             print('Trading frozen.')
             return self.coinsToTrade

@@ -64,7 +64,7 @@ def getData(krakenAPI, m, p, t = None):
         m.mean = sum(m.histPrices)/len(m.histPrices)
 
         if m.bid < t.minPrice * (1 - 0.03):
-            t.freeze = True
+            t.freeze = 1
     except:
         if t is not None:
             t.error = 0
@@ -84,7 +84,7 @@ def getDataBacktest(logFile,  m, p, t, i):
     m.mean = sum(m.histPrices)/len(m.histPrices)
     
     if m.bid < t.minPrice * (1 - 0.03):
-        t.freeze = True
+        t.freeze = 1
 
     return m, p
 
@@ -126,7 +126,7 @@ def printLogLine(m, p, t, logFileName, bounds=0):
             logFile.write(',' + '{0:0.2f}'.format(t.maxPrice))
         logFile.write('\n')
 
-def printStatus(m, p, statusFileName):
+def printStatus(m, p, t, statusFileName, freezeFileName):
     with open(statusFileName, 'w') as statusFile:
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write('{0:<10}'.format(m.time) + '\n')
@@ -138,6 +138,8 @@ def printStatus(m, p, statusFileName):
         statusFile.write('{0:>6.1f}'.format(p.EUR) + '\n')
         statusFile.write('{0:<10}'.format('BTC:'))
         statusFile.write('{0:>7.2f}'.format(p.BTC) + '\n')
+    with open(freezeFileName, 'w') as freezeFile:
+        freezeFile.write(str(t.freeze))
 
 def printTermLine(m, p, t):
     strLog = '{0:<10}'.format(m.time) + ' |'

@@ -109,14 +109,14 @@ class trader:
     def checkTradeSize(self, m, p, tradeFactor):
         if self.freeze is True:
             self.coinsToTrade = -p.BTC
-            print('Trade suspended.')
+            print('Trading frozen.')
             return self.coinsToTrade
 
-        minTrade = tradeFactor * p.value
         if self.coinsToTrade < -p.BTC:
                 self.coinsToTrade = -p.BTC
         if self.coinsToTrade > p.EUR / m.ask:
                 self.coinsToTrade = p.EUR / m.ask
+        minTrade = tradeFactor * p.value
         if abs(self.coinsToTrade) < minTrade \
            or self.target is 0 \
            or self.target is 1:

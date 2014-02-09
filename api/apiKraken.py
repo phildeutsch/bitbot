@@ -66,7 +66,7 @@ class API(object):
            (str(req['nonce']) + postdata).encode('latin1')).digest()
         message = urlpath + message.decode('latin1')
         message = message.encode('latin')
-        signature = hmac.new(base64.b64decode(self.secret),
+        signature = hmac.new(base64.b64decode(self.secret.encode('latin1')),
                              message, hashlib.sha512)
         
         headers = {

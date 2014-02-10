@@ -21,14 +21,16 @@ m         = marketData('Null', 0, 0, priceWindow)
 krakenAPI = apiKraken.API(key, secret)
 
 while True:
-    m, p, t = getData(krakenAPI, m, p, t)
+    m, p = getData(krakenAPI, m, p, t)
     
+    t.stopLoss(m, stopLossLimit, overrideFileName)
     t.updateBounds(m)
     t.calcBaseWeight(m)
     t.calcMomentum(momFactor, m)
+    t.checkOverride(overrideFileName)
+
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(m, p, tradeFactor)
-    t.checkOverride(overrideFileName)
     
     cancelOrders(krakenAPI, t)    
     placeOrder(krakenAPI, m, t)

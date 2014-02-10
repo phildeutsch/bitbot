@@ -48,6 +48,7 @@ class trader:
         with open(overrideFileName, 'rt') as of:
             data = of.readlines()
         flagOverride = int(data[0].split('=')[-1].strip())
+        print(flagOverride)
         targetOverride = int(data[1].split('=')[-1].strip())
         if flagOverride is 1:
             self.target = targetOverride
@@ -114,7 +115,7 @@ class trader:
             self.coinsToTrade = 0
         return self.coinsToTrade
 
-    def checkTradeSize(self, m, p, tradeFactor, stopLossLimit, overrideFileName):
+    def stopLoss(self, m, stopLossLimit, overrideFileName):
         if m.bid < self.minPrice * (1 - stopLossLimit):
             self.coinsToTrade = -p.BTC
             with open(overrideFileName, 'wt') as of:
@@ -123,6 +124,8 @@ class trader:
             print('Trading frozen.')
             return self.coinsToTrade
 
+
+    def checkTradeSize(self, m, p, tradeFactor):
         if self.coinsToTrade < -p.BTC:
                 self.coinsToTrade = -p.BTC
         if self.coinsToTrade > p.EUR / m.ask:

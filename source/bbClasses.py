@@ -114,9 +114,12 @@ class trader:
             self.coinsToTrade = 0
         return self.coinsToTrade
 
-    def checkTradeSize(self, m, p, tradeFactor):
-        if self.freeze is 1:
+    def checkTradeSize(self, m, p, tradeFactor, stopLossLimit, overrideFileName):
+        if m.bid < self.minPrice * (1 - stopLossLimit):
             self.coinsToTrade = -p.BTC
+            with open(overrideFileName, 'wt') as of:
+                of.write('override = ' + str(1) + '\n')
+                of.write('target = ' + str(0) + '\n')
             print('Trading frozen.')
             return self.coinsToTrade
 

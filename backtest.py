@@ -27,16 +27,15 @@ for tradeBuffer in [0]:
                         m = marketData('Null', 0, 0, priceWindow)
 
                         for i in range(1,file_len(logFileName)):
-                            t.freeze = 0                           
 
                             m, p = getDataBacktest(logFileName,  m, p, t, i)
 
-                            t.checkFreeze(m, stopLossLimit, freezeFileName)
                             t.updateBounds(m)
                             t.calcBaseWeight(m)
                             t.calcMomentum(momFactor, m)
                             t.calcCoinsToTrade(m, p)
-                            t.checkTradeSize(m, p, tradeFactor)
+                            t.checkTradeSize(m, p, tradeFactor, stopLossLimit,
+                                             overrideFileName)
             
                             printStatus(m, p, t, statusFileName, freezeFileName)
                             if abs(t.coinsToTrade) > 0:

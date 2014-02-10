@@ -28,6 +28,7 @@ while True:
     t.calcMomentum(momFactor, m)
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(m, p, tradeFactor)
+    t.checkOverride(overrideFileName)
     
     cancelOrders(krakenAPI, t)    
     placeOrder(krakenAPI, m, t)

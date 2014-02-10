@@ -7,11 +7,12 @@ priceWindow    = 100
 tradeBuffer    = 0
 stopLossLimit  = 0.03
  
-logFileName    = 'logs/history.csv'
-statusFileName = 'logs/status.txt'
-plotFile       = 'logs/plot.html'
-txFileName     = 'logs/transactions.csv'
+logFileName      = 'logs/history.csv'
+statusFileName   = 'logs/status.txt'
+plotFile         = 'logs/plot.html'
+txFileName       = 'logs/transactions.csv'
 
-transFileName  = 'data/funding.csv'
-logFileNameBT  = 'data/logBT.csv'
-freezeFileName = 'data/freeze.txt'
+transFileName    = 'data/funding.csv'
+logFileNameBT    = 'data/logBT.csv'
+freezeFileName   = 'data/freeze.txt'
+overrideFileName = 'data/override.txt'

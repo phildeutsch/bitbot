@@ -32,15 +32,15 @@ while True:
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(m, p, tradeFactor)
     
-#    cancelOrders(krakenAPI, t)    
-#    placeOrder(krakenAPI, m, t)
+    cancelOrders(krakenAPI, t)    
+    placeOrder(krakenAPI, m, t)
 
-#    printStatus(m, p, t, statusFileName, freezeFileName)
+    printStatus(m, p, t, statusFileName, freezeFileName)
     printTermLine(m, p, t)
-#    printLogLine(m, p, t, logFileName)
-#    if abs(t.coinsToTrade) > 0:
-#        printLogLine(m, p, t, txFileName)
-#    drawPlot(m, t, plotFile)
+    printLogLine(m, p, t, logFileName)
+    if abs(t.coinsToTrade) > 0:
+        printLogLine(m, p, t, txFileName)
+    drawPlot(m, t, plotFile)
 
     timeNow = datetime.datetime.now()
     delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second

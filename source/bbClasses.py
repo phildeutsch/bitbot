@@ -48,7 +48,6 @@ class trader:
         with open(overrideFileName, 'rt') as of:
             data = of.readlines()
         flagOverride = int(data[0].split('=')[-1].strip())
-        print(flagOverride)
         targetOverride = int(data[1].split('=')[-1].strip())
         if flagOverride is 1:
             self.target = targetOverride

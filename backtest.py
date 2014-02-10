@@ -33,9 +33,9 @@ for tradeBuffer in [0]:
                             t.updateBounds(m)
                             t.calcBaseWeight(m)
                             t.calcMomentum(momFactor, m)
+
                             t.calcCoinsToTrade(m, p)
-                            t.checkTradeSize(m, p, tradeFactor, stopLossLimit,
-                                             overrideFileName)
+                            t.checkTradeSize(m, p, tradeFactor)
             
                             printStatus(m, p, t, statusFileName, freezeFileName)
                             if abs(t.coinsToTrade) > 0:

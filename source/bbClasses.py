@@ -44,15 +44,13 @@ class trader:
         self.tradePrice = 1
         self.freeze = 0
 
-    def checkFreeze(self, m, stopLossLimit, freezeFileName):
-        with open(freezeFileName, 'rt') as freezeFile:
-            freezeFlag = freezeFile.read().strip()
-        if m.bid < self.minPrice * (1 - stopLossLimit):
-            self.freeze = 1
-        elif freezeFlag is 0:
-            self.freeze = 0
-        elif freezeFlag is 1:
-            self.freeze = 1
+    def checkOverride(self, overrideFileName):
+        with open(overrideFileName, 'rt') as of:
+            data = of.readlines()
+        flagOverride = data(o[0].split('=')[-1].strip())
+        targetOverride = data(o[1].split('=')[-1].strip())
+        if flagOverride is 1:
+            self.target = targetOverride
 
     def updateBounds(self, m):
         if m.ask > self.maxPrice:

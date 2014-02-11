@@ -50,11 +50,17 @@ def calcReturn(log, transactions, date):
     except:
         tdf = []
 
-    startValue = float(dfy.tail(1)['EUR'] + \
-                       dfy.tail(1)['BTC'] * dfy.tail(1)['Bid'])
+    if len(dfy) > 0:
+        startValue = float(dfy.tail(1)['EUR'] + \
+                           dfy.tail(1)['BTC'] * dfy.tail(1)['Bid'])
+        openPrice  = float((dfy.tail(1)['Bid'] + dfy.tail(1)['Ask'])/2)
+    else:
+        startValue = float(dft.head(1)['EUR'] + \
+                           dft.head(1)['BTC'] * dft.head(1)['Bid'])
+        openPrice  = float((dft.head(1)['Bid'] + dft.head(1)['Ask'])/2)
+        
     endValue   = float(dft.tail(1)['EUR'] + \
                        dft.tail(1)['BTC'] * dft.tail(1)['Bid'])
-    openPrice  = float((dfy.tail(1)['Bid'] + dfy.tail(1)['Ask'])/2)
     closePrice = float((dft.tail(1)['Bid'] + dft.tail(1)['Ask'])/2)
     
     if len(tdf) != 0:
@@ -91,9 +97,11 @@ def getReturns(logFileName, transfers=None, start=None, end=None):
     for d in range(len(dates)):
         if str(dates[d])[0:10] not in uniqueDates:
             uniqueDates.append(str(dates[d])[0:10])
-    for d in uniqueDates[1:]:
+    if uniqueDates[0] != start:
+        uniqueDates = uniqueDates[1:]
+    for d in uniqueDates:
             r.append(calcReturn(history, t, d))
-    return uniqueDates[1:], np.array(r)
+    return uniqueDates, np.array(r)
 
 def printReturns(dates, returns):
     sys.stdout.write('{0:<10}'.format('Date'))

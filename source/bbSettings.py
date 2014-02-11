@@ -16,3 +16,5 @@ transFileName    = 'data/funding.csv'
 logFileNameBT    = 'data/logBT.csv'
 freezeFileName   = 'data/freeze.txt'
 overrideFileName = 'data/override.txt'
+
+emailAddress     = 'philipp.g.deutsch@gmail.com'

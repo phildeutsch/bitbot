@@ -42,15 +42,22 @@ class trader:
         self.coinsToTrade = 0
         self.target = 0
         self.tradePrice = 1
-        self.freeze = 0
+        self.override = 0
+        self.suspend = 0
 
     def checkOverride(self, overrideFileName):
-        with open(overrideFileName, 'rt') as of:
-            data = of.readlines()
-        flagOverride = int(data[0].split('=')[-1].strip())
-        targetOverride = int(data[1].split('=')[-1].strip())
-        if flagOverride is 1:
-            self.target = targetOverride
+        try:
+            with open(overrideFileName, 'rt') as of:
+                data = of.readlines()
+            flagOverride   = int(data[0].split('=')[-1].strip())
+            targetOverride = int(data[1].split('=')[-1].strip())
+            flagSuspend    = int(data[2].split('=')[-1].strip())
+            self.suspend   = flagSuspend
+            self.override  = flagOverride
+            if flagOverride is 1:
+                self.target = targetOverride
+        except:
+            t.error = 1
 
     def updateBounds(self, m):
         if m.ask > self.maxPrice:
@@ -119,8 +126,10 @@ class trader:
             self.coinsToTrade = -p.BTC
             with open(overrideFileName, 'wt') as of:
                 of.write('override = ' + str(1) + '\n')
-                of.write('target = ' + str(0) + '\n')
+                of.write('target   = ' + str(1) + '\n')
+                of.write('suspend  = ' + str(0) + '\n')
             print('Trading frozen.')
+            sendEmail(t, emailAddress, 'Trading has been frozen.')
             return self.coinsToTrade
 
 

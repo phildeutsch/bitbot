@@ -1,7 +1,26 @@
+from smtplib import SMTP_SSL as SMTP
+from email.mime.text import MIMEText
 import linecache
 import time
 import sys
 import re
+
+def sendEmail(t, recipient, subject):
+    text = ''
+    msg = MIMEText(text, 'plain')
+    smtpServer = 'smtpout.europe.secureserver.net'
+    login = 'phil@phildeutsch.com'
+    pwd = 'Dezember2013'
+    msg['To'] = recipient
+    msg['From'] = login
+    msg['Subject'] = subject
+    try:
+        conn = SMTP(smtpServer)
+        conn.login(login, pwd)
+        conn.sendmail(login, recipient, msg.as_string())
+        conn.close()
+    except:
+        t.error = 1
 
 def cancelOrders(krakenAPI, t):
     try:
@@ -139,10 +158,13 @@ def printStatus(m, p, t, statusFileName, freezeFileName):
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write('{0:<10}'.format(m.time) + '\n')
         statusFile.write('{0:<10}'.format('Status:'))
-        if t.freeze is 0:
-            statusFile.write('{0:<10}'.format('Trading') + '\n')
-        elif t.freeze is 1:
-            statusFile.write('{0:<10}'.format('Trading frozen') + '\n')
+        if t.suspend is 0:
+            if t.override is 1:
+                statusFile.write('{0:<10}'.format('Trading to external target') + '\n')
+            elif t.override is 0:
+                statusFile.write('{0:<10}'.format('Autonomous trading') + '\n')
+        elif t.suspend is 1:
+            statusFile.write('{0:<10}'.format('Trading suspended') + '\n')
         statusFile.write('{0:<10}'.format('Value:'))
         statusFile.write('{0:>6.1f}'.format(p.EUR + p.BTC * m.bid) + '\n')
         statusFile.write('{0:<10}'.format('Price:'))

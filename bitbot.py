@@ -31,12 +31,13 @@ while True:
 
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(m, p, tradeFactor)
-    
-    cancelOrders(krakenAPI, t)    
-    placeOrder(krakenAPI, m, t)
 
-    printStatus(m, p, t, statusFileName, freezeFileName)
+    if t.suspend is not 1:
+        cancelOrders(krakenAPI, t)    
+        placeOrder(krakenAPI, m, t)
+    
     printTermLine(m, p, t)
+    printStatus(m, p, t, statusFileName, freezeFileName)
     printLogLine(m, p, t, logFileName)
     if abs(t.coinsToTrade) > 0:
         printLogLine(m, p, t, txFileName)

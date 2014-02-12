@@ -80,9 +80,10 @@ class API(object):
         ret = urllib.request.urlopen(urllib.request.Request(url, postdata, headers))
         return json.loads(ret.read().decode('latin1'))
 		
-    def getDepth(self, count):
-        depth = krakenAPI.query_public('Depth', {'pair' : 'XXBTZEUR',
-                                                 'count': count})
-        asks = depth['result']['XXBTZEUR']['asks']
-        bids = depth['result']['XXBTZEUR']['bids']
-        return bids, asks
+def getDepth(API, count):
+    depth = API.query_public('Depth', {
+                             'pair' : 'XXBTZEUR',
+                             'count': count})
+    asks = depth['result']['XXBTZEUR']['asks']
+    bids = depth['result']['XXBTZEUR']['bids']
+    return bids, asks

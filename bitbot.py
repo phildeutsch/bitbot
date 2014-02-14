@@ -8,41 +8,53 @@ import apiKraken
 from bbClasses import *
 from bbSettings import *
 from bbFunctions import *
-from bbKeysTrader import *
+from bbKeysMonitor import *
 
 import datetime
 import time
 import re
 
-t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, 
-                   priceWindow)
-p         = portfolio(1,0)
-m         = marketData('Null', 0, 0, priceWindow)
-krakenAPI = apiKraken.API(key, secret)
-
-while True:
-    m, p = getData(krakenAPI, m, p, t)
+def main():
+    testFlag  = 1
     
-    t.stopLoss(m, stopLossLimit, overrideFileName)
-    t.updateBounds(m)
-    t.calcBaseWeight(m)
-    t.calcMomentum(momFactor, m)
-    t.checkOverride(overrideFileName)
+    t         = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, 
+                   priceWindow, tradeFactor)
+    p         = portfolio(1,0)
+    m         = marketData('Null', 0, 0, priceWindow)
+    krakenAPI = apiKraken.API(keyKraken, secKraken)
 
-    t.calcCoinsToTrade(m, p)
-    t.checkTradeSize(m, p, tradeFactor)
-
-    if t.suspend is not 1:
-        cancelOrders(krakenAPI, t)    
-        placeOrder(krakenAPI, m, t)
+    while True:
+        krakenAPI.getBalance(m, p, t)
+        krakenAPI.getPrices(m, t.minTrade)
+        
+#        m, p = getData(krakenAPI, m, p, t)
     
-    printTermLine(m, p, t)
-    printStatus(m, p, t, statusFileName, freezeFileName)
-    printLogLine(m, p, t, logFileName)
-    if abs(t.coinsToTrade) > 0:
-        printLogLine(m, p, t, txFileName)
-    drawPlot(m, t, plotFile)
+        t.stopLoss(m, stopLossLimit, overrideFileName)
+        t.updateBounds(m)
+        t.calcBaseWeight(m)
+        t.calcMomentum(momFactor, m)
+        t.checkOverride(overrideFileName)
 
-    timeNow = datetime.datetime.now()
-    delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-    time.sleep(delay)
+        t.calcCoinsToTrade(m, p)
+        t.checkTradeSize(m, p, tradeFactor)
+
+        if t.suspend != 1 and testFlag != 1:
+            cancelOrders(krakenAPI, t)    
+            placeOrder(krakenAPI, m, t)
+    
+        printTermLine(m, p, t)
+        printStatus(m, p, t, statusFileName, freezeFileName)
+        printLogLine(m, p, t, logFileName)
+        if abs(t.coinsToTrade) > 0:
+            printLogLine(m, p, t, txFileName)
+        drawPlot(m, t, plotFile)
+
+        if testFlag == 1:
+            break
+        else:
+            timeNow = datetime.datetime.now()
+            delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+            time.sleep(delay)
+
+if __name__ == "__main__":
+    main()

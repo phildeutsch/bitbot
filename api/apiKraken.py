@@ -80,10 +80,38 @@ class API(object):
         ret = urllib.request.urlopen(urllib.request.Request(url, postdata, headers))
         return json.loads(ret.read().decode('latin1'))
 		
-def getDepth(API, count):
-    depth = API.query_public('Depth', {
-                             'pair' : 'XXBTZEUR',
-                             'count': count})
-    asks = depth['result']['XXBTZEUR']['asks']
-    bids = depth['result']['XXBTZEUR']['bids']
-    return bids, asks
+    def getDepth(self):
+        depth = self.query_public('Depth', {
+                                 'pair' : 'XXBTZEUR'})
+        asks = depth['result']['XXBTZEUR']['asks']
+        bids = depth['result']['XXBTZEUR']['bids']
+        return bids, asks
+		
+    def getPrice(self, coinsToTrade):
+        b, a = self.getDepth()
+        tradePrice = 0
+        if coinsToTrade > 0:
+            if coinsToTrade < float(a[0][1]):
+                tradePrice = float(a[0][0])
+            else:
+                cumDepth = 0
+                for i in range(len(a)):
+                    cumDepth += float(a[i][1])
+                    if cumDepth > coinsToTrade:
+                        tradePrice = a[i][0]
+                        break
+            if tradePrice is 0:
+                tradePrice = a[-1][0]
+        elif coinsToTrade < 0:
+            if coinsToTrade > float(b[0][1]):
+                tradePrice = float(b[0][0])
+            else:
+                cumDepth = 0
+                for i in range(len(b)):
+                    cumDepth += float(b[i][1])
+                    if cumDepth > -coinsToTrade:
+                        tradePrice = b[i][0]
+                        break
+            if tradePrice is 0:
+                tradePrice = b[-1][0]
+        return tradePrice

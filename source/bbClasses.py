@@ -25,7 +25,7 @@ class trader:
     buys  = deque([], priceWindow)
     sells = deque([], priceWindow)
     
-    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow):
+    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow, tradeFactor):
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
         except:
@@ -44,6 +44,8 @@ class trader:
         self.tradePrice = 1
         self.override = 0
         self.suspend = 0
+        self.minTrade = 0
+        self.tradeFactor = tradeFactor
 
     def checkOverride(self, overrideFileName):
         try:

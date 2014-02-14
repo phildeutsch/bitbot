@@ -80,27 +80,6 @@ def getBounds(logFileName, walkUp, walkDown):
             maxPrice = minPrice * (1 + walkUp)
     return minPrice, maxPrice
 
-def getData(krakenAPI, m, p, t = None):
-    try:
-        m.time   = krakenAPI.query_public('Time')['result']['rfc1123'][5:20]
-        tickData = krakenAPI.query_public('Ticker', {'pair' : 'XXBTZEUR'})
-        balance  = krakenAPI.query_private('Balance')['result']
-        m.bid = float(tickData['result']['XXBTZEUR']['b'][0])
-        m.ask = float(tickData['result']['XXBTZEUR']['a'][0])
-        p.EUR  = float(balance['ZEUR'])
-        p.BTC  = float(balance['XXBT'])
-        p.value = p.EUR + p.BTC * m.bid
-        p.weight = p.EUR / p.value
-        m.price = (m.bid+m.ask)/2
-        m.histPrices.append(m.price)
-        m.mean = sum(m.histPrices)/len(m.histPrices)
-
-    except:
-        if t is not None:
-            t.error = 0
-
-    return m, p
-
 def getDataBacktest(logFile,  m, p, t, i):
     data = re.split(',', linecache.getline(logFile, i+1))
     m.time = data[0]
@@ -175,7 +154,7 @@ def printStatus(m, p, t, statusFileName, freezeFileName):
         statusFile.write('{0:>7.2f}'.format(p.BTC) + '\n')
 
 def printTermLine(m, p, t):
-    strLog = '{0:<10}'.format(m.time) + ' |'
+    strLog = '{0:<10}'.format(m.time[0:16]) + ' |'
     strLog += ' B:'+ '{0:>7.1f}'.format(m.bid) 
     strLog += ' A:'+ '{0:>7.1f}'.format(m.ask) + ' |'
     strLog += ' EUR:' + '{0:>6.1f}'.format(p.EUR)

@@ -22,7 +22,8 @@ for tradeBuffer in [0]:
                             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
 
                         t = trader(logFileNameBT, walkUp, walkDown,
-                                midDistance, tradeBuffer, priceWindow)
+                                midDistance, tradeBuffer, priceWindow,
+                                tradeFactor)
                         p = portfolio(funds, 0)
                         m = marketData('Null', 0, 0, priceWindow)
 

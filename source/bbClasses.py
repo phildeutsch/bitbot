@@ -123,7 +123,7 @@ class trader:
             self.coinsToTrade = 0
         return self.coinsToTrade
 
-    def stopLoss(self, m, stopLossLimit, overrideFileName):
+    def stopLoss(self, m, p, t, stopLossLimit, overrideFileName):
         if m.bid < self.minPrice * (1 - stopLossLimit):
             self.coinsToTrade = -p.BTC
             with open(overrideFileName, 'wt') as of:

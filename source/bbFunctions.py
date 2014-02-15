@@ -20,16 +20,7 @@ def sendEmail(t, recipient, subject):
         conn.sendmail(login, recipient, msg.as_string())
         conn.close()
     except:
-        t.error = 1
-
-def cancelOrders(krakenAPI, t):
-    try:
-        openOrders = krakenAPI.query_private('OpenOrders')['result']
-        if openOrders['open'] != {}:
-            for transaction in openOrders['open'].keys():
-                krakenAPI.query_private('CancelOrder', {'txid':transaction})
-    except:
-        t.error = 0    
+        t.error = 'Error sending email.'
 
 def drawPlot(m, t, plotFile):
     plotFileHead   = 'source/plotHead.txt'
@@ -79,45 +70,6 @@ def getBounds(logFileName, walkUp, walkDown):
             minPrice = float(re.split(',', history[line])[1])
             maxPrice = minPrice * (1 + walkUp)
     return minPrice, maxPrice
-
-def getDataBacktest(logFile,  m, p, t, i):
-    data = re.split(',', linecache.getline(logFile, i+1))
-    m.time = data[0]
-    m.bid = float(data[1])
-    m.ask = float(data[2])
-    
-    p.value = p.EUR + p.BTC * m.bid
-    p.weight = p.EUR / p.value
-    m.price = (m.bid+m.ask)/2
-    m.histPrices.append(m.price)
-    m.mean = sum(m.histPrices)/len(m.histPrices)
-    
-    return m, p
-
-def placeOrder(krakenAPI, m, t):
-    try:
-        if t.coinsToTrade < 0:
-            trade = krakenAPI.query_private('AddOrder', {
-                'pair' : 'XXBTZEUR',
-                'type' : 'sell', 
-                'ordertype' : 'limit',
-                'price' : m.ask, 
-                'volume' : -t.coinsToTrade
-            })
-            t.error = 0
-        else:
-            trade = krakenAPI.query_private('AddOrder', {
-                'pair' : 'XXBTZEUR',
-                'type' : 'buy',
-                'ordertype' : 'limit',
-                'price' : m.bid,
-                'volume' : t.coinsToTrade
-             })
-            t.error = 0
-        if trade['error'] != []:
-            t.error = 1
-    except:
-        t.error = 1
 
 def printLogLine(m, p, t, logFileName, bounds=0):
     with open(logFileName,'a') as logFile:

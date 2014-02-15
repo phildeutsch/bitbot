@@ -136,3 +136,35 @@ class API(object):
         p.weight = p.EUR / p.value
         t.minTrade = t.tradeFactor * p.value
         return p.value
+
+    def cancelOrders(self, t):
+        try:
+            openOrders = self.query_private('OpenOrders')['result']
+            if openOrders['open'] != {}:
+                for transaction in openOrders['open'].keys():
+                    api.query_private('CancelOrder',{'txid':transaction})
+        except:
+            t.error = 'Error cancelling open Kraken orders.'
+
+    def placeOrder(self, m, t):
+        try:
+            if t.coinsToTrade < 0:
+                trade = self.query_private('AddOrder', {
+                    'pair' : 'XXBTZEUR',
+                    'type' : 'sell',
+                    'ordertype' : 'limit',
+                    'price' : m.ask,
+                    'volume' : -t.coinsToTrade
+                })
+            else:
+                trade = self.query_private('AddOrder', {
+                    'pair' : 'XXBTZEUR',
+                    'type' : 'buy',
+                    'ordertype' : 'limit',
+                    'price' : m.bid,
+                    'volume' : t.coinsToTrade
+                })
+            if trade['error'] != []:
+                t.error = 'Error trading on Kraken.'
+        except:
+            t.error = 'Error placing order on Kraken.'

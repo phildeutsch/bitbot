@@ -32,7 +32,7 @@ def main(argv=None):
             testFlag = 1
 
     p         = portfolio(100,0)
-    m         = marketData('Null', 0, 0, priceWindow)
+    m         = marketData('Null', 500, 500, priceWindow)
     if btFlag == 0:
         API = apiKraken.API(keyKraken, secKraken)
         t   = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, 
@@ -65,7 +65,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
     
     t.calcCoinsToTrade(m, p)
     t.checkTradeSize(m, p, tradeFactor)
-    
+ 
     if testFlag == 1:
         printTermLine(m, p, t)
     elif btFlag == 1:
@@ -75,8 +75,8 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
 
     else:
         if t.suspend != 1:
-            cancelOrders(api, t)
-            placeOrder(api, m, t)
+            api.cancelOrders(t)
+            api.placeOrder(m, t)
 
         printTermLine(m, p, t)
         printStatus(m, p, t, statusFileName, freezeFileName)

@@ -4,6 +4,7 @@ from collections import deque
 
 class portfolio:
     """ Stores portfolio with holdings in EUR and BTC """
+
     def __init__(self, amountEUR, amountBTC):
         self.EUR = amountEUR
         self.BTC = amountBTC
@@ -12,18 +13,19 @@ class portfolio:
 
 class marketData:
     """ Stores market data """
+
     def __init__(self, time, bid, ask, priceWindow):
         self.time = time
         self.bid = bid
         self.ask = ask
         self.price = (bid + ask)/2
-        self.mean = self.price
         self.histPrices = deque([], priceWindow)
+        self.mean = self.price
+        self.low = self.price
+        self.high = self.price
 
 class trader:
     """ Stores all trade parameters """
-    buys  = deque([], priceWindow)
-    sells = deque([], priceWindow)
     
     def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow, tradeFactor):
         try:
@@ -37,15 +39,17 @@ class trader:
         self.tradeBuffer = tradeBuffer
         self.walkUp = walkUp
         self.walkDown = walkDown
-        self.midPrice = self.minPrice + \
-            self.midDistance * (self.maxPrice - self.minPrice)
+#        self.midPrice = self.minPrice + \
+ #           self.midDistance * (self.maxPrice - self.minPrice)
         self.coinsToTrade = 0
-        self.target = 0
+        self.target = 1
         self.tradePrice = 1
         self.override = 0
         self.suspend = 0
         self.minTrade = 0
         self.tradeFactor = tradeFactor
+        buys  = deque([], priceWindow)
+        sells = deque([], priceWindow)
 
     def checkOverride(self, overrideFileName):
         try:
@@ -74,35 +78,21 @@ class trader:
 
     def calcBaseWeight(self, marketData):
         tb = self.tradeBuffer
-        md = self.midDistance
         minPrice = self.minPrice
         maxPrice = self.maxPrice
-        midPrice = self.midPrice
         p = (marketData.bid + marketData.ask)/2
-        if minPrice == midPrice or midPrice == maxPrice:
-            self.target = 1
-            return self.target
         if marketData.bid < self.minPrice:
             self.target = tb
         elif marketData.ask > self.maxPrice:
             self.target = tb + (1-tb)/(1+tb)
         else:
-    #       Linear
-    #       y = tb + (p - minPrice)/(maxPrice - minPrice) * (1-tb)/(1+tb)
-    #       Piecewise linear
-            if p < midPrice:
-                y = (1-md) * (p-minPrice)/(midPrice-minPrice)
-            else:
-                y = (1-md) + (p-midPrice)/(maxPrice-midPrice) * md
+            y = (p - minPrice)/(maxPrice - minPrice)
             y = tb + y * (1-tb)/(1+tb)
             self.target = y
         return self.target
 
     def calcMomentum(self, momFactor, m):
-        try:
-            mom  = - (m.price/m.mean-1)
-        except ZeroDivisionError:
-            mom  = 0
+        mom  = - (m.price/m.mean-1)
         self.target = self.target * (1 + momFactor * mom)
         return self.target
 

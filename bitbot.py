@@ -35,14 +35,12 @@ def main(argv=None):
     m         = marketData('Null', 500, 500, priceWindow)
     if btFlag == 0:
         API = apiKraken.API(keyKraken, secKraken)
-        t   = trader(logFileName, walkUp, walkDown, midDistance, tradeBuffer, 
-                           priceWindow, tradeFactor)
+        t   = trader(logFileName, walkUp, walkDown, priceWindow, tradeFactor)
     else:
         API = apiBacktest.API(logFileName)
         with open(logFileNameBT, 'w') as logBT:
             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
-        t   = trader(logFileNameBT, walkUp, walkDown, midDistance, tradeBuffer, 
-                       priceWindow, tradeFactor)
+        t   = trader(logFileNameBT, walkUp, walkDown, priceWindow, tradeFactor)
 
     while True:
         mainLoop(m, p, t, API, testFlag, btFlag)

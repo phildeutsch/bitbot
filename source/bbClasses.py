@@ -27,20 +27,14 @@ class marketData:
 class trader:
     """ Stores all trade parameters """
     
-    def __init__(self, logFileName, walkUp, walkDown, midDistance, tradeBuffer, priceWindow, tradeFactor):
+    def __init__(self, logFileName, walkUp, walkDown, priceWindow, tradeFactor):
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
         except:
             self.minPrice = 0
             self.maxPrice = 0
-        self.midDistance = midDistance
-        self.midPrice = self.minPrice + \
-                        self.midDistance * (self.maxPrice - self.minPrice)
-        self.tradeBuffer = tradeBuffer
         self.walkUp = walkUp
         self.walkDown = walkDown
-#        self.midPrice = self.minPrice + \
- #           self.midDistance * (self.maxPrice - self.minPrice)
         self.coinsToTrade = 0
         self.target = 1
         self.tradePrice = 1
@@ -72,22 +66,18 @@ class trader:
         if m.bid < self.minPrice:
             self.minPrice = m.bid
             self.maxPrice = self.minPrice * (1 + self.walkUp)
-        self.midPrice = self.minPrice + \
-                        self.midDistance * (self.maxPrice - self.minPrice)
         return self.minPrice, self.maxPrice
 
     def calcBaseWeight(self, marketData):
-        tb = self.tradeBuffer
         minPrice = self.minPrice
         maxPrice = self.maxPrice
         p = (marketData.bid + marketData.ask)/2
         if marketData.bid < self.minPrice:
-            self.target = tb
+            self.target = 0
         elif marketData.ask > self.maxPrice:
-            self.target = tb + (1-tb)/(1+tb)
+            self.target = 1
         else:
             y = (p - minPrice)/(maxPrice - minPrice)
-            y = tb + y * (1-tb)/(1+tb)
             self.target = y
         return self.target
 

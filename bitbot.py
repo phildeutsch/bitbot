@@ -24,37 +24,40 @@ def main():
     krakenAPI = apiKraken.API(keyKraken, secKraken)
 
     while True:
-        krakenAPI.getBalance(m, p, t)
-        krakenAPI.getPrices(m, t.minTrade)
-        
-#        m, p = getData(krakenAPI, m, p, t)
-    
-        t.stopLoss(m, stopLossLimit, overrideFileName)
-        t.updateBounds(m)
-        t.calcBaseWeight(m)
-        t.calcMomentum(momFactor, m)
-        t.checkOverride(overrideFileName)
+        mainLoop(m, p, t, krakenAPI, testFlag)
 
-        t.calcCoinsToTrade(m, p)
-        t.checkTradeSize(m, p, tradeFactor)
+        if testFlag == 1:
+            break
 
-        if t.suspend != 1 and testFlag != 1:
-            cancelOrders(krakenAPI, t)    
-            placeOrder(krakenAPI, m, t)
+def mainLoop(m, p, t, api, testFlag):
+    api.getBalance(m, p, t)
+    api.getPrices(m, t.minTrade)
     
+    t.stopLoss(m, stopLossLimit, overrideFileName)
+    t.updateBounds(m)
+    t.calcBaseWeight(m)
+    t.calcMomentum(momFactor, m)
+    t.checkOverride(overrideFileName)
+    
+    t.calcCoinsToTrade(m, p)
+    t.checkTradeSize(m, p, tradeFactor)
+    
+    if t.suspend != 1 and testFlag != 1:
+        cancelOrders(krakenAPI, t)
+        placeOrder(krakenAPI, m, t)
+
+    if testFlag == 1:
+        printTermLine(m, p, t)
+    else:
         printTermLine(m, p, t)
         printStatus(m, p, t, statusFileName, freezeFileName)
         printLogLine(m, p, t, logFileName)
         if abs(t.coinsToTrade) > 0:
             printLogLine(m, p, t, txFileName)
-        drawPlot(m, t, plotFile)
 
-        if testFlag == 1:
-            break
-        else:
-            timeNow = datetime.datetime.now()
-            delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-            time.sleep(delay)
+        timeNow = datetime.datetime.now()
+        delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+        time.sleep(delay)
 
 if __name__ == "__main__":
     main()

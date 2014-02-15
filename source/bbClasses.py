@@ -104,8 +104,9 @@ class trader:
         return self.coinsToTrade
 
     def stopLoss(self, m, p, t, stopLossLimit, overrideFileName):
-        if m.bid < self.minPrice * (1 - stopLossLimit):
+        if m.bid < m.high * (1 - stopLossLimit):
             self.coinsToTrade = -p.BTC
+            # Should recalculate bid price here!
             with open(overrideFileName, 'wt') as of:
                 of.write('override = ' + str(1) + '\n')
                 of.write('target   = ' + str(1) + '\n')

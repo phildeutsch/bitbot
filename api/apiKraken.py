@@ -125,6 +125,11 @@ class API(object):
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)
         m.time = datetime.datetime.now().isoformat()[:19]
+
+        if m.bid < m.low:
+            m.low = m.bid
+        if m.ask > m.high:
+            m.high = m.bid
             
         return m.bid, m.ask
         

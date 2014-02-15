@@ -4,6 +4,7 @@ sys.path.append('./source')
 sys.path.append('./api')
 
 import apiKraken
+import bitbot
 from bbClasses import *
 from bbSettings import *
 from bbFunctions import *
@@ -18,7 +19,7 @@ class bbCmd(cmd.Cmd):
     def do_backtest(self, arg):
         paramFlag = input('Use current parameters? ([y]/n): ')
         if paramFlag is not 'n':
-            import backtest
+            bitbot.main('-b')
             
     def help_backtest(self):
         print('Syntax: backtest')

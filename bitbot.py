@@ -12,13 +12,25 @@ from bbFunctions import *
 from bbKeysMonitor import *
 
 import datetime
+import getopt
 import time
 import re
 
-def main():
+def main(argv=None):
     testFlag = 0
-    btFlag   = 1
-    
+    btFlag   = 0
+
+    if argv is None:
+        argv = sys.argv[1:]
+    else:
+        argv = argv.split()
+    opts, args = getopt.getopt(argv, 'bt')
+    for o, a in opts:
+        if o == '-b':
+            btFlag = 1
+        elif o == '-t':
+            testFlag = 1
+
     p         = portfolio(100,0)
     m         = marketData('Null', 0, 0, priceWindow)
     if btFlag == 0:

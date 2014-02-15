@@ -124,7 +124,7 @@ class API(object):
         m.price = (m.bid + m.ask)/2
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)
-        m.time = datetime.datetime.now().isoformat()
+        m.time = datetime.datetime.now().isoformat()[:19]
             
         return m.bid, m.ask
         

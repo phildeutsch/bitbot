@@ -90,10 +90,10 @@ class API(object):
         return bids, asks
 		
     def getPrices(self, m, coinsToTrade):
-        a, b = self.getDepth(10)
+        b, a = self.getDepth(10)
         bid = 0
         ask = 0
-        coinsToTrade   = abs(coinsToTrade)
+        coinsToTrade = abs(coinsToTrade)
           
         if coinsToTrade < float(a[0][1]):
             ask = float(a[0][0])
@@ -155,7 +155,7 @@ class API(object):
                     'pair' : 'XXBTZEUR',
                     'type' : 'sell',
                     'ordertype' : 'limit',
-                    'price' : m.ask,
+                    'price' : m.bid,
                     'volume' : -t.coinsToTrade
                 })
             else:
@@ -163,7 +163,7 @@ class API(object):
                     'pair' : 'XXBTZEUR',
                     'type' : 'buy',
                     'ordertype' : 'limit',
-                    'price' : m.bid,
+                    'price' : m.ask,
                     'volume' : t.coinsToTrade
                 })
             if trade['error'] != []:

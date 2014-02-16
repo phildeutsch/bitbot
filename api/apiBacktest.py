@@ -16,18 +16,15 @@ class API(object):
 		
     def getPrices(self, m, coinsToTrade=None):
         data = re.split(',', linecache.getline(self.logFileName, self.line+1))
+        self.line += 1
         m.time = data[0]
         m.bid = float(data[1])
         m.ask = float(data[2])
         m.price = (m.bid + m.ask)/2
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)
-        self.line += 1
-        
-        if m.bid < m.low:
-            m.low = m.bid
-        if m.ask > m.high:
-            m.high = m.bid
+        m.low = min(m.histPrices)
+        m.high = max(m.histPrices)
             
         return m.bid, m.ask
         

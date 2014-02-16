@@ -44,8 +44,9 @@ class trader:
         self.minTrade = 0
         self.tradeFactor = tradeFactor
         self.momFactor = momFactor
+        self.allinFlag = 0
         self.backupFund = backupFund
-        self. backupLimit = backupLimit
+        self.allinLimit = allinLimit
         self.stopLossLimit = stopLossLimit
         buys  = deque([], priceWindow)
         sells = deque([], priceWindow)
@@ -86,10 +87,16 @@ class trader:
             self.target = self.backupFund + y
         return self.target
 
-    def buyCheap(self, m):
-    #   If price is below cutoff, lower target
-        if m.price < m.high * (1 - self.backupLimit):
-            self.target = self.target - self.backupFund
+    def checkAllin(self, m):
+    #   If price is below cutoff, go all in 
+        if m.price < m.high * (1 - self.allinLimit):
+            if self.allinFlag == 0:
+                print('Going all-in.')
+            self.target = 0
+            self.allinFlag = 1
+        else:
+            self.allinFlag = 0
+        return self.target
 
     def calcMomentum(self, m):
         mom  = - (m.price/m.mean-1)
@@ -114,7 +121,7 @@ class trader:
         return self.coinsToTrade
 
     def stopLoss(self, m, p, overrideFileName):
-        if m.bid < m.high * (1 - self.stopLossLimit):
+        if m.price < m.high * (1 - self.stopLossLimit):
             self.coinsToTrade = -p.BTC
             # Should recalculate bid price here!
             with open(overrideFileName, 'wt') as of:

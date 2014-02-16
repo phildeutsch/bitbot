@@ -48,8 +48,8 @@ class trader:
         self.backupFund = backupFund
         self.allinLimit = allinLimit
         self.stopLossLimit = stopLossLimit
-        buys  = deque([], priceWindow)
-        sells = deque([], priceWindow)
+        self.buys  = deque([], priceWindow)
+        self.sells = deque([], priceWindow)
 
     def checkOverride(self, overrideFileName):
         try:

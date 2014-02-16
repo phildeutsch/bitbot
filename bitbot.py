@@ -26,13 +26,14 @@ def main(argv=None):
     if btFlag == 0:
         API = apiKraken.API(keyKraken, secKraken)
         t   = trader(logFileName, walkUp, walkDown, priceWindow, tradeFactor, 
-                     momFactor, backupCoins, backupLimit, stopLossLimit)
+                     momFactor, backupFund, backupLimit, stopLossLimit)
     # Use data from logfile
     else:   
         API = apiBacktest.API(logFileName)
         with open(logFileNameBT, 'w') as logBT:
             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
-        t   = trader(logFileNameBT, walkUp, walkDown, priceWindow, tradeFactor)
+        t   = trader(logFileNameBT, walkUp, walkDown, priceWindow, tradeFactor, 
+                     momFactor, backupFund, backupLimit, stopLossLimit)
 
     while True:
         mainLoop(m, p, t, API, testFlag, btFlag)
@@ -50,6 +51,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         t.stopLoss(m, p, overrideFileName)
     t.updateBounds(m)
     t.calcBaseWeight(m)
+    t.buyCheap(m)
     t.calcMomentum(m)
     t.checkOverride(overrideFileName)
     

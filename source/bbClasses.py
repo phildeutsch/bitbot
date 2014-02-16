@@ -28,7 +28,7 @@ class trader:
     """ Stores all trade parameters """
     
     def __init__(self, logFileName, walkUp, walkDown, priceWindow, tradeFactor,
-                 momFactor, backupCoins, backupLimit, stopLossLimit):
+                 momFactor, backupFund, backupLimit, stopLossLimit):
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
         except:
@@ -44,7 +44,7 @@ class trader:
         self.minTrade = 0
         self.tradeFactor = tradeFactor
         self.momFactor = momFactor
-        self.backupCoins = backupCoins
+        self.backupFund = backupFund
         self. backupLimit = backupLimit
         self.stopLossLimit = stopLossLimit
         buys  = deque([], priceWindow)
@@ -82,9 +82,14 @@ class trader:
         elif marketData.ask > self.maxPrice:
             self.target = 1
         else:
-            y = (p - minPrice)/(maxPrice - minPrice)
-            self.target = y
+            y = (p - minPrice)/(maxPrice - minPrice) * (1 - self.backupFund)
+            self.target = self.backupFund + y
         return self.target
+
+    def buyCheap(self, m):
+    #   If price is below cutoff, lower target
+        if m.price < m.high * (1 - self.backupLimit):
+            self.target = self.target - self.backupFund
 
     def calcMomentum(self, m):
         mom  = - (m.price/m.mean-1)

@@ -4,9 +4,9 @@ tradeFactor    = 0.00045    # minTrade = portfolioValue * tradeFactor: 0.00045
 momFactor      = 0.75       # target   = target * (1-Momentum*momFactor): 0.75
 priceWindow    = 100        # Window for weighted average
 
-backupCoins    = 0.2        # Percentage of funds reserved for cheap buys
-backupLimit    = 0.05       # Limit (from last high) to identifying cheap coins
-stopLossLimit  = 0.10       # Limit (from last high) to liquidate all coins
+backupFund     = 0.00        # % of funds reserved for cheap buys: NA
+backupLimit    = 1.00       # % of high for identifying cheap coins: NA
+stopLossLimit  = 0.20       # % of high for liquidating all coins: NA
  
 logFileName      = 'logs/history.csv'
 statusFileName   = 'logs/status.txt'

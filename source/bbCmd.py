@@ -20,6 +20,8 @@ class bbCmd(cmd.Cmd):
         paramFlag = input('Use current parameters? ([y]/n): ')
         if paramFlag is not 'n':
             bitbot.main('-b')
+        d,r=getReturns(logFileNameBT, None, '2014-01-01', None)
+        printSummary(r)
             
     def help_backtest(self):
         print('Syntax: backtest')

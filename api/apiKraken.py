@@ -90,7 +90,7 @@ class API(object):
         return bids, asks
 		
     def getPrices(self, m, coinsToTrade):
-        b, a = self.getDepth(10)
+        a, b = self.getDepth(10)
         bid = 0
         ask = 0
         coinsToTrade   = abs(coinsToTrade)

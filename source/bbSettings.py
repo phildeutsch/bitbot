@@ -10,7 +10,7 @@ stopLossLimit  = 0.20       # % of high for liquidating all coins: NA
  
 logFileName      = 'logs/history.csv'
 statusFileName   = 'logs/status.txt'
-plotFile         = 'logs/plot.html'
+plotFileName     = 'logs/plot.html'
 txFileName       = 'logs/transactions.csv'
 
 transFileName    = 'data/funding.csv'

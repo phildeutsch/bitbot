@@ -73,6 +73,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         printTermLine(m, p, t)
         printStatus(m, p, t, statusFileName, freezeFileName)
         printLogLine(m, p, t, logFileName)
+        drawplot(m, t, plotFileName)
         if abs(t.coinsToTrade) > 0:
             printLogLine(m, p, t, txFileName)
 

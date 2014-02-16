@@ -17,19 +17,7 @@ import time
 import re
 
 def main(argv=None):
-    testFlag = 0
-    btFlag   = 0
-
-    if argv is None:
-        argv = sys.argv[1:]
-    else:
-        argv = argv.split()
-    opts, args = getopt.getopt(argv, 'bt')
-    for o, a in opts:
-        if o == '-b':
-            btFlag = 1
-        elif o == '-t':
-            testFlag = 1
+    testFlag, btFlag = argParser(argv)
 
     p         = portfolio(100,0)
     m         = marketData('Null', 500, 500, priceWindow)
@@ -85,6 +73,23 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         timeNow = datetime.datetime.now()
         delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
         time.sleep(delay)
+
+def argParser(argv):
+    testFlag = 0
+    btFlag   = 0
+
+    if argv is None:
+        argv = sys.argv[1:]
+    else:
+        argv = argv.split()
+    opts, args = getopt.getopt(argv, 'bt')
+    for o, a in opts:
+        if o == '-b':
+            btFlag = 1
+        elif o == '-t':
+            testFlag = 1
+    
+    return testFlag, btFlag
 
 if __name__ == "__main__":
     main()

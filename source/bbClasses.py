@@ -27,7 +27,8 @@ class marketData:
 class trader:
     """ Stores all trade parameters """
     
-    def __init__(self, logFileName, walkUp, walkDown, priceWindow, tradeFactor):
+    def __init__(self, logFileName, walkUp, walkDown, priceWindow, tradeFactor,
+                 momFactor, backupCoins, backupLimit, stopLossLimit):
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
         except:
@@ -42,6 +43,10 @@ class trader:
         self.suspend = 0
         self.minTrade = 0
         self.tradeFactor = tradeFactor
+        self.momFactor = momFactor
+        self.backupCoins = backupCoins
+        self. backupLimit = backupLimit
+        self.stopLossLimit = stopLossLimit
         buys  = deque([], priceWindow)
         sells = deque([], priceWindow)
 
@@ -81,9 +86,9 @@ class trader:
             self.target = y
         return self.target
 
-    def calcMomentum(self, momFactor, m):
+    def calcMomentum(self, m):
         mom  = - (m.price/m.mean-1)
-        self.target = self.target * (1 + momFactor * mom)
+        self.target = self.target * (1 + self.momFactor * mom)
         return self.target
 
     def calcCoinsToTrade(self, m, p):
@@ -103,8 +108,8 @@ class trader:
             self.coinsToTrade = 0
         return self.coinsToTrade
 
-    def stopLoss(self, m, p, t, stopLossLimit, overrideFileName):
-        if m.bid < m.high * (1 - stopLossLimit):
+    def stopLoss(self, m, p, overrideFileName):
+        if m.bid < m.high * (1 - self.stopLossLimit):
             self.coinsToTrade = -p.BTC
             # Should recalculate bid price here!
             with open(overrideFileName, 'wt') as of:

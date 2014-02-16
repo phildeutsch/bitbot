@@ -21,10 +21,14 @@ def main(argv=None):
 
     p         = portfolio(100,0)
     m         = marketData('Null', 500, 500, priceWindow)
+
+    # Use data from exchange
     if btFlag == 0:
         API = apiKraken.API(keyKraken, secKraken)
-        t   = trader(logFileName, walkUp, walkDown, priceWindow, tradeFactor)
-    else:
+        t   = trader(logFileName, walkUp, walkDown, priceWindow, tradeFactor, 
+                     momFactor, backupCoins, backupLimit, stopLossLimit)
+    # Use data from logfile
+    else:   
         API = apiBacktest.API(logFileName)
         with open(logFileNameBT, 'w') as logBT:
             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
@@ -43,10 +47,10 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
     api.getPrices(m, t.minTrade)
     
     if btFlag != 1:
-        t.stopLoss(m, p, t, stopLossLimit, overrideFileName)
+        t.stopLoss(m, p, overrideFileName)
     t.updateBounds(m)
     t.calcBaseWeight(m)
-    t.calcMomentum(momFactor, m)
+    t.calcMomentum(m)
     t.checkOverride(overrideFileName)
     
     t.calcCoinsToTrade(m, p)

@@ -144,7 +144,7 @@ class API(object):
             openOrders = self.query_private('OpenOrders')['result']
             if openOrders['open'] != {}:
                 for transaction in openOrders['open'].keys():
-                    api.query_private('CancelOrder',{'txid':transaction})
+                    self.query_private('CancelOrder',{'txid':transaction})
         except:
             t.error = 'Error cancelling open Kraken orders.'
 

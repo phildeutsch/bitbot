@@ -87,11 +87,13 @@ class trader:
             self.target = self.backupFund + y
         return self.target
 
-    def checkAllin(self, m):
+    def checkAllin(self, m, btFlag):
     #   If price is below cutoff, go all in 
         if m.price < m.high * (1 - self.allinLimit):
             if self.allinFlag == 0:
                 print('Going all-in.')
+                if btFlag != 1:
+                    sendEmail(t, emailAddress, 'Going all-in.')
             self.target = 0
             self.allinFlag = 1
         else:

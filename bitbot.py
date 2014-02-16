@@ -52,7 +52,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
     t.updateBounds(m)
     t.calcBaseWeight(m)
     t.calcMomentum(m)
-    t.checkAllin(m)
+    t.checkAllin(m, btFlag)
     t.checkOverride(overrideFileName)
     
     t.calcCoinsToTrade(m, p)

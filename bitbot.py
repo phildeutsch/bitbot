@@ -78,7 +78,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
 
         if t.error != 0:
             print(t.error)
-            bbFunctions.sendEmail(t, emailAddressm, t.error)
+            bbFunctions.sendEmail(t, emailAddress, t.error)
             with open(errorFileName, 'at') as ef:
                 ef.write(t.error + '\n')
             t.error = 0

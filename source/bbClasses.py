@@ -28,7 +28,7 @@ class trader:
     """ Stores all trade parameters """
     
     def __init__(self, logFileName, walkUp, walkDown, priceWindow, tradeFactor,
-                 momFactor, backupFund, allinLimit, stopLossLimit):
+                 momFactor, backupFund, backupLimit, stopLossLimit):
         try:
             self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
         except:

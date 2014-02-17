@@ -3,12 +3,12 @@
 import sys
 sys.path.append('./source')
 sys.path.append('./api')
-
 import api
+import bbClasses
+import bbFunctions
+
+from bbKeys import *
 from bbSettings import *
-from bbClasses import *
-from bbFunctions import *
-from bbKeysTrader import *
 
 import datetime
 import getopt
@@ -18,28 +18,29 @@ import re
 def main(argv=None):
     testFlag, btFlag = argParser(argv)
 
+    testFlag = 1
+
     # Use data from exchange
     if btFlag == 0:
         API = api.kraken.API(keyKraken, secKraken)
-        t   = trader(logFileName, walkUp, walkDown, priceWindow, tradeFactor, 
-                     momFactor, backupFund, allinLimit, stopLossLimit)
+        t   = bbClasses.trader(LOGFILENAME, WALKUP, WALKDOWN, PRICEWINDOW, TRADEFACTOR, 
+                     MOMFACTOR, BACKUPFUND, ALLINLIMIT, STOPLOSSLIMIT)
     # Use data from logfile
     else:
-        API = api.backtest.API(logFileName)
-        with open(logFileNameBT, 'w') as logBT:
+        API = api.backtest.API(LOGFILENAME)
+        with open(LOGFILENAMEBT, 'w') as logBT:
             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
-        t   = trader(logFileNameBT, walkUp, walkDown, priceWindow, tradeFactor, 
-                     momFactor, backupFund, allinLimit, stopLossLimit)
-
-    p         = portfolio(100,0)
-    m         = marketData('Null', 500, 500, priceWindow)
+        t   = bbClasses.trader(LOGFILENAMEBT, WALKUP, WALKDOWN, PRICEWINDOW, TRADEFACTOR, 
+                     MOMFACTOR, BACKUPFUND, ALLINLIMIT, STOPLOSSLIMIT)
+    p         = bbClasses.portfolio(100,0)
+    m         = bbClasses.marketData('Null', 500, 500, PRICEWINDOW)
 
     while True:
         mainLoop(m, p, t, API, testFlag, btFlag)
 
         if testFlag == 1:
             break
-        if btFlag == 1 and API.line == file_len(logFileName):
+        if btFlag == 1 and API.line == bbFunctions.file_len(LOGFILENAME):
             break
 
 def mainLoop(m, p, t, api, testFlag, btFlag):
@@ -47,34 +48,34 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
     api.getPrices(m, t.minTrade)
     
     if btFlag != 1:
-        t.stopLoss(m, p, overrideFileName)
+        t.stopLoss(m, p, OVERRIDEFILENAME)
     t.updateBounds(m)
     t.calcBaseWeight(m)
     t.calcMomentum(m)
     t.checkAllin(m, btFlag)
-    t.checkOverride(overrideFileName)
+    t.checkOverride(OVERRIDEFILENAME)
     
     t.calcCoinsToTrade(m, p)
-    t.checkTradeSize(m, p, tradeFactor)
+    t.checkTradeSize(m, p, TRADEFACTOR)
  
     if testFlag == 1:
-        printTermLine(m, p, t)
+        bbFunctions.printTermLine(m, p, t)
     elif btFlag == 1:
-        printLogLine(m, p, t, logFileNameBT, bounds = 1)
+        bbFunctions.printLogLine(m, p, t, LOGFILENAMEBT, bounds = 1)
         if abs(t.coinsToTrade) > 0:
-            printTermLine(m, p, t)
+            bbFunctions.printTermLine(m, p, t)
 
     else:
         if t.suspend != 1:
             api.cancelOrders(t)
             api.placeOrder(m, t)
 
-        printTermLine(m, p, t)
-        printStatus(m, p, t, statusFileName, freezeFileName)
-        printLogLine(m, p, t, logFileName)
-        drawPlot(m, t, plotFileName)
+        bbFunctions.printTermLine(m, p, t)
+        bbFunctions.printStatus(m, p, t, STATUSFILENAME, FREEZEFILENAME)
+        bbFunctions.printLogLine(m, p, t, LOGFILENAME)
+        bbFunctions.drawPlot(m, t, PLOTFILENAME)
         if abs(t.coinsToTrade) > 0:
-            printLogLine(m, p, t, txFileName)
+            bbFunctions.printLogLine(m, p, t, TXFILENAME)
 
         timeNow = datetime.datetime.now()
         delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second

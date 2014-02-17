@@ -130,13 +130,14 @@ class API(object):
             
         return m.bid, m.ask
         
-    def getBalance(self, m, p, t):
+    def getBalance(self, m, p, t=None):
         balance  = self.query_private('Balance')['result']
         p.EUR  = float(balance['ZEUR'])
         p.BTC  = float(balance['XXBT'])
         p.value = p.EUR + p.BTC * m.bid
         p.weight = p.EUR / p.value
-        t.minTrade = t.tradeFactor * p.value
+        if t is not None:
+            t.minTrade = t.tradeFactor * p.value
         return p.value
 
     def cancelOrders(self, t):

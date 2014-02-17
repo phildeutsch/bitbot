@@ -9,7 +9,7 @@ import apiBacktest
 from bbSettings import *
 from bbClasses import *
 from bbFunctions import *
-from bbKeysTrader import *
+from bbKeys import *
 
 import datetime
 import getopt

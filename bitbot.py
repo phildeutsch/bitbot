@@ -18,7 +18,6 @@ import re
 def main(argv=None):
     testFlag, btFlag = argParser(argv)
 
-    testFlag = 1
 
     # Use data from exchange
     if btFlag == 0:

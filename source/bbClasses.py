@@ -144,7 +144,7 @@ class trader:
             if self.target is not 0 and self.target is not 1:
                 self.coinsToTrade = 0
                 return self.coinsToTrade
-        if self.suspend == 0:
+        if self.suspend == 1:
                 self.coinsToTrade = 0
                 return self.coinsToTrade
         return self.coinsToTrade

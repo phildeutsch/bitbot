@@ -3,7 +3,7 @@
 import sys
 sys.path.append('./source')
 
-from bbCmd import *
+import bbCmd
 
-c = bbCmd()
+c = bbCmd.Cmd()
 c.cmdloop()

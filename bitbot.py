@@ -64,7 +64,6 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         bbFunctions.printLogLine(m, p, t, logFileNameBT, bounds = 1)
         if abs(t.coinsToTrade) > 0:
             bbFunctions.printTermLine(m, p, t)
-
     else:
         if t.suspend != 1:
             api.cancelOrders(t)

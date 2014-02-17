@@ -49,6 +49,7 @@ class trader:
         self.stopLossLimit = stopLossLimit
         self.buys  = deque([], priceWindow)
         self.sells = deque([], priceWindow)
+        self.error = 0
 
     def checkOverride(self, overrideFileName):
         try:

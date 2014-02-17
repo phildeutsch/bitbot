@@ -167,7 +167,8 @@ class API(object):
                     'price' : m.ask,
                     'volume' : t.coinsToTrade
                 })
-            if trade['error'] != []:
-                t.error = 'Error trading on Kraken.'
+            if abs(t.coinsToTrade) > 0:
+                if trade['error'] != []:
+                    t.error = 'Error trading on Kraken.'
         except:
             t.error = 'Error placing order on Kraken.'

@@ -77,6 +77,13 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         if abs(t.coinsToTrade) > 0:
             bbFunctions.printLogLine(m, p, t, txFileName)
 
+        if t.error != 0:
+            print(t.error)
+            bbFunctions.sendEmail(t, emailAddressm, t.error)
+            with open(errorFileName, 'at') as ef:
+                ef.write(t.error + '\n')
+            t.error = 0
+            
         timeNow = datetime.datetime.now()
         delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
         time.sleep(delay)

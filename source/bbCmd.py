@@ -1,15 +1,14 @@
-import sys
 import cmd
+
+import sys
 sys.path.append('./source')
 sys.path.append('./api')
-
 import api
-import bitbot
-from bbClasses import *
 from bbSettings import *
+from bbClasses import *
 from bbFunctions import *
-from bbPerformance import *
-from bbKeysMonitor import *
+from bbKeys import *
+from bbCmd import *
 
 class bbCmd(cmd.Cmd):
     def __init__(self):
@@ -58,15 +57,17 @@ class bbCmd(cmd.Cmd):
         krakenAPI = api.kraken.API(keyKraken, secKraken)
         pKraken   = portfolio(1,0)
         mKraken   = marketData('Null', 0, 0, 0)
-        mKraken, pKraken = getData(krakenAPI, mKraken, pKraken)
+        b,a = krakenAPI.getDepth(1)
+        mKraken.bid = float(b[0][0])
+        mKraken.ask = float(a[0][0])
+        krakenAPI.getBalance(mKraken, pKraken)
 
         print('Exchange   EUR         BTC     Value  ')
         print('--------------------------------------')
         sys.stdout.write('{0:<10}'.format('Kraken'))       
         sys.stdout.write('{0:>8.2f}'.format(float(pKraken.EUR)))       
         sys.stdout.write('{0:>10.3f}'.format(float(pKraken.BTC)))
-        sys.stdout.write('{0:>10.2f}'.format(pKraken.BTC * mKraken.bid + \
-                                             pKraken.EUR))
+        sys.stdout.write('{0:>10.2f}'.format(pKraken.value))
         print('')       
 
 

@@ -21,7 +21,7 @@ class Cmd(cmd.Cmd):
         if paramFlag is not 'n':
             bitbot.main('-b')
         d,r=bbPerformance.getReturns(logFileNameBT, None, '2014-01-01', None)
-        printSummary(r)
+        bbPerformance.printSummary(r)
             
     def help_backtest(self):
         print('Syntax: backtest')

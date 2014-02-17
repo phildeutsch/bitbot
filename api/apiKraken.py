@@ -159,7 +159,7 @@ class API(object):
                     'price' : m.bid,
                     'volume' : -t.coinsToTrade
                 })
-            else:
+            elif t.coinsToTrade > 0:
                 trade = self.query_private('AddOrder', {
                     'pair' : 'XXBTZEUR',
                     'type' : 'buy',

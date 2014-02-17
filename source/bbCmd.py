@@ -56,8 +56,8 @@ class Cmd(cmd.Cmd):
 
     def do_balance(self, arg):    
         krakenAPI = apiKraken.API(keyKraken, secKraken)
-        pKraken   = portfolio(1,0)
-        mKraken   = marketData('Null', 0, 0, 0)
+        pKraken   = bbClasses.portfolio(1,0)
+        mKraken   = bbClasses.marketData('Null', 0, 0, 0)
         b,a = krakenAPI.getDepth(1)
         mKraken.bid = float(b[0][0])
         mKraken.ask = float(a[0][0])

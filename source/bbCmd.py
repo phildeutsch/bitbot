@@ -5,13 +5,13 @@ sys.path.append('./api')
 
 import apiKraken
 import bitbot
-from bbClasses import *
-from bbSettings import *
-from bbFunctions import *
-from bbPerformance import *
-from bbKeys import *
+import bbClasses
+import bbPerformance
 
-class bbCmd(cmd.Cmd):
+from bbKeys import *
+from bbSettings import *
+
+class Cmd(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
         self.prompt = 'B> '
@@ -20,7 +20,7 @@ class bbCmd(cmd.Cmd):
         paramFlag = input('Use current parameters? ([y]/n): ')
         if paramFlag is not 'n':
             bitbot.main('-b')
-        d,r=getReturns(logFileNameBT, None, '2014-01-01', None)
+        d,r=bbPerformance.getReturns(logFileNameBT, None, '2014-01-01', None)
         printSummary(r)
             
     def help_backtest(self):
@@ -36,17 +36,17 @@ class bbCmd(cmd.Cmd):
         if len(endDate) is not 10:
             endDate = None
         btflag = input('Run backtest? (y/[n]): ')
-        getTransactions(logFileName, transFileName)
+        bbPerformance.getTransactions(logFileName, transFileName)
         if btflag is 'y':
-            d,r=getReturns(logFileNameBT, None, startDate, endDate)
-            printReturns(d, r)
+            d,r=bbPerformance.getReturns(logFileNameBT, None, startDate, endDate)
+            bbPerformance.printReturns(d, r)
             print('')
-            printSummary(r)
+            bbPerformance.printSummary(r)
         else:
-            d,r=getReturns(logFileName, transFileName, startDate, endDate)
-            printReturns(d, r)
+            d,r=bbPerformance.getReturns(logFileName, transFileName, startDate, endDate)
+            bbPerformance.printReturns(d, r)
             print('')
-            printSummary(r)
+            bbPerformance.printSummary(r)
             
     def help_performance(self):
             print('Syntax: performance')

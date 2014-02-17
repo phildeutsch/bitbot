@@ -4,8 +4,7 @@ import sys
 sys.path.append('./source')
 sys.path.append('./api')
 
-import apiKraken
-import apiBacktest
+import api
 from bbSettings import *
 from bbClasses import *
 from bbFunctions import *
@@ -21,12 +20,12 @@ def main(argv=None):
 
     # Use data from exchange
     if btFlag == 0:
-        API = apiKraken.API(keyKraken, secKraken)
+        API = api.kraken.API(keyKraken, secKraken)
         t   = trader(logFileName, walkUp, walkDown, priceWindow, tradeFactor, 
                      momFactor, backupFund, allinLimit, stopLossLimit)
     # Use data from logfile
     else:
-        API = apiBacktest.API(logFileName)
+        API = api.backtest.API(logFileName)
         with open(logFileNameBT, 'w') as logBT:
             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
         t   = trader(logFileNameBT, walkUp, walkDown, priceWindow, tradeFactor, 

@@ -12,6 +12,7 @@ logFileName      = 'logs/history.csv'
 statusFileName   = 'logs/status.txt'
 plotFileName     = 'logs/plot.html'
 txFileName       = 'logs/transactions.csv'
+errorFileName    = 'logs/errors.txt' 
 
 transFileName    = 'data/funding.csv'
 logFileNameBT    = 'data/logBT.csv'

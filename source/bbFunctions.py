@@ -96,14 +96,23 @@ def printStatus(m, p, t, statusFileName, freezeFileName):
                 statusFile.write('{0:<10}'.format('Autonomous trading') + '\n')
         elif t.suspend is 1:
             statusFile.write('{0:<10}'.format('Trading suspended') + '\n')
-        statusFile.write('{0:<10}'.format('Value:'))
-        statusFile.write('{0:>6.1f}'.format(p.EUR + p.BTC * m.bid) + '\n')
         statusFile.write('{0:<10}'.format('Price:'))
         statusFile.write('{0:>6.1f}'.format((m.bid+m.ask)/2) + '\n')
         statusFile.write('{0:<10}'.format('EUR:'))
         statusFile.write('{0:>6.1f}'.format(p.EUR) + '\n')
         statusFile.write('{0:<10}'.format('BTC:'))
         statusFile.write('{0:>7.2f}'.format(p.BTC) + '\n')
+        statusFile.write('{0:<10}'.format('Value:'))
+        statusFile.write('{0:>6.1f}'.format(p.EUR + p.BTC * m.bid) + '\n')
+        statusFile.write('\n')
+        statusFile.write('{0:<10}'.format('minPrice:'))
+        statusFile.write('{0:>7.2f}'.format(t.minPrice) + '\n')
+        statusFile.write('{0:<10}'.format('maxPrice:'))
+        statusFile.write('{0:>7.2f}'.format(t.maxPrice) + '\n')
+        statusFile.write('{0:<10}'.format('Allin:'))
+        statusFile.write('{0:>7.2f}'.format(m.high * (1 - t.allinLimit)) + '\n')
+        statusFile.write('{0:<10}'.format('Stoploss:'))
+        statusFile.write('{0:>7.2f}'.format(m.high * (1 - t.stopLossLimit)) + '\n')
 
 def printTermLine(m, p, t):
     strLog = '{0:<10}'.format(m.time[0:16]) + ' |'

@@ -1,5 +1,4 @@
-from bbFunctions import *
-from bbSettings import *
+import bbFunctions
 from collections import deque
 
 class portfolio:
@@ -28,9 +27,9 @@ class trader:
     """ Stores all trade parameters """
     
     def __init__(self, logFileName, walkUp, walkDown, priceWindow, tradeFactor,
-                 momFactor, backupFund, backupLimit, stopLossLimit):
+                 momFactor, backupFund, allinLimit, stopLossLimit):
         try:
-            self.minPrice, self.maxPrice = getBounds(logFileName, walkUp, walkDown)
+            self.minPrice, self.maxPrice = bbFunctions.getBounds(logFileName, walkUp, walkDown)
         except:
             self.minPrice = 0
             self.maxPrice = 0
@@ -131,7 +130,7 @@ class trader:
                 of.write('target   = ' + str(1) + '\n')
                 of.write('suspend  = ' + str(0) + '\n')
             print('Trading frozen.')
-            sendEmail(t, emailAddress, 'Trading has been frozen.')
+            bbFunctions.sendEmail(t, emailAddress, 'Trading has been frozen.')
             return self.coinsToTrade
 
 

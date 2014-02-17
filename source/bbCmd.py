@@ -1,14 +1,15 @@
-import cmd
-
 import sys
+import cmd
 sys.path.append('./source')
 sys.path.append('./api')
-import api
-from bbSettings import *
+
+import apiKraken
+import bitbot
 from bbClasses import *
+from bbSettings import *
 from bbFunctions import *
+from bbPerformance import *
 from bbKeys import *
-from bbCmd import *
 
 class bbCmd(cmd.Cmd):
     def __init__(self):
@@ -54,7 +55,7 @@ class bbCmd(cmd.Cmd):
 
 
     def do_balance(self, arg):    
-        krakenAPI = api.kraken.API(keyKraken, secKraken)
+        krakenAPI = apiKraken.API(keyKraken, secKraken)
         pKraken   = portfolio(1,0)
         mKraken   = marketData('Null', 0, 0, 0)
         b,a = krakenAPI.getDepth(1)

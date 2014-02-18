@@ -153,7 +153,7 @@ class trader:
     def handle_error(self, emailAddress, errorFileName):
         print(t.error)
         bbFunctions.sendEmail(self, m, emailAddress, self.error)
-            with open(errorFileName, 'at') as ef:
-                ef.write(m.time + '\t')
-                ef.write(self.error + '\n')
-            self.error = 0
+        with open(errorFileName, 'at') as ef:
+            ef.write(m.time + '\t')
+            ef.write(self.error + '\n')
+        self.error = 0

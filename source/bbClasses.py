@@ -79,7 +79,7 @@ class trader:
         maxPrice = self.maxPrice
         p = (marketData.bid + marketData.ask)/2
         if marketData.bid < self.minPrice:
-            self.target = 0
+            self.target = self.backupFund
         elif marketData.ask > self.maxPrice:
             self.target = 1
         else:
@@ -142,7 +142,7 @@ class trader:
                 self.coinsToTrade = p.EUR / m.ask
         minTrade = tradeFactor * p.value
         if abs(self.coinsToTrade) < minTrade:
-            if self.target is not 0 and self.target is not 1:
+            if self.target is not self.backupFund and self.target is not 1:
                 self.coinsToTrade = 0
                 return self.coinsToTrade
         if self.suspend == 1:

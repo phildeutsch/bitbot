@@ -77,11 +77,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
             bbFunctions.printLogLine(m, p, t, txFileName)
 
         if t.error != 0:
-            print(t.error)
-            bbFunctions.sendEmail(t, emailAddress, t.error)
-            with open(errorFileName, 'at') as ef:
-                ef.write(t.error + '\n')
-            t.error = 0
+            bbClasses.handle_error(m, emailAddress, errorFileName)
             
         timeNow = datetime.datetime.now()
         delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second

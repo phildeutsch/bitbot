@@ -64,7 +64,7 @@ def calcReturn(log, transactions, date):
     closePrice = float((dft.tail(1)['Bid'] + dft.tail(1)['Ask'])/2)
     
     if len(tdf) != 0:
-        tdf['EUR']=tdf['Amount']*tdf['Bid']
+        tdf['EUR']=tdf['AmountBTC']*(tdf['Bid']+tdf['Ask'])/2 + tdf['AmountEUR']
         endValue   = endValue - float(tdf.sum()['EUR'])
     
     retStrategy= endValue / startValue - 1
@@ -145,10 +145,23 @@ def printSummary(returns):
     sys.stdout.write('\n')
         
 def getTransactions(logFileName, transFileName):
-    history  = pd.read_csv(logFileName, parse_dates=[0], index_col=0)
-    df  = history.diff()    
-    tx  = (df['Trade'] == 0) & (df['BTC'] != 0) & (df['EUR'] == 0)
-    amounts = df[tx]['BTC']
-    out = history.loc[amounts.index.values,:].loc[:,['Bid','Ask']]
-    out['Amount'] = amounts
+    h = pd.read_csv(logFileName, parse_dates=[0], index_col=0)
+    h['p'] = (h['Bid'] + h['Ask'])/2
+    h['v'] = h['EUR'] + h['BTC'] * h['p']
+    d = h.diff()
+    h['dv'] = d['v']/h['v']
+    h['dp'] = d['p']/h['p']
+    h['dEUR'] = d['EUR']
+    h['dBTC'] = d['BTC']
+    h['dT'] = d['Trade']
+    # The holdings in EUR or BTC must have changed
+    h = h[(h['dEUR'] != 0) | (h['dBTC'] != 0)]
+    # This change cannot be due to a trade
+    h = h[abs(h['dEUR']+h['dBTC']*h['p'])>100]
+    
+    amountsBTC = h['dBTC']
+    amountsEUR = h['dEUR']
+    out = h.loc[h.index.values,:].loc[:,['Bid','Ask']]
+    out['AmountBTC'] = amountsBTC
+    out['AmountEUR'] = amountsEUR
     out.to_csv(transFileName)     

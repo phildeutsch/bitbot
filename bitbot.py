@@ -43,6 +43,11 @@ def main(argv=None):
         if btFlag == 1 and API.line == bbFunctions.file_len(logFileName):
             break
 
+        timeNow = datetime.datetime.now()
+        delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+        time.sleep(delay)
+
+
 def mainLoop(m, p, t, api, testFlag, btFlag):
     api.getBalance(m, p, t)
     api.getPrices(m, t.minTrade)
@@ -79,11 +84,6 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         if t.error != 0:
             t.handle_error(m, emailAddress, errorFileName)
             
-        timeNow = datetime.datetime.now()
-        delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-        print(delay)
-        time.sleep(delay)
-
 def argParser(argv):
     testFlag = 0
     btFlag   = 0

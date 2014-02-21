@@ -63,7 +63,7 @@ class trader:
             if flagOverride is 1:
                 self.target = targetOverride
         except:
-            t.error = 1
+            t.error = 'Error reading override file'
 
     def updateBounds(self, m):
         if m.ask > self.maxPrice:
@@ -131,7 +131,7 @@ class trader:
                 of.write('target   = ' + str(1) + '\n')
                 of.write('suspend  = ' + str(0) + '\n')
             print('Trading frozen.')
-            bbFunctions.sendEmail(t, emailAddress, 'Trading has been frozen.')
+            bbFunctions.sendEmail(self, emailAddress, 'Trading has been frozen.')
             return self.coinsToTrade
 
 

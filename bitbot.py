@@ -40,13 +40,8 @@ def main(argv=None):
 
         if testFlag == 1:
             break
-        if btFlag == 1 and API.line == bbFunctions.file_len(logFileName):
+        elif btFlag == 1 and API.line == bbFunctions.file_len(logFileName):
             break
-
-        timeNow = datetime.datetime.now()
-        delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-        time.sleep(delay)
-
 
 def mainLoop(m, p, t, api, testFlag, btFlag):
     api.getBalance(m, p, t)
@@ -83,6 +78,10 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
 
         if t.error != 0:
             t.handle_error(m, emailAddress, errorFileName)
+
+        timeNow = datetime.datetime.now()
+        delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+        time.sleep(delay)
             
 def argParser(argv):
     testFlag = 0

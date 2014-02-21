@@ -66,6 +66,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
             bbFunctions.printTermLine(m, p, t)
     else:
         if t.suspend != 1:
+            print('Trading suspended!')
             api.cancelOrders(t)
             api.placeOrder(m, t)
 

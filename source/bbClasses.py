@@ -150,7 +150,7 @@ class trader:
                 return self.coinsToTrade
         return self.coinsToTrade
         
-    def handle_error(self, emailAddress, errorFileName):
+    def handle_error(self, m, emailAddress, errorFileName):
         print(t.error)
         bbFunctions.sendEmail(self, m, emailAddress, self.error)
         with open(errorFileName, 'at') as ef:

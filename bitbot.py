@@ -81,6 +81,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
             
         timeNow = datetime.datetime.now()
         delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+        print(delay)
         time.sleep(delay)
 
 def argParser(argv):

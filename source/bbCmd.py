@@ -1,5 +1,6 @@
 import sys
 import cmd
+import datetime
 sys.path.append('./source')
 sys.path.append('./api')
 
@@ -15,6 +16,31 @@ class Cmd(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
         self.prompt = 'B> '
+
+    def do_funding(self, arg):
+        krakenAPI = apiKraken.API(keyKraken, secKraken)
+        pKraken   = bbClasses.portfolio(1,0)
+        mKraken   = bbClasses.marketData('Null', 0, 0, 0)
+        b,a = krakenAPI.getDepth(1)
+        mKraken.bid = float(b[0][0])
+        mKraken.ask = float(a[0][0])
+
+        strTime = datetime.datetime.now().isoformat()[0:16]
+        flagBTC = input('Enter BTC transaction? ([y]/n): ')
+        if flagBTC is 'n':
+            amtEUR = input('Enter EUR amount: (<0 if withdrawal): ')
+            writeList = ','.join([strTime, str(mKraken.bid), str(mKraken.ask),
+                                  '0', str(amtEUR) + '\n'])
+        else:
+            amtBTC = input('Enter BTC amount: (<0 if withdrawal): ')
+            writeList = ','.join([strTime, str(mKraken.bid), str(mKraken.ask),
+                                  str(amtBTC), '0\n'])
+        with open(fundFileName, 'at') as ff:
+            ff.write(writeList)
+
+    def help_funding(self):
+            print('Syntax: funding')
+            print('-- Input a cash flow to/from the portfolio')
 
     def do_backtest(self, arg):
         paramFlag = input('Use current parameters? ([y]/n): ')
@@ -36,14 +62,13 @@ class Cmd(cmd.Cmd):
         if len(endDate) is not 10:
             endDate = None
         btflag = input('Run backtest? (y/[n]): ')
-#        bbPerformance.getTransactions(logFileName, transFileName)
         if btflag is 'y':
             d,r=bbPerformance.getReturns(logFileNameBT, None, startDate, endDate)
             bbPerformance.printReturns(d, r)
             print('')
             bbPerformance.printSummary(r)
         else:
-            d,r=bbPerformance.getReturns(logFileName, transFileName, startDate, endDate)
+            d,r=bbPerformance.getReturns(logFileName, fundFileName, startDate, endDate)
             bbPerformance.printReturns(d, r)
             print('')
             bbPerformance.printSummary(r)

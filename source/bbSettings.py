@@ -14,7 +14,7 @@ plotFileName     = 'logs/plot.html'
 txFileName       = 'logs/transactions.csv'
 errorFileName    = 'logs/errors.txt' 
 
-transFileName    = 'data/funding.csv'
+fundFileName     = 'data/funding.csv'
 logFileNameBT    = 'data/logBT.csv'
 freezeFileName   = 'data/freeze.txt'
 overrideFileName = 'data/override.txt'

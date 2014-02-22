@@ -36,7 +36,7 @@ class Cmd(cmd.Cmd):
         if len(endDate) is not 10:
             endDate = None
         btflag = input('Run backtest? (y/[n]): ')
-        bbPerformance.getTransactions(logFileName, transFileName)
+#        bbPerformance.getTransactions(logFileName, transFileName)
         if btflag is 'y':
             d,r=bbPerformance.getReturns(logFileNameBT, None, startDate, endDate)
             bbPerformance.printReturns(d, r)

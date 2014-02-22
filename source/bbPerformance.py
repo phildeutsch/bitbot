@@ -143,25 +143,3 @@ def printSummary(returns):
     sys.stdout.write('{0:>8.2f}'.format(100*drawdown(returns[:,2])) + '%')    
     sys.stdout.write('{0:>8.2f}'.format(100*drawdown(returns[:,3])) + '%')
     sys.stdout.write('\n')
-        
-def getTransactions(logFileName, transFileName):
-    h = pd.read_csv(logFileName, parse_dates=[0], index_col=0)
-    h['p'] = (h['Bid'] + h['Ask'])/2
-    h['v'] = h['EUR'] + h['BTC'] * h['p']
-    d = h.diff()
-    h['dv'] = d['v']/h['v']
-    h['dp'] = d['p']/h['p']
-    h['dEUR'] = d['EUR']
-    h['dBTC'] = d['BTC']
-    h['dT'] = d['Trade']
-    # The holdings in EUR or BTC must have changed
-    h = h[(h['dEUR'] != 0) | (h['dBTC'] != 0)]
-    # This change cannot be due to a trade
-    h = h[abs(h['dEUR']+h['dBTC']*h['p'])>100]
-    
-    amountsBTC = h['dBTC']
-    amountsEUR = h['dEUR']
-    out = h.loc[h.index.values,:].loc[:,['Bid','Ask']]
-    out['AmountBTC'] = amountsBTC
-    out['AmountEUR'] = amountsEUR
-    out.to_csv(transFileName)     

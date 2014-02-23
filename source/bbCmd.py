@@ -44,7 +44,13 @@ class Cmd(cmd.Cmd):
 
     def do_backtest(self, arg):
         paramFlag = input('Use current parameters? ([y]/n): ')
-        if paramFlag is not 'n':
+        vbFlag = input('Show trades? (y/[n]): ')
+        if paramFlag is 'n':
+        #   Change parameters here
+            params = 1
+        if vbFlag is 'y':
+            bitbot.main('-b -v')
+        else:
             bitbot.main('-b')
         d,r=bbPerformance.getReturns(logFileNameBT, None, '2014-01-01', None)
         bbPerformance.printSummary(r)

@@ -91,7 +91,7 @@ class trader:
     #   If price is below cutoff, go all in 
         if m.price < m.high * (1 - self.allinLimit):
             if self.allinFlag == 0:
-                print('Going all-in.')
+    #           print('Going all-in.')
                 if btFlag != 1:
                     sendEmail(t, emailAddress, 'Going all-in.')
             self.target = 0

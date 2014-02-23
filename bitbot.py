@@ -36,7 +36,7 @@ def main(argv=None):
     p         = bbClasses.portfolio(100,0)
     m         = bbClasses.marketData('Null', 500, 500, priceWindow)
 
-    if vbFlag == 0:
+    if btFlag == 1 and vbFlag == 0 and testFlag == 0:
     #   Progress bar
         for i in range(math.floor(bbFunctions.file_len(logFileName)/100)):
             sys.stdout.write('|')

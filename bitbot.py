@@ -38,7 +38,7 @@ def main(argv=None):
 
     if btFlag == 1 and vbFlag == 0 and testFlag == 0:
     #   Progress bar
-        for i in range(math.floor(bbFunctions.file_len(logFileName)/100)):
+        for i in range(math.floor(bbFunctions.file_len(logFileName)/200)):
             sys.stdout.write('|')
         sys.stdout.write('\n')
         sys.stdout.flush
@@ -74,7 +74,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
             if abs(t.coinsToTrade) > 0:
                 bbFunctions.printTermLine(m, p, t)
         elif vbFlag == 0:
-            if api.line % 100 == 0:
+            if api.line % 200 == 0:
                 sys.stdout.write('|')
                 sys.stdout.flush()
     else:

@@ -78,8 +78,9 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
                 sys.stdout.write('|')
                 sys.stdout.flush()
     else:
-        if t.suspend != 1:
+        if t.suspend == 1:
             print('Trading suspended!')
+        elif t.suspend == 0:
             api.cancelOrders(t)
             api.placeOrder(m, t)
 

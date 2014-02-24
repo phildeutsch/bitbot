@@ -1,8 +1,8 @@
 ]);
 
         // Set chart options
-        var options = {'width':400,
-                       'height':300,
+        var options = {'width':800,
+                       'height':600,
        series: {0:{color: 'black', lineWidth: 1, pointSize: 0},
 1:{color: 'green'},
                 2:{color: 'blue'}}

@@ -131,13 +131,17 @@ class API(object):
         return m.bid, m.ask
         
     def getBalance(self, m, p, t=None):
-        balance  = self.query_private('Balance')['result']
-        p.EUR  = float(balance['ZEUR'])
-        p.BTC  = float(balance['XXBT'])
-        p.value = p.EUR + p.BTC * m.bid
-        p.weight = p.EUR / p.value
-        if t is not None:
-            t.minTrade = t.tradeFactor * p.value
+        try:
+            balance  = self.query_private('Balance')['result']
+            p.EUR  = float(balance['ZEUR'])
+            p.BTC  = float(balance['XXBT'])
+            p.value = p.EUR + p.BTC * m.bid
+            p.weight = p.EUR / p.value
+            if t is not None:
+                t.minTrade = t.tradeFactor * p.value
+        except:
+            if t is not None:
+                t.error = 'Error fetching balance from Kraken.'
         return p.value
 
     def cancelOrders(self, t):

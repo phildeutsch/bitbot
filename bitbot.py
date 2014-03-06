@@ -45,8 +45,6 @@ def main(argv=None):
     while True:
         mainLoop(m, p, t, API, testFlag, btFlag, vbFlag, debugFlag)
 
-        if testFlag == 1:
-            break
         elif btFlag == 1 and API.line == bbFunctions.file_len(logFileName):
             break
     print('\n')

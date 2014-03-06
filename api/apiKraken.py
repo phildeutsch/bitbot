@@ -95,7 +95,7 @@ class API(object):
 		
     def getPrices(self, m, t, coinsToTrade):
         b, a = self.getDepth(10)
-        if bids is None and asks is None:
+        if b is None and a is None:
             t.error = 'Error getting data from Kraken'
         else:
             bid = 0

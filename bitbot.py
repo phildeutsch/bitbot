@@ -1,116 +1,135 @@
-import sys
-import cmd
+#!/usr/bin/python3
 import datetime
+import getopt
+import time
+import sys
+import re
+import math
+
 sys.path.append('./source')
 sys.path.append('./api')
 
 import apiKraken
-import bitbot
+import apiBacktest
 import bbClasses
-import bbPerformance
+import bbFunctions
 
 from bbKeys import *
 from bbSettings import *
 
-class Cmd(cmd.Cmd):
-    def __init__(self):
-        cmd.Cmd.__init__(self)
-        self.prompt = 'B> '
+def main(argv=None):
+    testFlag, btFlag, vbFlag, debugFlag = argParser(argv)
 
-    def do_funding(self, arg):
-        krakenAPI = apiKraken.API(keyKraken, secKraken)
-        pKraken   = bbClasses.portfolio(1,0)
-        mKraken   = bbClasses.marketData('Null', 0, 0, 0)
-        b,a = krakenAPI.getDepth(1)
-        mKraken.bid = float(b[0][0])
-        mKraken.ask = float(a[0][0])
+    # Use data from exchange
+    if btFlag == 0:
+        API = apiKraken.API(keyKraken, secKraken)
+        t = bbClasses.trader(logFileName, walkUp, walkDown, priceWindow,
+tradeFactor,
+                     momFactor, backupFund, allinLimit, stopLossLimit)
+    # Use data from logfile
+    else:
+        API = apiBacktest.API(logFileName)
+        with open(logFileNameBT, 'w') as logBT:
+            logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
+        t = bbClasses.trader(logFileNameBT, walkUp, walkDown, priceWindow,
+tradeFactor,
+                     momFactor, backupFund, allinLimit, stopLossLimit)
 
-        strTime = datetime.datetime.now().isoformat()[0:16]
-        flagBTC = input('Enter BTC transaction? ([y]/n): ')
-        if flagBTC is 'n':
-            amtEUR = input('Enter EUR amount: (<0 if withdrawal): ')
-            writeList = ','.join([strTime, str(mKraken.bid), str(mKraken.ask),
-                                  '0', str(amtEUR) + '\n'])
-        else:
-            amtBTC = input('Enter BTC amount: (<0 if withdrawal): ')
-            writeList = ','.join([strTime, str(mKraken.bid), str(mKraken.ask),
-                                  str(amtBTC), '0\n'])
-        with open(fundFileName, 'at') as ff:
-            ff.write(writeList)
+    p = bbClasses.portfolio(100,0)
+    m = bbClasses.marketData('Null', 500, 500, priceWindow)
 
-    def help_funding(self):
-            print('Syntax: funding')
-            print('-- Input a cash flow to/from the portfolio')
+    if btFlag == 1 and vbFlag == 0 and testFlag == 0:
+    # Progress bar
+        for i in range(math.floor(bbFunctions.file_len(logFileName)/200)):
+            sys.stdout.write('|')
+        sys.stdout.write('\n')
+        sys.stdout.flush
+    while True:
+        mainLoop(m, p, t, API, testFlag, btFlag, vbFlag, debugFlag)
 
-    def do_backtest(self, arg):
-        paramFlag = input('Use current parameters? ([y]/n): ')
-        vbFlag = input('Show trades? (y/[n]): ')
-        if paramFlag is 'n':
-        #   Change parameters here
-            params = 1
-        if vbFlag is 'y':
-            bitbot.main('-b -v')
-        else:
-            bitbot.main('-b')
-        d,r=bbPerformance.getReturns(logFileNameBT, None, '2014-01-01', None)
-        bbPerformance.printSummary(r)
-            
-    def help_backtest(self):
-        print('Syntax: backtest')
-        print('-- Run backtest using the current logfile as input')
+        if testFlag:
+            break
+        elif btFlag == 1 and API.line == bbFunctions.file_len(logFileName):
+            break
+    print('\n')
+
+def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
+    api.getBalance(m, p, t)
+    api.getPrices(m, t, t.minTrade)
     
+    if btFlag != 1:
+        t.stopLoss(m, p, overrideFileName)
+    t.updateBounds(m)
+    t.calcBaseWeight(m)
+    t.calcMomentum(m)
+    t.checkAllin(m, btFlag)
+    t.checkOverride(overrideFileName)
     
-    def do_performance(self, arg):
-        startDate = input('Initial Date (YYYY-MM-DD): ')
-        if len(startDate) is not 10:
-            startDate = '2014-01-08'
-        endDate   = input('End Date (YYYY-MM-DD): ')
-        if len(endDate) is not 10:
-            endDate = None
-        btflag = input('Run backtest? (y/[n]): ')
-        if btflag is 'y':
-            d,r=bbPerformance.getReturns(logFileNameBT, None, startDate, endDate)
-            bbPerformance.printReturns(d, r)
-            print('')
-            bbPerformance.printSummary(r)
-        else:
-            d,r=bbPerformance.getReturns(logFileName, fundFileName, startDate, endDate)
-            bbPerformance.printReturns(d, r)
-            print('')
-            bbPerformance.printSummary(r)
-            
-    def help_performance(self):
-            print('Syntax: performance')
-            print('-- Calculates the performance between two dates for ' +
-                  'a client')
+    t.calcCoinsToTrade(m, p)
+    t.checkTradeSize(m, p, tradeFactor)
+ 
+    if testFlag == 1:
+        bbFunctions.printTermLine(m, p, t)
+    elif btFlag == 1:
+        bbFunctions.printLogLine(m, p, t, logFileNameBT, bounds = 1)
+        if vbFlag == 1:
+            if abs(t.coinsToTrade) > 0:
+                bbFunctions.printTermLine(m, p, t)
+        elif vbFlag == 0:
+            if api.line % 200 == 0:
+                sys.stdout.write('|')
+                sys.stdout.flush()
+    else:
+        if t.suspend == 1:
+            print('Trading suspended!')
+        elif t.suspend == 0 and t.error == 0:
+            api.cancelOrders(t)
+            api.placeOrder(m, t)
 
+        bbFunctions.printTermLine(m, p, t)
+        bbFunctions.printStatus(m, p, t, statusFileName, freezeFileName)
+        bbFunctions.printLogLine(m, p, t, logFileName)
+        bbFunctions.drawPlot(m, t, plotFileName)
+        if abs(t.coinsToTrade) > 0:
+            bbFunctions.printLogLine(m, p, t, txFileName)
 
-    def do_balance(self, arg):    
-        krakenAPI = apiKraken.API(keyKraken, secKraken)
-        pKraken   = bbClasses.portfolio(1,0)
-        mKraken   = bbClasses.marketData('Null', 0, 0, 0)
-        b,a = krakenAPI.getDepth(1)
-        mKraken.bid = float(b[0][0])
-        mKraken.ask = float(a[0][0])
-        krakenAPI.getBalance(mKraken, pKraken)
+        if t.error != 0:
+            t.handle_error(m, emailAddress, errorFileName)
 
-        print('Exchange   EUR         BTC     Value  ')
-        print('--------------------------------------')
-        sys.stdout.write('{0:<10}'.format('Kraken'))       
-        sys.stdout.write('{0:>8.2f}'.format(float(pKraken.EUR)))       
-        sys.stdout.write('{0:>10.3f}'.format(float(pKraken.BTC)))
-        sys.stdout.write('{0:>10.2f}'.format(pKraken.value))
-        print('')       
-
-
-    def help_balance(self):
-            print('Syntax: balance')
-            print('-- Shows the current balance and total Value of the ' +
-                  'portfolio')
-            
-    def do_exit(self, arg):
-        sys.exit(1)
+        timeNow = datetime.datetime.now()
+        delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
         
-    def help_exit(self):
-            print('Syntax: exit')
-            print('-- Terminates the application')
+        if debugFlag == 1:
+            while delay > 10:
+                timeNow = datetime.datetime.now()
+                delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+                print('Waiting another ' + str(delay) + ' seconds.\n')
+                time.sleep(10)
+        else:
+            time.sleep(delay)
+        
+def argParser(argv):
+    testFlag = 0
+    btFlag = 0
+    vbFlag = 0
+    debugFlag = 0
+
+    if argv is None:
+        argv = sys.argv[1:]
+    else:
+        argv = argv.split()
+    opts, args = getopt.getopt(argv, 'btvd')
+    for o, a in opts:
+        if o == '-b':
+            btFlag = 1
+        elif o == '-t':
+            testFlag = 1
+        elif o == '-v':
+            vbFlag = 1
+        elif o == '-d':
+            debugFlag = 1
+    
+    return testFlag, btFlag, vbFlag, debugFlag
+
+if __name__ == "__main__":
+    main()

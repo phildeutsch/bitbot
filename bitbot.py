@@ -97,8 +97,15 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
         timeNow = datetime.datetime.now()
         delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
         
-        time.sleep(delay)
-            
+        if debugFlag == 1:
+            while delay > 10:
+                timeNow = datetime.datetime.now()
+                delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+                sys.stdout.write('Waiting another ' + delay + 'seconds.\n')
+                time.sleep(delay)
+        else:
+            time.sleep(delay)
+        
 def argParser(argv):
     testFlag  = 0
     btFlag    = 0

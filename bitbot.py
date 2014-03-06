@@ -102,7 +102,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
                 timeNow = datetime.datetime.now()
                 delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
                 sys.stdout.write('Waiting another ' + delay + 'seconds.\n')
-                time.sleep(delay)
+                time.sleep(10)
         else:
             time.sleep(delay)
         

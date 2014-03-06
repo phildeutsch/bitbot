@@ -45,6 +45,8 @@ def main(argv=None):
     while True:
         mainLoop(m, p, t, API, testFlag, btFlag, vbFlag, debugFlag)
 
+        if testFlag:
+            break
         elif btFlag == 1 and API.line == bbFunctions.file_len(logFileName):
             break
     print('\n')
@@ -99,7 +101,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
             while delay > 10:
                 timeNow = datetime.datetime.now()
                 delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-                sys.stdout.write('Waiting another ' + delay + 'seconds.\n')
+                print('Waiting another ' + str(delay) + ' seconds.\n')
                 time.sleep(10)
         else:
             time.sleep(delay)
@@ -114,7 +116,7 @@ def argParser(argv):
         argv = sys.argv[1:]
     else:
         argv = argv.split()
-    opts, args = getopt.getopt(argv, 'btv')
+    opts, args = getopt.getopt(argv, 'btvd')
     for o, a in opts:
         if o == '-b':
             btFlag = 1
@@ -122,7 +124,7 @@ def argParser(argv):
             testFlag = 1
         elif o == '-v':
             vbFlag = 1
-        elif d == '-d':
+        elif o == '-d':
             debugFlag = 1
     
     return testFlag, btFlag, vbFlag, debugFlag

@@ -82,45 +82,53 @@ class API(object):
         return json.loads(ret.read().decode('latin1'))
 		
     def getDepth(self, count):
-        depth = self.query_public('Depth', {
-                                 'pair' : 'XXBTZEUR',
-                                 'count': count})
-        asks = depth['result']['XXBTZEUR']['asks']
-        bids = depth['result']['XXBTZEUR']['bids']
+        try:
+            depth = self.query_public('Depth', {
+                                     'pair' : 'XXBTZEUR',
+                                     'count': count})
+            asks = depth['result']['XXBTZEUR']['asks']
+            bids = depth['result']['XXBTZEUR']['bids']
+        except:
+            bids = None
+            asks = None
         return bids, asks
 		
-    def getPrices(self, m, coinsToTrade):
+    def getPrices(self, m, t, coinsToTrade):
         b, a = self.getDepth(10)
-        bid = 0
-        ask = 0
-        coinsToTrade = abs(coinsToTrade)
-          
-        if coinsToTrade < float(a[0][1]):
-            ask = float(a[0][0])
+        if bids is None and asks is None:
+            t.error = 'Error getting data from Kraken'
         else:
-            cumDepth = 0
-            for i in range(len(a)):
-                cumDepth += float(a[i][1])
-                if cumDepth > coinsToTrade:
-                    ask = a[i][0]
-                    break
-        if ask == 0:
-            ask = a[-1][0]
-                    
-        if coinsToTrade < float(b[0][1]):
-            bid = float(b[0][0])
-        else:
-            cumDepth = 0
-            for i in range(len(b)):
-                cumDepth += float(b[i][1])
-                if cumDepth > coinsToTrade:
-                    bid = b[i][0]
-                    break
-        if bid == 0:
-            bid = b[-1][0]
+            bid = 0
+            ask = 0
+            coinsToTrade = abs(coinsToTrade)
+              
+            if coinsToTrade < float(a[0][1]):
+                ask = float(a[0][0])
+            else:
+                cumDepth = 0
+                for i in range(len(a)):
+                    cumDepth += float(a[i][1])
+                    if cumDepth > coinsToTrade:
+                        ask = a[i][0]
+                        break
+            if ask == 0:
+                ask = a[-1][0]
+                        
+            if coinsToTrade < float(b[0][1]):
+                bid = float(b[0][0])
+            else:
+                cumDepth = 0
+                for i in range(len(b)):
+                    cumDepth += float(b[i][1])
+                    if cumDepth > coinsToTrade:
+                        bid = b[i][0]
+                        break
+            if bid == 0:
+                bid = b[-1][0]
 
-        m.bid = float(bid)
-        m.ask = float(ask)
+            m.bid = float(bid)
+            m.ask = float(ask)
+
         m.price = (m.bid + m.ask)/2
         m.histPrices.append(m.price)
         m.mean = sum(m.histPrices)/len(m.histPrices)

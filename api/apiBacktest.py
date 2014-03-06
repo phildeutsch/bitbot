@@ -14,7 +14,7 @@ class API(object):
         self.line = 1
  
 		
-    def getPrices(self, m, coinsToTrade=None):
+    def getPrices(self, m, t=None, coinsToTrade=None):
         data = re.split(',', linecache.getline(self.logFileName, self.line+1))
         self.line += 1
         m.time = data[0]

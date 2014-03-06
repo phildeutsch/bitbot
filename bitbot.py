@@ -53,7 +53,7 @@ def main(argv=None):
 
 def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
     api.getBalance(m, p, t)
-    api.getPrices(m, t.minTrade)
+    api.getPrices(m, t, t.minTrade)
     
     if btFlag != 1:
         t.stopLoss(m, p, overrideFileName)
@@ -80,7 +80,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
     else:
         if t.suspend == 1:
             print('Trading suspended!')
-        elif t.suspend == 0:
+        elif t.suspend == 0 and t.error == 0:
             api.cancelOrders(t)
             api.placeOrder(m, t)
 

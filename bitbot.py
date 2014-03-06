@@ -18,7 +18,7 @@ from bbKeys import *
 from bbSettings import *
 
 def main(argv=None):
-    testFlag, btFlag, vbFlag = argParser(argv)
+    testFlag, btFlag, vbFlag, debugFlag = argParser(argv)
 
     # Use data from exchange
     if btFlag == 0:
@@ -43,7 +43,7 @@ def main(argv=None):
         sys.stdout.write('\n')
         sys.stdout.flush
     while True:
-        mainLoop(m, p, t, API, testFlag, btFlag, vbFlag)
+        mainLoop(m, p, t, API, testFlag, btFlag, vbFlag, debugFlag)
 
         if testFlag == 1:
             break
@@ -51,7 +51,7 @@ def main(argv=None):
             break
     print('\n')
 
-def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
+def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
     api.getBalance(m, p, t)
     api.getPrices(m, t, t.minTrade)
     
@@ -96,12 +96,14 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
 
         timeNow = datetime.datetime.now()
         delay   = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+        
         time.sleep(delay)
             
 def argParser(argv):
-    testFlag = 0
-    btFlag   = 0
-    vbFlag   = 0
+    testFlag  = 0
+    btFlag    = 0
+    vbFlag    = 0
+    debugFlag = 0
 
     if argv is None:
         argv = sys.argv[1:]
@@ -115,8 +117,10 @@ def argParser(argv):
             testFlag = 1
         elif o == '-v':
             vbFlag = 1
+        elif d == '-d':
+            debugFlag = 1
     
-    return testFlag, btFlag, vbFlag
+    return testFlag, btFlag, vbFlag, debugFlag
 
 if __name__ == "__main__":
     main()

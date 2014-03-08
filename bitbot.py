@@ -23,17 +23,17 @@ def main(argv=None):
     # Use data from exchange
     if btFlag == 0:
         API = apiKraken.API(keyKraken, secKraken)
-        t = bbClasses.trader(logFileName, walkUp, walkDown, priceWindow,
-tradeFactor,
-                     momFactor, backupFund, allinLimit, stopLossLimit)
+        t = bbClasses.trader(logFileName, walkUp, walkDown, priceWindow, 
+                             tradeFactor,  momFactor, backupFund, allinLimit, 
+                             stopLossLimit)
     # Use data from logfile
     else:
         API = apiBacktest.API(logFileName)
         with open(logFileNameBT, 'w') as logBT:
             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
         t = bbClasses.trader(logFileNameBT, walkUp, walkDown, priceWindow,
-tradeFactor,
-                     momFactor, backupFund, allinLimit, stopLossLimit)
+                             tradeFactor, momFactor, backupFund, allinLimit, 
+                             stopLossLimit)
 
     p = bbClasses.portfolio(100,0)
     m = bbClasses.marketData('Null', 500, 500, priceWindow)

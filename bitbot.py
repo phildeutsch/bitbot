@@ -59,14 +59,39 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
     
     if btFlag != 1:
         t.stopLoss(m, p, overrideFileName)
+    if debugFlag:
+        sys.stdout.write('Start of cycle: ' + str(datetime.datetime.now()) + '\n')
+        sys.stdout.write('Updating bounds...')
+        sys.stdout.flush()
     t.updateBounds(m)
+    if debugFlag:
+        sys.stdout.write('done.\nCalculating base weight...')
+        sys.stdout.flush()
     t.calcBaseWeight(m)
+    if debugFlag:
+        sys.stdout.write('done.\nCalculating momentum...')
+        sys.stdout.flush()
     t.calcMomentum(m)
+    if debugFlag:
+        sys.stdout.write('done.\nChecking all-in...')
+        sys.stdout.flush()
     t.checkAllin(m, btFlag)
+    if debugFlag:
+        sys.stdout.write('done.\nChecking override...')
+        sys.stdout.flush()
     t.checkOverride(overrideFileName)
     
+    if debugFlag:
+        sys.stdout.write('done.\nCalculating coins to trade...')
+        sys.stdout.flush()
     t.calcCoinsToTrade(m, p)
+    if debugFlag:
+        sys.stdout.write('done.\nChecking trade size...')
+        sys.stdout.flush()
     t.checkTradeSize(m, p, tradeFactor)
+    if debugFlag:
+        sys.stdout.write('done.\n')
+        sys.stdout.flush()
  
     if testFlag == 1:
         bbFunctions.printTermLine(m, p, t)
@@ -83,30 +108,51 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
         if t.suspend == 1:
             print('Trading suspended!')
         elif t.suspend == 0 and t.error == 0:
+            if debugFlag:
+                sys.stdout.write('Cancelling orders...')
+                sys.stdout.flush()
             api.cancelOrders(t)
+            if debugFlag:
+                sys.stdout.write('done.\nPlacing orders...')
+                sys.stdout.flush()
             api.placeOrder(m, t)
-
-        bbFunctions.printTermLine(m, p, t)
+            if debugFlag:
+                sys.stdout.write('done.\n')
+                sys.stdout.flush()
+        
+        if debugFlag:
+            sys.stdout.write('Logging...')
+            sys.stdout.flush()
+        else:
+            bbFunctions.printTermLine(m, p, t)
         bbFunctions.printStatus(m, p, t, statusFileName, freezeFileName)
         bbFunctions.printLogLine(m, p, t, logFileName)
         bbFunctions.drawPlot(m, t, plotFileName)
         if abs(t.coinsToTrade) > 0:
             bbFunctions.printLogLine(m, p, t, txFileName)
-
+        if debugFlag:
+            sys.stdout.write('done\n')
+            sys.stdout.flush()
+            
+        if debugFlag:
+            sys.stdout.write('Error handling...')
+            sys.stdout.flush()
         if t.error != 0:
             t.handle_error(m, emailAddress, errorFileName)
+        if debugFlag:
+            sys.stdout.write('done.\n')
+            sys.stdout.flush()
 
+        if debugFlag:
+            sys.stdout.write('Calculating seconds to sleep...')
+            sys.stdout.flush()
         timeNow = datetime.datetime.now()
         delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-        
-        if debugFlag == 1:
-            while delay > 10:
-                timeNow = datetime.datetime.now()
-                delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-                print('Waiting another ' + str(delay) + ' seconds.\n')
-                time.sleep(10)
-        else:
-            time.sleep(delay)
+        if debugFlag:
+            sys.stdout.write('done. \t(' + str(delay) + ').\n\n')
+            sys.stdout.flush()
+
+        time.sleep(delay)
         
 def argParser(argv):
     testFlag = 0

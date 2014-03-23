@@ -127,7 +127,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
             api.placeOrder(m, t)
             if debugFlag:
                 sys.stdout.write('done.\n')
-                 sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+                sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
                 sys.stdout.flush()
         
         if debugFlag:

@@ -60,38 +60,46 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
     if btFlag != 1:
         t.stopLoss(m, p, overrideFileName)
     if debugFlag:
-        sys.stdout.write('Start of cycle: ' + str(datetime.datetime.now()) + '\n')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.write('Updating bounds...')
         sys.stdout.flush()
     t.updateBounds(m)
     if debugFlag:
         sys.stdout.write('done.\t' + str(t.minTrade) + ' ' + str(t.maxTrade)+ '\n')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdoue.write('Calculating base weight...')
         sys.stdout.flush()
     t.calcBaseWeight(m)
     if debugFlag:
-        sys.stdout.write('done.\nCalculating momentum...')
+        sys.stdout.write('done.\t' + '\n')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+        sys.stdout.write('Calculating momentum...')
         sys.stdout.flush()
     t.calcMomentum(m)
     if debugFlag:
         sys.stdout.write('done.\nChecking all-in...')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.flush()
     t.checkAllin(m, btFlag)
     if debugFlag:
         sys.stdout.write('done.\nChecking override...')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.flush()
     t.checkOverride(overrideFileName)
     
     if debugFlag:
         sys.stdout.write('done.\nCalculating coins to trade...')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.flush()
     t.calcCoinsToTrade(m, p)
     if debugFlag:
         sys.stdout.write('done.\nChecking trade size...')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.flush()
     t.checkTradeSize(m, p, tradeFactor)
     if debugFlag:
         sys.stdout.write('done.\n')
+        sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.flush()
  
     if testFlag == 1:
@@ -119,6 +127,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
             api.placeOrder(m, t)
             if debugFlag:
                 sys.stdout.write('done.\n')
+                 sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
                 sys.stdout.flush()
         
         if debugFlag:
@@ -133,6 +142,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
             bbFunctions.printLogLine(m, p, t, txFileName)
         if debugFlag:
             sys.stdout.write('done\n')
+            sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
             sys.stdout.flush()
             
         if debugFlag:
@@ -142,6 +152,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
             t.handle_error(m, emailAddress, errorFileName)
         if debugFlag:
             sys.stdout.write('done.\n')
+            sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
             sys.stdout.flush()
 
         if debugFlag:
@@ -151,6 +162,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
         delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
         if debugFlag:
             sys.stdout.write('done. \t(' + str(delay) + ').\n\n')
+            sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
             sys.stdout.flush()
 
         time.sleep(delay)

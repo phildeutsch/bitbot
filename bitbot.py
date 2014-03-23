@@ -65,7 +65,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
         sys.stdout.flush()
     t.updateBounds(m)
     if debugFlag:
-        sys.stdout.write('done.\t' + str(t.minTrade) + ' ' + str(t.maxTrade)+ '\n')
+        sys.stdout.write('done.\t' + str(t.minPrice) + ' ' + str(t.maxPrice)+ '\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdoue.write('Calculating base weight...')
         sys.stdout.flush()

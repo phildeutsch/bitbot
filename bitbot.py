@@ -65,40 +65,44 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
         sys.stdout.flush()
     t.updateBounds(m)
     if debugFlag:
-        sys.stdout.write('done.\t' + str(t.minPrice) + ' ' + str(t.maxPrice)+ '\n')
+        sys.stdout.write('done.\t\t' + str(t.minPrice) + ' ' + str(t.maxPrice)+ '\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
-        sys.stdout.write('Calculating base weight...')
+        sys.stdout.write('Calculating weight...')
         sys.stdout.flush()
     t.calcBaseWeight(m)
     if debugFlag:
-        sys.stdout.write('done.\t' + '\n')
+        sys.stdout.write('done.\t' + str(round(t.target,3)) + '\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.write('Calculating momentum...')
         sys.stdout.flush()
     t.calcMomentum(m)
     if debugFlag:
-        sys.stdout.write('done.\nChecking all-in...')
+        sys.stdout.write('done.\t' + str(round(t.target,3)) + '\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+        sys.stdout.write('Checking all-in...')
         sys.stdout.flush()
     t.checkAllin(m, btFlag)
     if debugFlag:
-        sys.stdout.write('done.\nChecking override...')
+        sys.stdout.write('done.\t\t' + str(t.allinFlag) +'\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+        sys.stdout.write('Checking override...')
         sys.stdout.flush()
     t.checkOverride(overrideFileName)
     
     if debugFlag:
-        sys.stdout.write('done.\nCalculating coins to trade...')
+        sys.stdout.write('done.\t' + str(t.override) + '\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+        sys.stdout.write('Calculating optimum...')
         sys.stdout.flush()
     t.calcCoinsToTrade(m, p)
     if debugFlag:
-        sys.stdout.write('done.\nChecking trade size...')
+        sys.stdout.write('done.\t' + str(round(t.coinsToTrade,3)) + '\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+        sys.stdout.write('Checking trade size...')
         sys.stdout.flush()
     t.checkTradeSize(m, p, tradeFactor)
     if debugFlag:
-        sys.stdout.write('done.\n')
+        sys.stdout.write('done.\t' + str(round(t.coinsToTrade,3)) + '\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.flush()
  
@@ -122,7 +126,9 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
                 sys.stdout.flush()
             api.cancelOrders(t)
             if debugFlag:
-                sys.stdout.write('done.\nPlacing orders...')
+                sys.stdout.write('done.\t' + '\n')
+                sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+                sys.stdout.write('Placing orders...')
                 sys.stdout.flush()
             api.placeOrder(m, t)
             if debugFlag:
@@ -151,18 +157,17 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
         if t.error != 0:
             t.handle_error(m, emailAddress, errorFileName)
         if debugFlag:
-            sys.stdout.write('done.\n')
+            sys.stdout.write('done.\t\t' + str(t.error) + '\n')
             sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
             sys.stdout.flush()
 
         if debugFlag:
-            sys.stdout.write('Calculating seconds to sleep...')
+            sys.stdout.write('Calculating sleep...')
             sys.stdout.flush()
         timeNow = datetime.datetime.now()
         delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
         if debugFlag:
-            sys.stdout.write('done. \t(' + str(delay) + ').\n\n')
-            sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
+            sys.stdout.write('done. \t' + str(delay) + '\n\n')
             sys.stdout.flush()
 
         time.sleep(delay)

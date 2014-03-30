@@ -93,7 +93,7 @@ class trader:
             if self.allinFlag == 0:
     #           print('Going all-in.')
                 if btFlag != 1:
-                    bbFunctions.sendEmail(t, emailAddress, 'Going all-in.')
+                    bbFunctions.sendEmail(self, emailAddress, 'Going all-in.')
             self.target = 0
             self.allinFlag = 1
         else:

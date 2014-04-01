@@ -49,6 +49,7 @@ def calcReturn(log, transactions, date):
 
     dft = log[startt : endt]
     dfy = log[starty : endy]
+
     try:
         tdf = transactions[date]
     except:
@@ -79,7 +80,7 @@ def getReturns(logFileName, transfers=None, start=None, end=None):
     history   = pd.read_csv(logFileName, parse_dates=[0], index_col=0)
  
     if start is None:
-        npstart = '2014-01-08'
+        start = '2014-01-08'
         npstart = np.datetime64(start + 'T23:50') - np.timedelta64(1, 'D')
         npstart = str(npstart)[:16]
     else:
@@ -91,6 +92,7 @@ def getReturns(logFileName, transfers=None, start=None, end=None):
     else: 
         npend = np.datetime64(end + 'T23:59')
         npend = str(npend)[:16]
+    print(npstart, npend)
     history     = history[npstart:npend]
  
     if transfers is None:
@@ -107,6 +109,8 @@ def getReturns(logFileName, transfers=None, start=None, end=None):
             uniqueDates.append(str(dates[d])[0:10])
     if uniqueDates[0] != start:
         uniqueDates = uniqueDates[1:]
+    if end is not None and uniqueDates[-1] != end:
+        uniqueDates = uniqueDates[:-1]
     for d in uniqueDates:
             r.append(calcReturn(history, t, d))
     return uniqueDates, np.array(r)

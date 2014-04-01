@@ -92,7 +92,6 @@ def getReturns(logFileName, transfers=None, start=None, end=None):
     else: 
         npend = np.datetime64(end + 'T23:59')
         npend = str(npend)[:16]
-    print(npstart, npend)
     history     = history[npstart:npend]
  
     if transfers is None:

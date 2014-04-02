@@ -81,7 +81,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag, debugFlag):
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')
         sys.stdout.write('Checking all-in...')
         sys.stdout.flush()
-    t.checkAllin(m, btFlag)
+    t.checkAllin(m, btFlag, emailAddress)
     if debugFlag:
         sys.stdout.write('done.\t\t' + str(t.allinFlag) +'\n')
         sys.stdout.write(datetime.datetime.now().isoformat()[0:19] + '\t')

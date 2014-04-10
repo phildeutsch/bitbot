@@ -96,7 +96,7 @@ class trader:
                     bbFunctions.sendEmail(self, emailAddress, 'Going all-in.')
             self.target = 0
             self.allinFlag = 1
-        else:
+        elif m.price > 1.01 * m.high * (1 - self.allinLimit):
             self.allinFlag = 0
         return self.target
 

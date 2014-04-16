@@ -52,7 +52,7 @@ def drawPlot(m, t, plotFile):
             content = file1.readlines()
             picFile.write(''.join(content))
 
-        for i in range(len(m.histPrices)):
+        for i in range(min(len(m.histPrices), len(t.buys))):
             picFile.write('[' + str(i) + ',')
             picFile.write(str(m.histPrices[i]) + ',')
             picFile.write(str(t.buys[i]) + ',')

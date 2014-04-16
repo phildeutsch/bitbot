@@ -36,7 +36,7 @@ def main(argv=None):
                              stopLossLimit)
 
     p = bbClasses.portfolio(100,0)
-    m = bbClasses.marketData('Null', 500, 500, priceWindow)
+    m = bbClasses.marketData('Null', 500, 500, logFileName, priceWindow)
 
     if btFlag == 1 and vbFlag == 0 and testFlag == 0:
     # Progress bar

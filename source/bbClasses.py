@@ -13,12 +13,12 @@ class portfolio:
 class marketData:
     """ Stores market data """
 
-    def __init__(self, time, bid, ask, priceWindow):
+    def __init__(self, time, bid, ask, logFileName, priceWindow):
         self.time = time
         self.bid = bid
         self.ask = ask
         self.price = (bid + ask)/2
-        self.histPrices = deque([], priceWindow)
+        self.histPrices = bbFunctions.getHistPrices(logFileName, priceWindow)
         self.mean = self.price
         self.low = self.price
         self.high = self.price

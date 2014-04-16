@@ -1,9 +1,20 @@
 from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
+from collections import deque
 import linecache
 import time
 import sys
 import re
+
+def getHistPrices(logFileName, priceWindow):
+    histPrices = deque([], priceWindow)
+    with open(logFileName, 'rt') as f:
+        data = f.readlines()
+    for i in range(priceWindow):
+        bid=float(data[-priceWindow+i].split(',')[1])
+        ask=float(data[-priceWindow+i].split(',')[2])
+        histPrices.append((bid+ask)/2)
+    return histPrices
 
 def sendEmail(t, recipient, subject):
     text = ''

@@ -1,20 +1,34 @@
 from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
-from collections import deque
 import linecache
 import time
 import sys
 import re
 
-def getHistPrices(logFileName, priceWindow):
-    histPrices = deque([], priceWindow)
-    with open(logFileName, 'rt') as f:
-        data = f.readlines()
-    for i in range(priceWindow):
-        bid=float(data[-priceWindow+i].split(',')[1])
-        ask=float(data[-priceWindow+i].split(',')[2])
-        histPrices.append((bid+ask)/2)
-    return histPrices
+def readSettings(settingsFile):
+    s = {}
+    for line in open(settingsFile):
+        l   = line.split(' ')
+        try:
+            s[l[0]] = float(l[-1].strip())
+        except:
+            s[l[0]] = l[-1].strip()
+    return s
+
+def chooseParameters():
+    sys.stdout.write('Choose Parameter to change:\n')
+    sys.stdout.write(' x) Done\n')
+    sys.stdout.write(' d) Display current values\n')
+    sys.stdout.write(' s) Restore standard values\n')
+    sys.stdout.write(' 1) walkUp\n')
+    sys.stdout.write(' 3) walkDown\n')
+    sys.stdout.write(' 4) tradeFactor\n')
+    sys.stdout.write(' 5) momFactor\n')
+    sys.stdout.write(' 6) priceWindow\n')
+    sys.stdout.write(' 7) backupFund\n')
+    sys.stdout.write(' 8) allinLimit\n')
+    sys.stdout.write(' 9) stopLossLimit\n')
+    paramChoice = input('')
 
 def sendEmail(t, recipient, subject):
     text = ''
@@ -52,7 +66,7 @@ def drawPlot(m, t, plotFile):
             content = file1.readlines()
             picFile.write(''.join(content))
 
-        for i in range(min(len(m.histPrices), len(t.buys))):
+        for i in range(len(m.histPrices)):
             picFile.write('[' + str(i) + ',')
             picFile.write(str(m.histPrices[i]) + ',')
             picFile.write(str(t.buys[i]) + ',')

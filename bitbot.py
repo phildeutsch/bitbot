@@ -4,7 +4,6 @@ import getopt
 import time
 import sys
 import re
-import math
 
 sys.path.append('./source')
 sys.path.append('./api')
@@ -19,6 +18,8 @@ from bbSettings import *
 
 def main(argv=None):
     testFlag, btFlag, vbFlag = argParser(argv)
+    
+    settings = bbFunctions.readSettings('data/bbSettings.txt')
 
     # Use data from exchange
     if btFlag == 0:
@@ -36,11 +37,11 @@ def main(argv=None):
                              stopLossLimit)
 
     p = bbClasses.portfolio(100,0)
-    m = bbClasses.marketData('Null', 500, 500, logFileName, priceWindow)
+    m = bbClasses.marketData('Null', 500, 500, settings)
 
     if btFlag == 1 and vbFlag == 0 and testFlag == 0:
     # Progress bar
-        for i in range(math.floor(bbFunctions.file_len(logFileName)/200)):
+        for i in range(bbFunctions.progressBarLength(settings)):
             sys.stdout.write('|')
         sys.stdout.write('\n')
         sys.stdout.flush

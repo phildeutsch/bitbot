@@ -4,6 +4,10 @@ import linecache
 import time
 import sys
 import re
+import math
+
+def progressBarLength(settings):
+    return math.floor(file_len(str(settings['logFileName']))/250)
 
 def readSettings(settingsFile):
     s = {}

@@ -150,7 +150,7 @@ class API(object):
                 t.minTrade = bbCfg.tradeFactor * p.value
         except Exception as err:
             if t is not None:
-                t.error = 'Error in apiKraken.getBalance: ' + str(err)
+                t.error = 'apiKraken.getBalance: ' + str(err)
         return p.value
 
     def cancelOrders(self, t):
@@ -159,8 +159,8 @@ class API(object):
             if openOrders['open'] != {}:
                 for transaction in openOrders['open'].keys():
                     self.query_private('CancelOrder',{'txid':transaction})
-        except:
-            t.error = 'Error cancelling open Kraken orders.'
+        except Exception as err:
+            t.error = 'apiKraken.cancelOrders: ' + str(err)
 
     def placeOrder(self, m, t):
         try:
@@ -183,5 +183,5 @@ class API(object):
             if abs(t.coinsToTrade) > 0:
                 if trade['error'] != []:
                     t.error = 'Error trading on Kraken.'
-        except:
-            t.error = 'Error placing order on Kraken.'
+        except Exception as err:
+            t.error = 'apiKraken.placeOrder: ' + str(err)

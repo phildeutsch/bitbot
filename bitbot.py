@@ -19,15 +19,13 @@ from bbSettings import *
 def main(argv=None):
     testFlag, btFlag, vbFlag = argParser(argv)
     
-    settings = bbFunctions.readSettings('data/bbSettings.txt')
-
     # Use data from exchange
     if btFlag == 0:
         API = apiKraken.API(keyKraken, secKraken)
         t = bbClasses.trader(logFileName, walkUp, walkDown, priceWindow, 
                              tradeFactor,  momFactor, backupFund, allinLimit, 
                              stopLossLimit)
-    # Use data from logfile
+    # Backtest: Use data from logfile
     else:
         API = apiBacktest.API(logFileName)
         with open(logFileNameBT, 'w') as logBT:
@@ -35,7 +33,7 @@ def main(argv=None):
         t = bbClasses.trader(logFileNameBT, walkUp, walkDown, priceWindow,
                              tradeFactor, momFactor, backupFund, allinLimit, 
                              stopLossLimit)
-
+    print(bbSettings.cfg)
     p = bbClasses.portfolio(100,0)
     m = bbClasses.marketData('Null', 500, 500, settings)
 

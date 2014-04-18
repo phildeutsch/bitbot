@@ -1,5 +1,6 @@
 from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
+import bbCfg
 import linecache
 import time
 import sys
@@ -9,8 +10,8 @@ import math
 def getLogFileNameBT(settings):
     return 'data/logBT' + str(hash(frozenset(settings.items()))) + '.csv'
 
-def progressBarLength(settings):
-    return math.floor(file_len(str(settings['logFileName']))/250)
+def progressBarLength():
+    return math.floor(file_len(bbCfg.logFileName)/bbCfg.progressBar)
 
 def chooseParameters():
     sys.stdout.write('Choose Parameter to change:\n')

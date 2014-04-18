@@ -8,13 +8,13 @@ import re
 sys.path.append('./source')
 sys.path.append('./api')
 
+import bbCfg
 import apiKraken
 import apiBacktest
 import bbClasses
 import bbFunctions
 
 from bbKeys import *
-from bbSettings import *
 
 def main(argv=None):
     testFlag, btFlag, vbFlag = argParser(argv)
@@ -22,24 +22,20 @@ def main(argv=None):
     # Use data from exchange
     if btFlag == 0:
         API = apiKraken.API(keyKraken, secKraken)
-        t = bbClasses.trader(logFileName, walkUp, walkDown, priceWindow, 
-                             tradeFactor,  momFactor, backupFund, allinLimit, 
-                             stopLossLimit)
+        t = bbClasses.trader(bbCfg.logFileName)
     # Backtest: Use data from logfile
     else:
-        API = apiBacktest.API(logFileName)
-        with open(logFileNameBT, 'w') as logBT:
+        API = apiBacktest.API()
+        with open(bbCfg.logFileNameBT, 'w') as logBT:
             logBT.write('Time,Bid,Ask,EUR,BTC,Trade,minPrice,maxPrice\n')
-        t = bbClasses.trader(logFileNameBT, walkUp, walkDown, priceWindow,
-                             tradeFactor, momFactor, backupFund, allinLimit, 
-                             stopLossLimit)
-    print(bbSettings.cfg)
+        t = bbClasses.trader(bbCfg.logFileNameBT)
+    
     p = bbClasses.portfolio(100,0)
-    m = bbClasses.marketData('Null', 500, 500, settings)
+    m = bbClasses.marketData('Null', 500, 500)
 
     if btFlag == 1 and vbFlag == 0 and testFlag == 0:
     # Progress bar
-        for i in range(bbFunctions.progressBarLength(settings)):
+        for i in range(bbFunctions.progressBarLength()):
             sys.stdout.write('|')
         sys.stdout.write('\n')
         sys.stdout.flush
@@ -48,7 +44,7 @@ def main(argv=None):
 
         if testFlag:
             break
-        elif btFlag == 1 and API.line == bbFunctions.file_len(logFileName):
+        elif btFlag == 1 and API.line == bbFunctions.file_len(bbCfg.logFileName):
             break
     print('\n')
 
@@ -57,25 +53,25 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
     api.getPrices(m, t, t.minTrade)
     
     if btFlag != 1:
-        t.stopLoss(m, p, overrideFileName)
+        t.stopLoss(m, p)
     t.updateBounds(m)
     t.calcBaseWeight(m)
     t.calcMomentum(m)
-    t.checkAllin(m, btFlag, emailAddress)
-    t.checkOverride(overrideFileName)
+    t.checkAllin(m, btFlag)
+    t.checkOverride()
     
     t.calcCoinsToTrade(m, p)
-    t.checkTradeSize(m, p, tradeFactor)
+    t.checkTradeSize(m, p)
  
     if testFlag == 1:
         bbFunctions.printTermLine(m, p, t)
     elif btFlag == 1:
-        bbFunctions.printLogLine(m, p, t, logFileNameBT, bounds = 1)
+        bbFunctions.printLogLine(m, p, t, bbCfg.logFileNameBT, bounds = 1)
         if vbFlag == 1:
             if abs(t.coinsToTrade) > 0:
                 bbFunctions.printTermLine(m, p, t)
         elif vbFlag == 0:
-            if api.line % 200 == 0:
+            if api.line %  bbCfg.progressBar == 0:
                 sys.stdout.write('|')
                 sys.stdout.flush()
     else:
@@ -86,14 +82,14 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
             api.placeOrder(m, t)
         
         bbFunctions.printTermLine(m, p, t)
-        bbFunctions.printStatus(m, p, t, statusFileName, freezeFileName)
-        bbFunctions.printLogLine(m, p, t, logFileName)
-        bbFunctions.drawPlot(m, t, plotFileName)
+        bbFunctions.printStatus(m, p, t)
+        bbFunctions.printLogLine(m, p, t, bbCfg.logFileName)
+        bbFunctions.drawPlot(m, t)
         if abs(t.coinsToTrade) > 0:
-            bbFunctions.printLogLine(m, p, t, txFileName)
+            bbFunctions.printLogLine(m, p, t)
             
         if t.error != 0:
-            t.handle_error(m, emailAddress, errorFileName)
+            t.handle_error(m)
 
         timeNow = datetime.datetime.now()
         delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second

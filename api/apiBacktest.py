@@ -1,3 +1,4 @@
+import bbCfg
 import time
 import datetime
 import linecache 
@@ -9,13 +10,11 @@ class API(object):
      
     """
      
-    def __init__(self, logFileName):
-        self.logFileName = logFileName
+    def __init__(self):
         self.line = 1
- 
 		
     def getPrices(self, m, t=None, coinsToTrade=None):
-        data = re.split(',', linecache.getline(self.logFileName, self.line+1))
+        data = re.split(',', linecache.getline(bbCfg.logFileName, self.line+1))
         self.line += 1
         m.time = data[0]
         m.bid = float(data[1])
@@ -37,5 +36,5 @@ class API(object):
 
         p.value = p.EUR + p.BTC * m.bid
         p.weight = p.EUR / p.value
-        t.minTrade = t.tradeFactor * p.value
+        t.minTrade = bbCfg.tradeFactor * p.value
         return p.value

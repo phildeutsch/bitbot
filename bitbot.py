@@ -40,15 +40,19 @@ def main(argv=None):
         sys.stdout.write('\n')
         sys.stdout.flush
     while True:
-        mainLoop(m, p, t, API, testFlag, btFlag, vbFlag)
+        mainLoop(m, p, t, API, testFlag, btFlag)
 
         if testFlag:
             break
         elif btFlag == 1 and API.line == bbFunctions.file_len(bbCfg.logFileName):
             break
-    print('\n')
+        
+        timeNow = datetime.datetime.now()
+        delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+        time.sleep(delay)
+        
 
-def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
+def mainLoop(m, p, t, api, testFlag, btFlag):
     api.getBalance(m, p, t)
     api.getPrices(m, t, t.minTrade)
     
@@ -90,11 +94,6 @@ def mainLoop(m, p, t, api, testFlag, btFlag, vbFlag):
             
         if t.error != 0:
             t.handle_error(m)
-
-        timeNow = datetime.datetime.now()
-        delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-
-        time.sleep(delay)
         
 def argParser(argv):
     testFlag = 0

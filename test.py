@@ -3,14 +3,18 @@ import sys
 sys.path.append('./source')
 sys.path.append('./api')
 
-import apiBitstamp
+import bbCfg
+import bbFunctions
+import bbClasses
+import bitbot
+import apiKraken
+
 from bbKeys import *
 
+t = bbClasses.trader(bbCfg.logFileName)
+p = bbClasses.portfolio(100,0)
+m = bbClasses.marketData('Null', 500, 500)
+API = apiKraken.API(keyKraken, secKraken)
 
-public_client = apiBitstamp.Public()
-print(public_client.ticker()['volume'])
-trading_client = apiBitstamp.Trading(
-    username = '370147',
-    key = keyBitstamp,
-    secret = secBitstamp)
-print(trading_client.account_balance())
+bitbot.mainLoop(m, p, t, API, 0, 0)
+

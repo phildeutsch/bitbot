@@ -9,6 +9,7 @@ import base64
 import time
 import datetime
  
+import bbCfg
  
 class API(object):
     """Kraken.com cryptocurrency Exchange API.
@@ -146,10 +147,10 @@ class API(object):
             p.value = p.EUR + p.BTC * m.bid
             p.weight = p.EUR / p.value
             if t is not None:
-                t.minTrade = t.tradeFactor * p.value
-        except:
+                t.minTrade = bbCfg.tradeFactor * p.value
+        except Exception as err:
             if t is not None:
-                t.error = 'Error fetching balance from Kraken.'
+                t.error = 'Error in apiKraken.getBalance: ' + str(err)
         return p.value
 
     def cancelOrders(self, t):

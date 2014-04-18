@@ -8,12 +8,14 @@ import apiKraken
 import bitbot
 import bbClasses
 import bbPerformance
+import bbFunctions
+import bbSettings
 
 from bbKeys import *
-from bbSettings import *
 
 class Cmd(cmd.Cmd):
     def __init__(self):
+        print(bbSettings.cfg)
         cmd.Cmd.__init__(self)
         self.prompt = 'B> '
 
@@ -47,14 +49,16 @@ class Cmd(cmd.Cmd):
         vbFlag = input('Show trades? (y/[n]): ')
         if paramFlag is 'n':
         #   Change parameters here
-            params = 1
+            bbFunctions.chooseParameters()
+        logFileNameBT = bbFunctions.getLogFileNameBT(settings)
+        print(logFileNameBT)
         if vbFlag is 'y':
             bitbot.main('-b -v')
         else:
             bitbot.main('-b')
         d,r=bbPerformance.getReturns(logFileNameBT, None, '2014-01-01', None)
         bbPerformance.printSummary(r)
-            
+
     def help_backtest(self):
         print('Syntax: backtest')
         print('-- Run backtest using the current logfile as input')

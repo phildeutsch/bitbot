@@ -17,7 +17,7 @@ import bbFunctions
 from bbKeys import *
 
 def main(argv=None):
-    testFlag, btFlag, vbFlag = argParser(argv)
+    testFlag, btFlag = argParser(argv)
     
     # Use data from exchange
     if btFlag == 0:
@@ -33,7 +33,7 @@ def main(argv=None):
     p = bbClasses.portfolio(100,0)
     m = bbClasses.marketData('Null', 500, 500)
 
-    if btFlag == 1 and vbFlag == 0 and testFlag == 0:
+    if btFlag == 1 and testFlag == 0:
     # Progress bar
         for i in range(bbFunctions.progressBarLength()):
             sys.stdout.write('|')
@@ -46,11 +46,12 @@ def main(argv=None):
             break
         elif btFlag == 1 and API.line == bbFunctions.file_len(bbCfg.logFileName):
             break
-        
-        timeNow = datetime.datetime.now()
-        delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
-        time.sleep(delay)
-        
+    
+        if not btFlag:       
+            timeNow = datetime.datetime.now()
+            delay = (10 - (timeNow.minute)%10) * 60 - timeNow.second
+            time.sleep(delay)
+    print('\n')      
 
 def mainLoop(m, p, t, api, testFlag, btFlag):
     api.getBalance(m, p, t)
@@ -71,13 +72,9 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         bbFunctions.printTermLine(m, p, t)
     elif btFlag == 1:
         bbFunctions.printLogLine(m, p, t, bbCfg.logFileNameBT, bounds = 1)
-        if vbFlag == 1:
-            if abs(t.coinsToTrade) > 0:
-                bbFunctions.printTermLine(m, p, t)
-        elif vbFlag == 0:
-            if api.line %  bbCfg.progressBar == 0:
-                sys.stdout.write('|')
-                sys.stdout.flush()
+        if api.line %  bbCfg.progressBar == 0:
+            sys.stdout.write('|')
+            sys.stdout.flush()
     else:
         if t.suspend == 1:
             print('Trading suspended!')
@@ -98,22 +95,19 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
 def argParser(argv):
     testFlag = 0
     btFlag = 0
-    vbFlag = 0
 
     if argv is None:
         argv = sys.argv[1:]
     else:
         argv = argv.split()
-    opts, args = getopt.getopt(argv, 'btv')
+    opts, args = getopt.getopt(argv, 'bt')
     for o, a in opts:
         if o == '-b':
             btFlag = 1
         elif o == '-t':
             testFlag = 1
-        elif o == '-v':
-            vbFlag = 1
     
-    return testFlag, btFlag, vbFlag
+    return testFlag, btFlag
 
 if __name__ == "__main__":
     main()

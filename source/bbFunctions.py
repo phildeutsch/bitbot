@@ -6,18 +6,11 @@ import sys
 import re
 import math
 
+def getLogFileNameBT(settings):
+    return 'data/logBT' + str(hash(frozenset(settings.items()))) + '.csv'
+
 def progressBarLength(settings):
     return math.floor(file_len(str(settings['logFileName']))/250)
-
-def readSettings(settingsFile):
-    s = {}
-    for line in open(settingsFile):
-        l   = line.split(' ')
-        try:
-            s[l[0]] = float(l[-1].strip())
-        except:
-            s[l[0]] = l[-1].strip()
-    return s
 
 def chooseParameters():
     sys.stdout.write('Choose Parameter to change:\n')

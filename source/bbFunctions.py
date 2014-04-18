@@ -45,7 +45,7 @@ def sendEmail(t, recipient, subject):
     except:
         t.error = 'Error sending email.'
 
-def drawPlot(m, t, plotFile):
+def drawPlot(m, t):
     plotFileHead   = 'source/plotHead.txt'
     plotFileTail   = 'source/plotTail.txt'
 
@@ -59,7 +59,7 @@ def drawPlot(m, t, plotFile):
         t.buys.append('null')
         t.sells.append(m.bid)
 
-    with open(plotFile,'w') as picFile:
+    with open(bbCfg.plotFileName,'w') as picFile:
         with open(plotFileHead,'rt') as file1:
             content = file1.readlines()
             picFile.write(''.join(content))
@@ -80,7 +80,7 @@ def file_len(fname):
             pass
     return i + 1
 
-def getBounds(logFileName, walkUp, walkDown):
+def getBounds(logFileName):
     with open(logFileName,'r') as logFile:
         history = logFile.readlines()
     maxPrice = float(re.split(',', history[1])[2])
@@ -88,10 +88,10 @@ def getBounds(logFileName, walkUp, walkDown):
     for line in range(2,len(history)):
         if float(re.split(',', history[line])[2]) > maxPrice:
             maxPrice = float(re.split(',', history[line])[2])
-            minPrice = maxPrice * (1 - walkDown)
+            minPrice = maxPrice * (1 - bbCfg.walkDown)
         if float(re.split(',', history[line])[1]) < minPrice:
             minPrice = float(re.split(',', history[line])[1])
-            maxPrice = minPrice * (1 + walkUp)
+            maxPrice = minPrice * (1 + bbCfg.walkUp)
     return minPrice, maxPrice
 
 def printLogLine(m, p, t, logFileName, bounds=0):
@@ -107,8 +107,8 @@ def printLogLine(m, p, t, logFileName, bounds=0):
             logFile.write(',' + '{0:0.2f}'.format(t.maxPrice))
         logFile.write('\n')
 
-def printStatus(m, p, t, statusFileName, freezeFileName):
-    with open(statusFileName, 'w') as statusFile:
+def printStatus(m, p, t):
+    with open(bbCfg.statusFileName, 'w') as statusFile:
         statusFile.write('{0:<10}'.format('Time:'))
         statusFile.write('{0:<10}'.format(m.time) + '\n')
         statusFile.write('{0:<10}'.format('Status:'))
@@ -133,9 +133,9 @@ def printStatus(m, p, t, statusFileName, freezeFileName):
         statusFile.write('{0:<10}'.format('maxPrice:'))
         statusFile.write('{0:>7.2f}'.format(t.maxPrice) + '\n')
         statusFile.write('{0:<10}'.format('Allin:'))
-        statusFile.write('{0:>7.2f}'.format(m.high * (1 - t.allinLimit)) + '\n')
+        statusFile.write('{0:>7.2f}'.format(m.high * (1 - bbCfg.allinLimit)) + '\n')
         statusFile.write('{0:<10}'.format('Stoploss:'))
-        statusFile.write('{0:>7.2f}'.format(m.high * (1 - t.stopLossLimit)) + '\n')
+        statusFile.write('{0:>7.2f}'.format(m.high * (1 - bbCfg.stopLossLimit)) + '\n')
 
 def printTermLine(m, p, t):
     strLog = '{0:<10}'.format(m.time[0:16]) + ' |'

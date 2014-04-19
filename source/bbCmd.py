@@ -48,9 +48,15 @@ class Cmd(cmd.Cmd):
         if paramFlag is 'n':
         #   Change parameters here
             bbFunctions.chooseParameters()
+        numLinesLog = bbFunctions.file_len(bbCfg.logFileName) 
         bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT()
         print(bbCfg.logFileNameBT)
-        bitbot.main('-b')
+        try:
+            numLinesLogBT = bbFunctions.file_len(bbCfg.logFileNameBT)
+        except:
+            numLinesLogBT = 0
+        if numLinesLogBT != numLinesLog:
+            bitbot.main('-b')
         d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, None, '2014-01-01', None)
         bbPerformance.printSummary(r)
 

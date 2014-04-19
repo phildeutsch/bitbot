@@ -13,7 +13,9 @@ def getLogFileNameBT():
     varList = [var for var in dir(bbCfg) if not var.startswith("_")]
     varDict = OrderedDict()
     for var in sorted(varList):
-        varDict[var] = eval('bbCfg.'+ var)
+        if var != 'logFileNameBT':
+            varDict[var] = eval('bbCfg.'+ var)
+#   print(varDict)
     h = hashlib.md5(str(varDict).encode('utf-8')).hexdigest()
     return 'data/logBT' + h + '.csv'
 

@@ -4,25 +4,24 @@ import datetime
 sys.path.append('./source')
 sys.path.append('./api')
 
+import bbCfg
 import apiKraken
 import bitbot
 import bbClasses
 import bbPerformance
 import bbFunctions
-import bbSettings
 
 from bbKeys import *
 
 class Cmd(cmd.Cmd):
     def __init__(self):
-        print(bbSettings.cfg)
         cmd.Cmd.__init__(self)
         self.prompt = 'B> '
 
     def do_funding(self, arg):
         krakenAPI = apiKraken.API(keyKraken, secKraken)
         pKraken   = bbClasses.portfolio(1,0)
-        mKraken   = bbClasses.marketData('Null', 0, 0, 0)
+        mKraken   = bbClasses.marketData('Null', 0, 0)
         b,a = krakenAPI.getDepth(1)
         mKraken.bid = float(b[0][0])
         mKraken.ask = float(a[0][0])
@@ -37,7 +36,7 @@ class Cmd(cmd.Cmd):
             amtBTC = input('Enter BTC amount: (<0 if withdrawal): ')
             writeList = ','.join([strTime, str(mKraken.bid), str(mKraken.ask),
                                   str(amtBTC), '0\n'])
-        with open(fundFileName, 'at') as ff:
+        with open(bbCfg.fundFileName, 'at') as ff:
             ff.write(writeList)
 
     def help_funding(self):
@@ -46,17 +45,13 @@ class Cmd(cmd.Cmd):
 
     def do_backtest(self, arg):
         paramFlag = input('Use current parameters? ([y]/n): ')
-        vbFlag = input('Show trades? (y/[n]): ')
         if paramFlag is 'n':
         #   Change parameters here
             bbFunctions.chooseParameters()
-        logFileNameBT = bbFunctions.getLogFileNameBT(settings)
-        print(logFileNameBT)
-        if vbFlag is 'y':
-            bitbot.main('-b -v')
-        else:
-            bitbot.main('-b')
-        d,r=bbPerformance.getReturns(logFileNameBT, None, '2014-01-01', None)
+        bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT()
+        print(bbCfg.logFileNameBT)
+        bitbot.main('-b')
+        d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, None, '2014-01-01', None)
         bbPerformance.printSummary(r)
 
     def help_backtest(self):
@@ -71,17 +66,11 @@ class Cmd(cmd.Cmd):
         endDate   = input('End Date (YYYY-MM-DD): ')
         if len(endDate) is not 10:
             endDate = None
-        btflag = input('Run backtest? (y/[n]): ')
-        if btflag is 'y':
-            d,r=bbPerformance.getReturns(logFileNameBT, None, startDate, endDate)
-            bbPerformance.printReturns(d, r)
-            print('')
-            bbPerformance.printSummary(r)
-        else:
-            d,r=bbPerformance.getReturns(logFileName, fundFileName, startDate, endDate)
-            bbPerformance.printReturns(d, r)
-            print('')
-            bbPerformance.printSummary(r)
+        d,r=bbPerformance.getReturns(bbCfg.logFileName, bbCfg.fundFileName,
+                                     startDate, endDate)
+        bbPerformance.printReturns(d, r)
+        print('')
+        bbPerformance.printSummary(r)
             
     def help_performance(self):
             print('Syntax: performance')
@@ -92,7 +81,7 @@ class Cmd(cmd.Cmd):
     def do_balance(self, arg):    
         krakenAPI = apiKraken.API(keyKraken, secKraken)
         pKraken   = bbClasses.portfolio(1,0)
-        mKraken   = bbClasses.marketData('Null', 0, 0, 0)
+        mKraken   = bbClasses.marketData('Null', 0, 0)
         b,a = krakenAPI.getDepth(1)
         mKraken.bid = float(b[0][0])
         mKraken.ask = float(a[0][0])

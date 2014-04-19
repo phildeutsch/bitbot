@@ -6,9 +6,16 @@ import time
 import sys
 import re
 import math
+import hashlib
+from collections import OrderedDict
 
-def getLogFileNameBT(settings):
-    return 'data/logBT' + str(hash(frozenset(settings.items()))) + '.csv'
+def getLogFileNameBT():
+    varList = [var for var in dir(bbCfg) if not var.startswith("_")]
+    varDict = OrderedDict()
+    for var in sorted(varList):
+        varDict[var] = eval('bbCfg.'+ var)
+    h = hashlib.md5(str(varDict).encode('utf-8')).hexdigest()
+    return 'data/logBT' + h + '.csv'
 
 def progressBarLength():
     return math.floor(file_len(bbCfg.logFileName)/bbCfg.progressBar)

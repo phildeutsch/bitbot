@@ -47,7 +47,7 @@ class Cmd(cmd.Cmd):
         paramFlag = input('Use current parameters? ([y]/n): ')
         if paramFlag is 'n':
         #   Change parameters here
-            bbFunctions.chooseParameters()
+            bbFunctions.choose_parameters()
         numLinesLog = bbFunctions.file_len(bbCfg.logFileName) 
         bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT()
         print(bbCfg.logFileNameBT)

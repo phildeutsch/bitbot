@@ -8,6 +8,7 @@ import re
 import math
 import hashlib
 from collections import OrderedDict
+from imp import reload
 
 def display_config():
     varList = [var for var in dir(bbCfg) if not var.startswith("_")]
@@ -40,7 +41,7 @@ def getLogFileNameBT():
 def progressBarLength():
     return math.floor(file_len(bbCfg.logFileName)/bbCfg.progressBar)
 
-def chooseParameters():
+def choose_parameters():
     sys.stdout.write('Choose Parameter to change:\n')
     sys.stdout.write(' x) Done\n')
     sys.stdout.write(' d) Display current values\n')
@@ -56,8 +57,14 @@ def chooseParameters():
     paramChoice = input('')
     if paramChoice == 'd':
         display_config()
-        chooseParameters()
-
+        choose_parameters()
+    elif paramChoice == 's':
+        reload(bbCfg)
+    elif is_number(paramChoice):
+        newValue = input('Enter new value for ' +
+                        str(numList[int(paramChoice)]) + ':\n')
+        exec('bbCfg.' + numList[int(paramChoice)] + ' = ' + newValue)
+        choose_parameters()
 
 def sendEmail(t, recipient, subject):
     text = ''

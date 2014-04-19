@@ -9,12 +9,30 @@ import math
 import hashlib
 from collections import OrderedDict
 
+def display_config():
+    varList = [var for var in dir(bbCfg) if not var.startswith("_")]
+    numList = [var for var in varList if is_number(eval('bbCfg.'+var))]
+    numList = sorted(numList)
+    for var in sorted(numList):
+        sys.stdout.write('{0:<20}'.format(var))
+        sys.stdout.write(str(eval('bbCfg.'+var)) + '\n')
+    print('')
+    return 0
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
 def getLogFileNameBT():
     varList = [var for var in dir(bbCfg) if not var.startswith("_")]
+    numList = [var for var in varList if is_number(eval('bbCfg.'+var))]
+    numList = sorted(numList)
     varDict = OrderedDict()
-    for var in sorted(varList):
-        if var != 'logFileNameBT':
-            varDict[var] = eval('bbCfg.'+ var)
+    for var in numList:
+        varDict[var] = eval('bbCfg.'+ var)
 #   print(varDict)
     h = hashlib.md5(str(varDict).encode('utf-8')).hexdigest()
     return 'data/logBT' + h + '.csv'
@@ -27,15 +45,19 @@ def chooseParameters():
     sys.stdout.write(' x) Done\n')
     sys.stdout.write(' d) Display current values\n')
     sys.stdout.write(' s) Restore standard values\n')
-    sys.stdout.write(' 1) walkUp\n')
-    sys.stdout.write(' 3) walkDown\n')
-    sys.stdout.write(' 4) tradeFactor\n')
-    sys.stdout.write(' 5) momFactor\n')
-    sys.stdout.write(' 6) priceWindow\n')
-    sys.stdout.write(' 7) backupFund\n')
-    sys.stdout.write(' 8) allinLimit\n')
-    sys.stdout.write(' 9) stopLossLimit\n')
+    varList = [var for var in dir(bbCfg) if not var.startswith("_")]
+    numList = [var for var in varList if is_number(eval('bbCfg.'+var))]
+    numList = sorted(numList)
+    for i in range(len(numList)):
+        sys.stdout.write('{0:>2}'.format(i) + ') ')
+        sys.stdout.write(numList[i])
+        sys.stdout.write('\n')
+
     paramChoice = input('')
+    if paramChoice == 'd':
+        display_config()
+        chooseParameters()
+
 
 def sendEmail(t, recipient, subject):
     text = ''

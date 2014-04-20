@@ -60,6 +60,9 @@ def choose_parameters():
         choose_parameters()
     elif paramChoice == 's':
         reload(bbCfg)
+        choose_parameters()
+    elif paramChoice == 'x':
+        pass
     elif is_number(paramChoice):
         newValue = input('Enter new value for ' +
                         str(numList[int(paramChoice)]) + ':\n')

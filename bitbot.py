@@ -87,7 +87,7 @@ def mainLoop(m, p, t, api, testFlag, btFlag):
         bbFunctions.printLogLine(m, p, t, bbCfg.logFileName)
         bbFunctions.drawPlot(m, t)
         if abs(t.coinsToTrade) > 0:
-            bbFunctions.printLogLine(m, p, t)
+            bbFunctions.printLogLine(m, p, t, bbCfg.txFileName)
             
         if t.error != 0:
             t.handle_error(m)

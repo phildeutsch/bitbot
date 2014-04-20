@@ -50,7 +50,6 @@ class Cmd(cmd.Cmd):
             bbFunctions.choose_parameters()
         numLinesLog = bbFunctions.file_len(bbCfg.logFileName) 
         bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT()
-        print(bbCfg.logFileNameBT)
         try:
             numLinesLogBT = bbFunctions.file_len(bbCfg.logFileNameBT)
         except:

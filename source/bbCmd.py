@@ -56,7 +56,7 @@ class Cmd(cmd.Cmd):
             numLinesLogBT = 0
         if numLinesLogBT != numLinesLog:
             bitbot.main('-b')
-        d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, None, '2014-01-01', None)
+        d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, None, '2014-01-08', None)
         bbPerformance.printSummary(r)
 
     def help_backtest(self):
@@ -71,8 +71,14 @@ class Cmd(cmd.Cmd):
         endDate   = input('End Date (YYYY-MM-DD): ')
         if len(endDate) is not 10:
             endDate = None
-        d,r=bbPerformance.getReturns(bbCfg.logFileName, bbCfg.fundFileName,
-                                     startDate, endDate)
+        chooseBT = input('Calculate performance for backtest? y/[n]: ')
+        if chooseBT == 'y':
+            bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT() 
+            d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, None,
+                                         startDate, endDate)
+        else:
+            d,r=bbPerformance.getReturns(bbCfg.logFileName, bbCfg.fundFileName,
+                                         startDate, endDate)
         bbPerformance.printReturns(d, r)
         print('')
         bbPerformance.printSummary(r)

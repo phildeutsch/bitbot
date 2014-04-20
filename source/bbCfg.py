@@ -1,6 +1,6 @@
 walkUp              = 0.15
 walkDown            = 0
-tradeFactor         = 0.00045
+tradeFactor         = 0.0005
 momFactor           = 0.75
 priceWindow         = 100
 backupFund          = 0.20

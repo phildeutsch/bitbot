@@ -1,6 +1,8 @@
 import sys
 import cmd
 import datetime
+import numpy as np
+from imp import reload
 sys.path.append('./source')
 sys.path.append('./api')
 
@@ -40,8 +42,47 @@ class Cmd(cmd.Cmd):
             ff.write(writeList)
 
     def help_funding(self):
-            print('Syntax: funding')
-            print('-- Input a cash flow to/from the portfolio')
+        print('Syntax: funding')
+        print('-- Input a cash flow to/from the portfolio')
+            
+    def do_calibrate(self, arg):
+        reload(bbCfg)
+        old_walkUp = bbCfg.walkUp
+        old_walkDown = bbCfg.walkDown
+        old_tradeFactor = bbCfg.tradeFactor
+        old_allinLimit = bbCfg.allinLimit
+        old_backupFund = bbCfg.backupFund
+        m = [0.9, 1, 1.1]
+        result = []
+        numLinesLog = bbFunctions.file_len(bbCfg.logFileName) 
+        for bbCfg.walkUp in [x * old_walkUp for x in m]:
+            for bbCfg.walkDown in [x * old_walkDown for x in m]:
+                for bbCfg.tradeFactor in [x * old_tradeFactor for x in m]:
+                    for bbCfg.allinLimit in [x * old_allinLimit for x in m]:
+                        for bbCfg.backupFund in [x * old_backupFund for x in m]:
+                            bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT()
+                            try:
+                                n = bbFunctions.file_len(bbCfg.logFileNameBT)
+                            except:
+                                n = 0
+                            bbFunctions.display_config()
+                            if n != numLinesLog:
+                                bitbot.main('-b')
+                            d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, 
+                                              None, '2014-01-08', None)
+                            result.append([
+                                bbCfg.walkUp,
+                                bbCfg.walkDown,
+                                bbCfg.tradeFactor,
+                                bbCfg.allinLimit,
+                                bbCfg.backupFund,
+                                100*bbPerformance.totalReturn(r[:,2])])
+        result = np.array(result)
+        result[np.argsort(result[:, len(result)])]
+        
+    def help_calibrate(self):
+            print('Syntax: calibrate')
+            print('-- Optimize current parameters')
 
     def do_backtest(self, arg):
         paramFlag = input('Use current parameters? ([y]/n): ')

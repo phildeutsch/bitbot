@@ -1,9 +1,9 @@
-walkUp              = 0.15
+walkUp              = 0.135
 walkDown            = 0
-tradeFactor         = 0.0005
+tradeFactor         = 0.00055
 momFactor           = 0.75
-allinLimit          = 0.10
-backupFund          = 0.20
+allinLimit          = 0.11
+backupFund          = 0.22
 priceWindow         = 100
 stopLossLimit       = 0.20
 progressBar         = 250

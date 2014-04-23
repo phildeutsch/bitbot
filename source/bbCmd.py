@@ -48,37 +48,42 @@ class Cmd(cmd.Cmd):
     def do_calibrate(self, arg):
         reload(bbCfg)
         old_walkUp = bbCfg.walkUp
-        old_walkDown = bbCfg.walkDown
         old_tradeFactor = bbCfg.tradeFactor
         old_allinLimit = bbCfg.allinLimit
         old_backupFund = bbCfg.backupFund
-        m = [0.9, 1, 1.1]
+        m = [0.9, 1.1]
         result = []
-        numLinesLog = bbFunctions.file_len(bbCfg.logFileName) 
+        numLinesLog = bbFunctions.file_len(bbCfg.logFileName)
+        for i in range(len(m)**4):
+            sys.stdout.write('|')
+        sys.stdout.write('\n')
         for bbCfg.walkUp in [x * old_walkUp for x in m]:
-            for bbCfg.walkDown in [x * old_walkDown for x in m]:
-                for bbCfg.tradeFactor in [x * old_tradeFactor for x in m]:
-                    for bbCfg.allinLimit in [x * old_allinLimit for x in m]:
-                        for bbCfg.backupFund in [x * old_backupFund for x in m]:
-                            bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT()
-                            try:
-                                n = bbFunctions.file_len(bbCfg.logFileNameBT)
-                            except:
-                                n = 0
-                            bbFunctions.display_config()
-                            if n != numLinesLog:
-                                bitbot.main('-b')
-                            d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, 
-                                              None, '2014-01-08', None)
-                            result.append([
+            for bbCfg.tradeFactor in [x * old_tradeFactor for x in m]:
+                for bbCfg.allinLimit in [x * old_allinLimit for x in m]:
+                    for bbCfg.backupFund in [x * old_backupFund for x in m]:
+                        bbCfg.logFileNameBT = bbFunctions.getLogFileNameBT()
+                        try:
+                            n = bbFunctions.file_len(bbCfg.logFileNameBT)
+                        except:
+                            n = 0
+                        #bbFunctions.display_config()
+                        sys.stdout.write('|')
+                        if n != numLinesLog:
+                            bitbot.main('-b')
+                        d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, 
+                                                     None, '2014-01-08', None)
+                        result.append([
                                 bbCfg.walkUp,
-                                bbCfg.walkDown,
                                 bbCfg.tradeFactor,
                                 bbCfg.allinLimit,
                                 bbCfg.backupFund,
-                                100*bbPerformance.totalReturn(r[:,2])])
+                                100*bbPerformance.totalReturn(r[:,3])])
+        print('')
         result = np.array(result)
-        result[np.argsort(result[:, len(result)])]
+        result = result[np.argsort(result[:, len(result[0])-1])]
+        print(' '.join('{0:>10}'.format(x) for x in ['walkUp', 'tradeFactor', 'allinLimit', 'backupFund', 'Return']))
+        for row in result[-10:]:
+            print(' '.join('{0:10.4}'.format(x) for x in row))
         
     def help_calibrate(self):
             print('Syntax: calibrate')

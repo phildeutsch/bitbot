@@ -68,8 +68,9 @@ class Cmd(cmd.Cmd):
                             n = 0
                         #bbFunctions.display_config()
                         sys.stdout.write('|')
+                        sys.stdout.flush()
                         if n != numLinesLog:
-                            bitbot.main('-b')
+                            bitbot.main('-b -q')
                         d,r=bbPerformance.getReturns(bbCfg.logFileNameBT, 
                                                      None, '2014-01-08', None)
                         result.append([
